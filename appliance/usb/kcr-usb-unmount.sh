@@ -16,7 +16,18 @@ log() {
 
 log "USB device removed: $DEVICE"
 
-# Unmount if mounted
+# Don't touch the music drive - it's managed by fstab
+MUSIC_MOUNT="/mnt/kcr-music"
+if mountpoint -q "$MUSIC_MOUNT" 2>/dev/null; then
+    # Check if this device is the music drive
+    MUSIC_DEV=$(findmnt -n -o SOURCE "$MUSIC_MOUNT" 2>/dev/null)
+    if [ "$DEVICE" = "$MUSIC_DEV" ]; then
+        log "Ignoring removal event for music drive ($DEVICE) - managed by fstab"
+        exit 0
+    fi
+fi
+
+# Unmount presenter USB if mounted
 if mountpoint -q "$MOUNT_POINT" 2>/dev/null; then
     umount "$MOUNT_POINT" 2>/dev/null
     log "Unmounted $MOUNT_POINT"

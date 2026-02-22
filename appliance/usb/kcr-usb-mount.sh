@@ -16,6 +16,13 @@ log() {
 
 log "USB device detected: $DEVICE"
 
+# Check if this is the permanent music storage drive (labelled KCR-MUSIC)
+LABEL=$(blkid -o value -s LABEL "$DEVICE" 2>/dev/null)
+if [ "$LABEL" = "KCR-MUSIC" ]; then
+    log "Skipping KCR-MUSIC drive (permanent music storage) - mounted via fstab"
+    exit 0
+fi
+
 # Create mount point if it doesn't exist
 mkdir -p "$MOUNT_POINT"
 

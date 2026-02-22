@@ -319,6 +319,49 @@ clear_sensitive_config() {
     log_success "Sensitive data cleared from config"
 }
 
+configure_music_drive() {
+    log_info "Checking music drive..."
+
+    MUSIC_MOUNT="/mnt/kcr-music"
+    MUSIC_DIR="$MUSIC_MOUNT/music"
+
+    # Try to mount if not already mounted (fstab should handle this, but just in case)
+    if ! mountpoint -q "$MUSIC_MOUNT" 2>/dev/null; then
+        log_info "Music drive not mounted, attempting mount..."
+        mount "$MUSIC_MOUNT" 2>/dev/null || true
+    fi
+
+    if mountpoint -q "$MUSIC_MOUNT" 2>/dev/null; then
+        log_success "Music drive mounted at $MUSIC_MOUNT"
+
+        # Ensure music directory exists with correct permissions
+        mkdir -p "$MUSIC_DIR"
+        chown www-data:www-data "$MUSIC_DIR"
+        chmod 755 "$MUSIC_DIR"
+
+        # Verify the symlink is correct
+        if [ -L "$KCR_INSTALL_DIR/music" ]; then
+            log_success "Music symlink verified: $KCR_INSTALL_DIR/music -> $MUSIC_DIR"
+        else
+            log_info "Creating music symlink..."
+            rm -rf "$KCR_INSTALL_DIR/music"
+            ln -s "$MUSIC_DIR" "$KCR_INSTALL_DIR/music"
+            log_success "Music symlink created"
+        fi
+    else
+        log_error "Music drive (KCR-MUSIC) not found!"
+        log_error "Please plug in the USB SSD labelled KCR-MUSIC and reboot"
+
+        # Create a fallback local music directory so the app doesn't break
+        if [ ! -e "$KCR_INSTALL_DIR/music" ]; then
+            mkdir -p "$KCR_INSTALL_DIR/music"
+            chown www-data:www-data "$KCR_INSTALL_DIR/music"
+            chmod 755 "$KCR_INSTALL_DIR/music"
+            log_info "Created fallback local music directory"
+        fi
+    fi
+}
+
 # ============================================================
 # Main Execution
 # ============================================================
@@ -337,6 +380,7 @@ main() {
 
     # Run configuration steps
     expand_filesystem
+    configure_music_drive
     configure_station
     configure_network
     configure_timezone

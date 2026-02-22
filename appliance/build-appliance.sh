@@ -232,6 +232,44 @@ phase4b_install_usb_system() {
     log_success "USB auto-mount system configured"
 }
 
+phase4c_configure_music_drive() {
+    log_header "Phase 4c: Configure Separate Music Drive"
+
+    log "Creating music drive mount point..."
+    mkdir -p /mnt/kcr-music
+
+    log "Adding music drive to fstab (mount by label)..."
+    if ! grep -q "LABEL=KCR-MUSIC" /etc/fstab; then
+        echo "" >> /etc/fstab
+        echo "# KCR Tracks - Music storage drive (USB SSD labelled KCR-MUSIC)" >> /etc/fstab
+        echo "LABEL=KCR-MUSIC  /mnt/kcr-music  auto  defaults,nofail,x-systemd.device-timeout=10  0  2" >> /etc/fstab
+    fi
+
+    log "Installing music drive setup script..."
+    cp "$APPLIANCE_DIR/music-drive/setup-music-drive.sh" /usr/local/bin/
+    chmod +x /usr/local/bin/setup-music-drive.sh
+
+    log "Setting up music directory symlink..."
+    # Remove the default music directory if it exists and create symlink
+    if [ -d "$KCR_INSTALL_DIR/music" ] && [ ! -L "$KCR_INSTALL_DIR/music" ]; then
+        # Move any existing music to a backup
+        if [ "$(ls -A "$KCR_INSTALL_DIR/music" 2>/dev/null)" ]; then
+            log_warn "Backing up existing music files to music.bak/"
+            mv "$KCR_INSTALL_DIR/music" "$KCR_INSTALL_DIR/music.bak"
+        else
+            rmdir "$KCR_INSTALL_DIR/music"
+        fi
+    fi
+
+    # Create symlink (will point to the music drive once it's mounted)
+    if [ ! -L "$KCR_INSTALL_DIR/music" ]; then
+        ln -s /mnt/kcr-music/music "$KCR_INSTALL_DIR/music"
+        log_success "Symlink created: $KCR_INSTALL_DIR/music -> /mnt/kcr-music/music"
+    fi
+
+    log_success "Music drive configuration complete"
+}
+
 phase5_apply_security() {
     log_header "Phase 5: Apply Security Hardening"
 
@@ -368,25 +406,30 @@ show_summary() {
     echo ""
     echo "The system is now configured as a KCR Tracks appliance."
     echo ""
-    echo "Next steps to create the distributable image:"
+    echo "  OS:    SD card (this card)"
+    echo "  Music: Separate USB SSD labelled 'KCR-MUSIC'"
     echo ""
-    echo "  1. Shutdown this Pi:"
+    echo "IMPORTANT: Before imaging, set up the music drive:"
+    echo ""
+    echo "  1. Plug in the USB SSD that will store music"
+    echo "  2. Run:  sudo setup-music-drive.sh"
+    echo "  3. This formats and labels it as KCR-MUSIC"
+    echo ""
+    echo "Then create the distributable SD card image:"
+    echo ""
+    echo "  4. Shutdown this Pi:"
     echo "     sudo shutdown -h now"
     echo ""
-    echo "  2. Remove the SD card/SSD and connect to another Linux computer"
+    echo "  5. Remove the SD card and connect to your Windows PC"
     echo ""
-    echo "  3. Create the disk image:"
-    echo "     sudo dd if=/dev/sdX of=kcr-tracks-v2.0.img bs=4M status=progress"
+    echo "  6. Use Win32 Disk Imager to read the SD card to a file:"
+    echo "     Save as: KCR-Tracks-Master.img"
     echo ""
-    echo "  4. Shrink the image (optional but recommended):"
-    echo "     wget https://raw.githubusercontent.com/Drewsif/PiShrink/master/pishrink.sh"
-    echo "     chmod +x pishrink.sh"
-    echo "     sudo ./pishrink.sh kcr-tracks-v2.0.img"
+    echo "  7. Use Win32 Disk Imager to write that file to new SD cards"
     echo ""
-    echo "  5. Compress the image:"
-    echo "     xz -9 -T0 kcr-tracks-v2.0.img"
-    echo ""
-    echo "  6. The final file kcr-tracks-v2.0.img.xz is ready for distribution!"
+    echo "  Note: Each station needs its own KCR-MUSIC USB SSD."
+    echo "  Run setup-music-drive.sh on each one, or clone from a"
+    echo "  formatted drive using Win32 Disk Imager."
     echo ""
     echo -e "${GREEN}============================================================${NC}"
 }
@@ -406,6 +449,7 @@ main() {
     phase3_install_kiosk
     phase4_install_first_boot
     phase4b_install_usb_system
+    phase4c_configure_music_drive
     phase5_apply_security
     phase6_configure_display
     phase7_optimize
