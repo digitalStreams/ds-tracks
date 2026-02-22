@@ -251,6 +251,14 @@ phase4c_configure_music_drive() {
     cp "$APPLIANCE_DIR/music-drive/setup-music-drive.sh" /usr/local/bin/
     chmod +x /usr/local/bin/setup-music-drive.sh
 
+    # Install the storage mode switch script (called by admin UI)
+    cp "$APPLIANCE_DIR/music-drive/apply-storage-mode.sh" /usr/local/bin/
+    chmod +x /usr/local/bin/apply-storage-mode.sh
+
+    log "Configuring sudo for storage mode switching (www-data)..."
+    echo "www-data ALL=(ALL) NOPASSWD: /usr/local/bin/apply-storage-mode.sh" > /etc/sudoers.d/kcr-storage-mode
+    chmod 440 /etc/sudoers.d/kcr-storage-mode
+
     # Ensure the music directory exists as a real directory for now.
     # First-boot will convert it to a symlink if MUSIC_STORAGE=usb in the config.
     if [ ! -d "$KCR_INSTALL_DIR/music" ] && [ ! -L "$KCR_INSTALL_DIR/music" ]; then

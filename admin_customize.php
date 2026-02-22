@@ -28,6 +28,21 @@ if (isset($_GET['logout'])) {
     exit;
 }
 
+// Handle music storage mode change
+if (isset($_POST['save_storage']) && isset($_SESSION['admin_logged_in'])) {
+    $newMode = ($_POST['music_storage'] === 'sdcard') ? 'sdcard' : 'usb';
+    $output = [];
+    $returnCode = 0;
+    exec('sudo /usr/local/bin/apply-storage-mode.sh ' . escapeshellarg($newMode) . ' 2>&1', $output, $returnCode);
+
+    $result = json_decode(implode('', $output), true);
+    if ($result && $result['success']) {
+        $success = $result['message'];
+    } else {
+        $error = $result['message'] ?? 'Failed to change storage mode';
+    }
+}
+
 // Handle customization save
 if (isset($_POST['save_branding']) && isset($_SESSION['admin_logged_in'])) {
     $config = "<?php\n";
@@ -253,6 +268,31 @@ require_once 'branding.php';
             color: #666;
             margin-top: 5px;
         }
+        .storage-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .storage-option {
+            display: block;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: normal;
+        }
+        .storage-option:hover {
+            border-color: #1a7a7a;
+        }
+        .storage-option input[type="radio"] {
+            margin-right: 8px;
+        }
+        .storage-option .hint {
+            display: block;
+            margin-top: 5px;
+            margin-left: 24px;
+        }
     </style>
 </head>
 <body>
@@ -329,6 +369,40 @@ require_once 'branding.php';
             <div class="button-group">
                 <button type="submit" name="save_branding" class="btn-primary">Save Changes</button>
                 <button type="button" onclick="location.href='login.php'" class="btn-secondary">Cancel</button>
+            </div>
+        </form>
+
+        <form method="post" style="margin-top: 30px;">
+            <div class="section">
+                <h2>Music Storage</h2>
+                <p>Choose where music files are stored.</p>
+
+                <?php
+                    // Detect current mode
+                    $musicPath = __DIR__ . '/music';
+                    $currentMode = is_link($musicPath) ? 'usb' : 'sdcard';
+                    $usbMounted = is_dir('/mnt/kcr-music') && @file_exists('/mnt/kcr-music/music');
+                ?>
+
+                <div class="storage-options">
+                    <label class="storage-option">
+                        <input type="radio" name="music_storage" value="sdcard" <?php echo $currentMode === 'sdcard' ? 'checked' : ''; ?>>
+                        <strong>SD Card</strong> — Music stored on this SD card
+                        <span class="hint">Simpler setup. Limited by SD card size.</span>
+                    </label>
+                    <label class="storage-option">
+                        <input type="radio" name="music_storage" value="usb" <?php echo $currentMode === 'usb' ? 'checked' : ''; ?>>
+                        <strong>USB SSD</strong> — Music stored on separate USB drive
+                        <span class="hint">Best for large libraries. Requires a USB drive labelled KCR-MUSIC.
+                        <?php if (!$usbMounted && $currentMode !== 'usb') echo '<br><em>No KCR-MUSIC drive detected.</em>'; ?></span>
+                    </label>
+                </div>
+
+                <p class="hint" style="margin-top: 15px;">Currently using: <strong><?php echo $currentMode === 'usb' ? 'USB SSD' : 'SD Card'; ?></strong></p>
+
+                <div class="button-group">
+                    <button type="submit" name="save_storage" class="btn-primary">Apply Storage Setting</button>
+                </div>
             </div>
         </form>
     </div>
