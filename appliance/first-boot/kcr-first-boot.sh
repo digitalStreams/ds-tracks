@@ -320,44 +320,75 @@ clear_sensitive_config() {
 }
 
 configure_music_drive() {
-    log_info "Checking music drive..."
+    local music_storage=$(get_config "MUSIC_STORAGE" "usb")
+    log_info "Music storage mode: $music_storage"
 
     MUSIC_MOUNT="/mnt/kcr-music"
     MUSIC_DIR="$MUSIC_MOUNT/music"
 
-    # Try to mount if not already mounted (fstab should handle this, but just in case)
-    if ! mountpoint -q "$MUSIC_MOUNT" 2>/dev/null; then
-        log_info "Music drive not mounted, attempting mount..."
-        mount "$MUSIC_MOUNT" 2>/dev/null || true
-    fi
+    if [ "$music_storage" = "sdcard" ]; then
+        # --- SD Card mode: music stored locally on the SD card ---
+        log_info "Configuring local SD card music storage..."
 
-    if mountpoint -q "$MUSIC_MOUNT" 2>/dev/null; then
-        log_success "Music drive mounted at $MUSIC_MOUNT"
-
-        # Ensure music directory exists with correct permissions
-        mkdir -p "$MUSIC_DIR"
-        chown www-data:www-data "$MUSIC_DIR"
-        chmod 755 "$MUSIC_DIR"
-
-        # Verify the symlink is correct
+        # Remove symlink if one exists from a previous USB config
         if [ -L "$KCR_INSTALL_DIR/music" ]; then
-            log_success "Music symlink verified: $KCR_INSTALL_DIR/music -> $MUSIC_DIR"
-        else
-            log_info "Creating music symlink..."
-            rm -rf "$KCR_INSTALL_DIR/music"
-            ln -s "$MUSIC_DIR" "$KCR_INSTALL_DIR/music"
-            log_success "Music symlink created"
+            rm -f "$KCR_INSTALL_DIR/music"
+            log_info "Removed USB symlink"
         fi
-    else
-        log_error "Music drive (KCR-MUSIC) not found!"
-        log_error "Please plug in the USB SSD labelled KCR-MUSIC and reboot"
 
-        # Create a fallback local music directory so the app doesn't break
-        if [ ! -e "$KCR_INSTALL_DIR/music" ]; then
+        # Create real local directory
+        if [ ! -d "$KCR_INSTALL_DIR/music" ]; then
             mkdir -p "$KCR_INSTALL_DIR/music"
-            chown www-data:www-data "$KCR_INSTALL_DIR/music"
-            chmod 755 "$KCR_INSTALL_DIR/music"
-            log_info "Created fallback local music directory"
+        fi
+        chown www-data:www-data "$KCR_INSTALL_DIR/music"
+        chmod 755 "$KCR_INSTALL_DIR/music"
+
+        log_success "Music storage: SD card ($KCR_INSTALL_DIR/music)"
+    else
+        # --- USB mode: music stored on separate USB SSD ---
+        log_info "Configuring USB SSD music storage..."
+
+        # Try to mount if not already mounted (fstab should handle this, but just in case)
+        if ! mountpoint -q "$MUSIC_MOUNT" 2>/dev/null; then
+            log_info "Music drive not mounted, attempting mount..."
+            mount "$MUSIC_MOUNT" 2>/dev/null || true
+        fi
+
+        if mountpoint -q "$MUSIC_MOUNT" 2>/dev/null; then
+            log_success "Music drive mounted at $MUSIC_MOUNT"
+
+            # Ensure music directory exists with correct permissions
+            mkdir -p "$MUSIC_DIR"
+            chown www-data:www-data "$MUSIC_DIR"
+            chmod 755 "$MUSIC_DIR"
+
+            # Create or verify the symlink
+            if [ -L "$KCR_INSTALL_DIR/music" ]; then
+                log_success "Music symlink verified: $KCR_INSTALL_DIR/music -> $MUSIC_DIR"
+            else
+                # Remove real directory if it exists, replace with symlink
+                if [ -d "$KCR_INSTALL_DIR/music" ]; then
+                    if [ "$(ls -A "$KCR_INSTALL_DIR/music" 2>/dev/null)" ]; then
+                        log_warn "Moving existing local music to USB drive..."
+                        cp -a "$KCR_INSTALL_DIR/music/"* "$MUSIC_DIR/" 2>/dev/null || true
+                    fi
+                    rm -rf "$KCR_INSTALL_DIR/music"
+                fi
+                ln -s "$MUSIC_DIR" "$KCR_INSTALL_DIR/music"
+                log_success "Music symlink created"
+            fi
+        else
+            log_error "Music drive (KCR-MUSIC) not found!"
+            log_error "Please plug in the USB SSD labelled KCR-MUSIC and reboot"
+            log_error "Or change MUSIC_STORAGE=sdcard in kcr-config.txt to use the SD card"
+
+            # Create a fallback local directory so the app doesn't break
+            if [ ! -e "$KCR_INSTALL_DIR/music" ]; then
+                mkdir -p "$KCR_INSTALL_DIR/music"
+                chown www-data:www-data "$KCR_INSTALL_DIR/music"
+                chmod 755 "$KCR_INSTALL_DIR/music"
+                log_info "Created fallback local music directory"
+            fi
         fi
     fi
 }

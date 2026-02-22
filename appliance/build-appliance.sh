@@ -233,41 +233,33 @@ phase4b_install_usb_system() {
 }
 
 phase4c_configure_music_drive() {
-    log_header "Phase 4c: Configure Separate Music Drive"
+    log_header "Phase 4c: Configure Music Storage"
 
-    log "Creating music drive mount point..."
+    log "Preparing USB music drive support..."
+
+    # Create mount point for USB SSD option
     mkdir -p /mnt/kcr-music
 
-    log "Adding music drive to fstab (mount by label)..."
+    # Add fstab entry (nofail = won't block boot if drive is absent)
     if ! grep -q "LABEL=KCR-MUSIC" /etc/fstab; then
         echo "" >> /etc/fstab
         echo "# KCR Tracks - Music storage drive (USB SSD labelled KCR-MUSIC)" >> /etc/fstab
         echo "LABEL=KCR-MUSIC  /mnt/kcr-music  auto  defaults,nofail,x-systemd.device-timeout=10  0  2" >> /etc/fstab
     fi
 
-    log "Installing music drive setup script..."
+    # Install the music drive setup script (for USB SSD formatting)
     cp "$APPLIANCE_DIR/music-drive/setup-music-drive.sh" /usr/local/bin/
     chmod +x /usr/local/bin/setup-music-drive.sh
 
-    log "Setting up music directory symlink..."
-    # Remove the default music directory if it exists and create symlink
-    if [ -d "$KCR_INSTALL_DIR/music" ] && [ ! -L "$KCR_INSTALL_DIR/music" ]; then
-        # Move any existing music to a backup
-        if [ "$(ls -A "$KCR_INSTALL_DIR/music" 2>/dev/null)" ]; then
-            log_warn "Backing up existing music files to music.bak/"
-            mv "$KCR_INSTALL_DIR/music" "$KCR_INSTALL_DIR/music.bak"
-        else
-            rmdir "$KCR_INSTALL_DIR/music"
-        fi
+    # Ensure the music directory exists as a real directory for now.
+    # First-boot will convert it to a symlink if MUSIC_STORAGE=usb in the config.
+    if [ ! -d "$KCR_INSTALL_DIR/music" ] && [ ! -L "$KCR_INSTALL_DIR/music" ]; then
+        mkdir -p "$KCR_INSTALL_DIR/music"
     fi
+    chown www-data:www-data "$KCR_INSTALL_DIR/music" 2>/dev/null || true
+    chmod 755 "$KCR_INSTALL_DIR/music" 2>/dev/null || true
 
-    # Create symlink (will point to the music drive once it's mounted)
-    if [ ! -L "$KCR_INSTALL_DIR/music" ]; then
-        ln -s /mnt/kcr-music/music "$KCR_INSTALL_DIR/music"
-        log_success "Symlink created: $KCR_INSTALL_DIR/music -> /mnt/kcr-music/music"
-    fi
-
-    log_success "Music drive configuration complete"
+    log_success "Music storage configured (first-boot will apply MUSIC_STORAGE setting)"
 }
 
 phase5_apply_security() {
@@ -406,10 +398,12 @@ show_summary() {
     echo ""
     echo "The system is now configured as a KCR Tracks appliance."
     echo ""
-    echo "  OS:    SD card (this card)"
-    echo "  Music: Separate USB SSD labelled 'KCR-MUSIC'"
+    echo "Music storage is controlled by MUSIC_STORAGE in kcr-config.txt:"
     echo ""
-    echo "IMPORTANT: Before imaging, set up the music drive:"
+    echo "  MUSIC_STORAGE=usb     (default) Separate USB SSD for music"
+    echo "  MUSIC_STORAGE=sdcard  Music stored on this SD card"
+    echo ""
+    echo "If using USB storage, set up the music drive before imaging:"
     echo ""
     echo "  1. Plug in the USB SSD that will store music"
     echo "  2. Run:  sudo setup-music-drive.sh"
@@ -417,19 +411,10 @@ show_summary() {
     echo ""
     echo "Then create the distributable SD card image:"
     echo ""
-    echo "  4. Shutdown this Pi:"
-    echo "     sudo shutdown -h now"
-    echo ""
-    echo "  5. Remove the SD card and connect to your Windows PC"
-    echo ""
-    echo "  6. Use Win32 Disk Imager to read the SD card to a file:"
-    echo "     Save as: KCR-Tracks-Master.img"
-    echo ""
-    echo "  7. Use Win32 Disk Imager to write that file to new SD cards"
-    echo ""
-    echo "  Note: Each station needs its own KCR-MUSIC USB SSD."
-    echo "  Run setup-music-drive.sh on each one, or clone from a"
-    echo "  formatted drive using Win32 Disk Imager."
+    echo "  4. Shutdown:  sudo shutdown -h now"
+    echo "  5. Remove the SD card and use Win32 Disk Imager to read it"
+    echo "  6. Save as: KCR-Tracks-Master.img"
+    echo "  7. Write that file to new SD cards for each station"
     echo ""
     echo -e "${GREEN}============================================================${NC}"
 }

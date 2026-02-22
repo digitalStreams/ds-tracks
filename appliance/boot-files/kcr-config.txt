@@ -64,6 +64,16 @@ SCREEN_ROTATION=0
 HIDE_CURSOR=true
 
 # ------------------------------------------------------------
+# MUSIC STORAGE
+# ------------------------------------------------------------
+# Where to store music files:
+#   usb    - On a separate USB SSD (labelled KCR-MUSIC)
+#            Best for large music libraries. USB SSD can be any size.
+#   sdcard - On this SD card (in the app's music folder)
+#            Simpler setup, but limited by SD card size.
+MUSIC_STORAGE=usb
+
+# ------------------------------------------------------------
 # ADVANCED OPTIONS
 # ------------------------------------------------------------
 # Leave these at defaults unless you know what you're doing.

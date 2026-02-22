@@ -12,14 +12,14 @@
 
 ## How the Appliance Works
 
-Each KCR Tracks appliance uses **two drives**:
+You choose how to store music files:
 
-| Drive | What It Does | Size |
-|-------|-------------|------|
-| **SD card** | Holds the operating system and KCR Tracks software | 16-32GB |
-| **USB SSD** | Holds all the music files (labelled "KCR-MUSIC") | 64GB+ (bigger = more music) |
+| Option | How It Works | Best For |
+|--------|-------------|----------|
+| **USB SSD** (default) | OS on SD card, music on separate USB drive | Large music libraries, upgradeable storage |
+| **SD card only** | Everything on one SD card | Simpler setup, smaller libraries |
 
-Why two drives? The SD card image stays small and quick to clone. The music drive can be any size the station can afford - plug in a bigger one any time.
+This is set in a config file (`kcr-config.txt`) — you can change it any time.
 
 ---
 
@@ -30,8 +30,8 @@ Why two drives? The SD card image stays small and quick to clone. The music driv
 | Item | What It Is | Where to Get It | Approx Cost |
 |------|-----------|-----------------|-------------|
 | **Raspberry Pi 4 or 5** | Small credit-card computer | Core Electronics, Amazon AU | $90 |
-| **SD card (16-32GB)** | Micro SD card for the operating system | Any electronics store | $15 |
-| **USB SSD (64GB+)** | External USB drive for music storage | Any electronics store | $30+ |
+| **SD card (32GB+)** | Micro SD card | Any electronics store | $15 |
+| **USB SSD (optional)** | External USB drive for music storage | Any electronics store | $30+ |
 | **SD card reader** | Plugs SD card into your PC | Any electronics store | $10 |
 | **USB-C power supply** | Powers the Pi | Comes with Pi kits | $25 |
 | **HDMI display** | Any TV or monitor | Use your TV | - |
@@ -39,6 +39,8 @@ Why two drives? The SD card image stays small and quick to clone. The music driv
 | **USB keyboard** | Any keyboard | You have one | - |
 | **Ethernet cable** | For internet connection | You have one | - |
 | **USB thumb drive** | To copy files from your PC to the Pi | You have one | - |
+
+**Note:** You only need the USB SSD if you choose USB storage. If using SD card storage, a larger SD card (64GB+) is recommended.
 
 **Important:** The Pi needs a wired ethernet connection (plugged into your router) for the build. WiFi is harder to set up and not needed - this is just for building.
 
@@ -103,7 +105,7 @@ Connect the Pi in this order:
 3. **Plug in the HDMI cable** (from the Pi to your TV/monitor)
    - Use the HDMI port **closest to the USB-C power port**
 4. **Plug in the USB keyboard**
-5. **DO NOT plug in the music USB SSD yet** - we'll set it up after the build
+5. **If using USB SSD for music:** don't plug it in yet — we'll set it up after the build
 6. **Plug in the USB-C power supply** (this turns it on)
 
 You'll see text scrolling on the screen. Wait about 30 seconds.
@@ -209,9 +211,9 @@ When it finishes, you'll see a green message:
 ============================================================
 ```
 
-### Step 5: Set Up the Music Drive (2 minutes)
+### Step 5: Set Up the Music Drive (USB SSD only — skip if using SD card)
 
-Now plug in the USB SSD that will store music. Wait 5 seconds, then type:
+If you're using a separate USB SSD for music storage, plug it in now. Wait 5 seconds, then type:
 
 ```
 sudo setup-music-drive.sh
@@ -225,13 +227,7 @@ The script will:
 
 **WARNING:** This erases everything on the USB SSD. Make sure it's the right drive!
 
-When it finishes, you'll see:
-
-```
-============================================================
- Music drive setup complete!
-============================================================
-```
+**If you're using SD card storage instead**, skip this step entirely. You can change the storage mode later by editing `kcr-config.txt` on the boot partition (set `MUSIC_STORAGE=sdcard`).
 
 ### Step 6: Shutdown (1 minute)
 
@@ -250,7 +246,7 @@ Wait for the green light on the Pi to stop flashing (about 10 seconds).
 
 Now you'll save the SD card as a file on your PC, so you can make copies.
 
-**Note:** You only image the SD card, not the music USB SSD. The SD card image is small (under 8GB). Each station gets its own music drive.
+**Note:** You only image the SD card. If using USB SSD storage, each station gets its own music drive.
 
 ### Step 1: Download Win32 Disk Imager
 
@@ -277,7 +273,7 @@ Now you'll save the SD card as a file on your PC, so you can make copies.
 
 Each station needs:
 - A cloned **SD card** (from your master image)
-- A formatted **USB SSD** (labelled KCR-MUSIC)
+- A formatted **USB SSD** labelled KCR-MUSIC (only if using USB storage)
 
 ### For the SD Card
 
@@ -290,7 +286,9 @@ Each station needs:
 7. Wait (5-10 minutes)
 8. "Write Successful" - done!
 
-### For the Music Drive
+### For the Music Drive (USB SSD storage only)
+
+Skip this section if you chose SD card storage.
 
 You have two options:
 
@@ -309,7 +307,7 @@ You have two options:
 4. Write that file to new USB SSDs
 5. (This copies the format and label automatically)
 
-### Customise the Station Name (Optional)
+### Customise the Station Name and Storage Mode (Optional)
 
 After writing the SD card, it will show a small partition called **bootfs** or **boot** in Windows Explorer.
 
@@ -321,13 +319,17 @@ After writing the SD card, it will show a small partition called **bootfs** or *
    STATION_NAME=Kiama Community Radio
    STATION_SHORT_NAME=KCR
    ```
-5. Save and close
+5. To use SD card storage instead of USB SSD, change:
+   ```
+   MUSIC_STORAGE=sdcard
+   ```
+6. Save and close
 6. Safely eject the card
 
 ### Assemble and Boot
 
 1. Insert the cloned SD card into the target Raspberry Pi
-2. Plug in the KCR-MUSIC USB SSD
+2. If using USB storage, plug in the KCR-MUSIC USB SSD
 3. Connect the display and power
 4. Wait 2-3 minutes for first-boot setup
 5. KCR Tracks appears on screen
@@ -349,14 +351,15 @@ The first boot takes a bit longer because it sets up the system and checks the m
 | Script stops with red text | Read the error message. Usually it's a network issue. Try running the script again |
 | USB stick not detected | Try a different USB port. Try `sudo mount /dev/sdb1 /mnt/usb` instead |
 
-### Music Drive Problems
+### Music Drive Problems (USB SSD mode only)
 
 | Problem | Solution |
 |---------|----------|
 | "No USB drives found" | Make sure the USB SSD is plugged in. Try a different USB port |
 | Wrong drive shown | If multiple USB drives are connected, remove all except the SSD |
 | Music not saving | Check the USB SSD is plugged in and the light is on |
-| "Music drive not found" on boot | Plug in the KCR-MUSIC USB SSD and reboot |
+| "Music drive not found" on boot | Plug in the KCR-MUSIC USB SSD and reboot, or switch to SD card mode |
+| Want to switch to SD card | Edit `kcr-config.txt`: set `MUSIC_STORAGE=sdcard`, then reboot |
 
 ### Cloning Problems
 
@@ -398,7 +401,7 @@ Print this and keep it with your Pi kit.
     cd /tmp/KCR-Tracks2/appliance
     sudo bash build-appliance.sh
 
-  SET UP MUSIC DRIVE (plug in USB SSD first):
+  SET UP MUSIC DRIVE (USB SSD mode only):
     sudo setup-music-drive.sh
 
   SHUTDOWN:
@@ -417,13 +420,14 @@ Print this and keep it with your Pi kit.
 | Item | What It Is |
 |------|-----------|
 | `KCR-Tracks-Master.img` on your PC | Your golden master SD card image |
-| Cloned SD cards | Ready-to-boot OS drives for each station |
-| KCR-MUSIC USB SSDs | Music storage drives for each station |
+| Cloned SD cards | Ready-to-boot drives for each station |
+| KCR-MUSIC USB SSDs (if using USB mode) | Music storage drives for each station |
 
 To make more stations in future:
 1. Write `KCR-Tracks-Master.img` to a new SD card (5 minutes, Win32 Disk Imager)
-2. Format a USB SSD as music drive (boot Pi, run one command, shutdown)
-3. Done!
+2. Optionally edit `kcr-config.txt` to set station name and storage mode
+3. If USB mode: format a USB SSD (boot Pi, run one command, shutdown)
+4. Done!
 
 ---
 
@@ -433,10 +437,11 @@ To make more stations in future:
 |-------|------|--------------|------|
 | Prep (at desk) | Flash Pi OS, copy files to USB | No | 15 mins |
 | Build (one time) | Boot Pi, run build script | Yes (7 commands) | 45 mins |
-| Music drive (one time) | Format USB SSD | Yes (2 commands) | 2 mins |
+| Music drive (USB mode) | Format USB SSD | Yes (1 command) | 2 mins |
 | Save master | Read SD card on PC | No | 10 mins |
 | Clone (per station) | Write image to new SD card | No | 5 mins each |
-| Music drive (per station) | Format USB SSD | Yes (2 commands) | 2 mins |
-| Customise (optional) | Edit text file on Windows | No | 2 mins |
+| Music drive (per station, USB mode) | Format USB SSD | Yes (1 command) | 2 mins |
+| Customise (optional) | Edit config file on Windows | No | 2 mins |
 
-**Total Linux exposure: 9 commands for the first build, 2 commands per additional station.**
+**SD card mode:** 7 Linux commands total, once, never again.
+**USB SSD mode:** 8 Linux commands for the first build, 1 command per additional station.
