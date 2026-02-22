@@ -1,0 +1,77 @@
+#!/bin/bash
+# ============================================================
+# KCR Tracks Kiosk Mode X Session Configuration
+# ============================================================
+# This file is installed to /home/pi/.xinitrc
+# It configures the X session for kiosk mode operation
+# ============================================================
+
+# Disable screen blanking and power saving
+xset s off
+xset s noblank
+xset -dpms
+
+# Disable screen saver
+xset s 0 0
+
+# Hide cursor after 0.5 seconds of inactivity
+unclutter -idle 0.5 -root &
+
+# Start window manager in background
+openbox-session &
+
+# Wait for window manager to start
+sleep 2
+
+# Wait for network to be available
+echo "Waiting for network..."
+for i in {1..30}; do
+    if ping -c 1 127.0.0.1 &> /dev/null; then
+        break
+    fi
+    sleep 1
+done
+
+# Additional wait for Apache to start
+sleep 3
+
+# Get configuration for cursor hiding
+HIDE_CURSOR="true"
+if [ -f /boot/firmware/kcr-config.txt ]; then
+    HIDE_CURSOR=$(grep "^HIDE_CURSOR=" /boot/firmware/kcr-config.txt | cut -d'=' -f2 || echo "true")
+elif [ -f /boot/kcr-config.txt ]; then
+    HIDE_CURSOR=$(grep "^HIDE_CURSOR=" /boot/kcr-config.txt | cut -d'=' -f2 || echo "true")
+fi
+
+# Build Chromium flags
+CHROMIUM_FLAGS=(
+    --kiosk
+    --noerrdialogs
+    --disable-infobars
+    --disable-session-crashed-bubble
+    --disable-restore-session-state
+    --disable-translate
+    --no-first-run
+    --start-fullscreen
+    --autoplay-policy=no-user-gesture-required
+    --disable-features=TranslateUI
+    --disable-pinch
+    --overscroll-history-navigation=0
+    --check-for-update-interval=604800
+    --disable-component-update
+)
+
+# Add cursor flag if hiding cursor
+if [ "$HIDE_CURSOR" = "true" ]; then
+    CHROMIUM_FLAGS+=(--cursor=none)
+fi
+
+# Launch Chromium in kiosk mode
+# Loop to restart if it crashes
+while true; do
+    chromium-browser "${CHROMIUM_FLAGS[@]}" http://localhost/kcr-tracks/login.php
+
+    # If Chromium exits, wait a moment then restart
+    echo "Chromium exited, restarting in 3 seconds..."
+    sleep 3
+done

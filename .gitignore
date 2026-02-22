@@ -1,0 +1,28 @@
+# KCR Tracks - Git Ignore File
+
+# Log files
+logs/
+*.log
+
+# Music files (user uploaded content)
+music/*
+!music/.gitkeep
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.bak
+
+# Environment specific
+.env
+config.local.php

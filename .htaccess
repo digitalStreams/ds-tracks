@@ -1,0 +1,66 @@
+# KCR Tracks - Apache Configuration
+# Security hardening for Apache web server
+
+# Prevent directory listing
+Options -Indexes
+
+# Protect log files and configuration
+<FilesMatch "\.(log|ini)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Protect sensitive files
+<FilesMatch "^(config\.php|\.htaccess)$">
+    Order allow,deny
+    Deny from all
+    <IfModule mod_rewrite.c>
+        RewriteEngine On
+        RewriteRule .* - [F,L]
+    </IfModule>
+</FilesMatch>
+
+# Enable error documents (optional)
+ErrorDocument 403 "Access Forbidden"
+ErrorDocument 404 "File Not Found"
+
+# Set default character encoding
+AddDefaultCharset UTF-8
+
+# PHP security settings
+<IfModule mod_php7.c>
+    php_flag display_errors Off
+    php_flag log_errors On
+    php_value error_log logs/php_errors.log
+</IfModule>
+
+# Protect against clickjacking
+<IfModule mod_headers.c>
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Set proper MIME types for audio files
+<IfModule mod_mime.c>
+    AddType audio/mpeg mp3
+    AddType audio/mp4 m4a
+    AddType audio/ogg ogg
+    AddType audio/flac flac
+    AddType audio/wav wav
+</IfModule>
+
+# Compress text files for better performance
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css application/json application/javascript
+</IfModule>
+
+# Cache audio files for better performance
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType audio/mpeg "access plus 1 week"
+    ExpiresByType audio/mp4 "access plus 1 week"
+    ExpiresByType audio/ogg "access plus 1 week"
+    ExpiresByType audio/flac "access plus 1 week"
+    ExpiresByType audio/wav "access plus 1 week"
+</IfModule>

@@ -1,0 +1,259 @@
+<?php
+/**
+ * KCR Tracks - JSON API Handler
+ * Provides session and track data with input validation and security
+ */
+
+// Start session
+session_start();
+
+// Configuration
+define('MUSIC_BASE_DIR', __DIR__ . '/music/');
+
+// Error logging function
+function logError($message) {
+    error_log(date('[Y-m-d H:i:s] ') . $message . PHP_EOL, 3, __DIR__ . '/api_errors.log');
+}
+
+// Sanitize input function
+function sanitizeInput($input, $allowDash = true) {
+    if ($allowDash) {
+        return preg_replace('/[^a-zA-Z0-9_-]/', '', $input);
+    }
+    return preg_replace('/[^a-zA-Z0-9_]/', '', $input);
+}
+
+// Validate directory path is within music directory
+function isValidMusicPath($path) {
+    $realPath = realpath($path);
+    $baseDir = realpath(MUSIC_BASE_DIR);
+
+    if ($realPath === false) {
+        return false;
+    }
+
+    return strpos($realPath, $baseDir) === 0;
+}
+
+// Get sessions for a specific user
+if(isset($_POST['u_name'])){
+    $user_name = sanitizeInput($_POST['u_name']);
+
+    // Validate username
+    if (empty($user_name) || strlen($user_name) < 3) {
+        logError('Invalid username in u_name request: ' . $_POST['u_name']);
+        echo json_encode(['error' => 'Invalid username']);
+        exit;
+    }
+
+    $dirs = array_filter(glob(MUSIC_BASE_DIR . '*'), 'is_dir');
+    $arr = [];
+    $my_music = [];
+
+    foreach ($dirs as $key => $value) {
+        // Validate path before processing
+        if (!isValidMusicPath($value)) {
+            logError('Invalid path detected: ' . $value);
+            continue;
+        }
+
+        $dirName = basename($value);
+        $nameParts = explode("-", $dirName);
+        $onlyname = $nameParts[0];
+
+        if($onlyname == $user_name){
+            $files = scandir($value);
+            array_splice($files, 0, 2); // Remove . and ..
+
+            // Sanitize file names before adding to response
+            $sanitizedFiles = array_map('basename', $files);
+
+            $arr[] = array('name' => $dirName, 'music' => $sanitizedFiles);
+        }
+    }
+
+    $data = json_encode($arr, JSON_PRETTY_PRINT);
+    echo $data;
+
+
+}else{
+
+    if(isset($_POST['option'])){
+        $option = sanitizeInput($_POST['option']);
+
+        // Get list of all users
+        if($option == 'users'){
+            $dirs = array_filter(glob(MUSIC_BASE_DIR . '*'), 'is_dir');
+            $arr = [];
+            foreach ($dirs as $key => $value) {
+                // Validate path
+                if (!isValidMusicPath($value)) {
+                    continue;
+                }
+                $dirName = basename($value);
+                $arr[] = array('name' => $dirName);
+            }
+            $data = json_encode($arr, JSON_PRETTY_PRINT);
+            echo $data;
+
+        // Get users dropdown (deprecated - but keeping for compatibility)
+        } else if ($option == 'by_users'){
+            echo '<label for="Music Users">Choose a User:</label>
+            <select name="Music" id="Users_id">';
+
+            $scan = scandir(MUSIC_BASE_DIR);
+            foreach($scan as $file) {
+                if ($file === '.' || $file === '..') continue;
+
+                $fullPath = MUSIC_BASE_DIR . $file;
+                if (!is_dir($fullPath) || !isValidMusicPath($fullPath)) {
+                    continue;
+                }
+
+                $safeFile = htmlspecialchars($file, ENT_QUOTES, 'UTF-8');
+                echo "<option value=\"$safeFile\">$safeFile</option>";
+            }
+            echo '</select>';
+
+        // Get session details for a specific path
+        } else if(!empty($option)){
+            $sessionPath = sanitizeInput($option);
+            $fullPath = MUSIC_BASE_DIR . $sessionPath;
+
+            // Validate path exists and is within music directory
+            if (!is_dir($fullPath) || !isValidMusicPath($fullPath)) {
+                logError('Invalid session path requested: ' . $option);
+                echo json_encode(['error' => 'Invalid session']);
+                exit;
+            }
+
+            $files = scandir($fullPath);
+            $myarr = [];
+
+            // Parse session name for metadata
+            $nameParts = explode("-", $sessionPath);
+            $username = $nameParts[0];
+            $dateTime = isset($nameParts[1]) && isset($nameParts[2])
+                        ? $nameParts[1] . '-' . $nameParts[2]
+                        : '';
+
+            // Format date/time
+            if (!empty($dateTime)) {
+                $parts = explode('-', $dateTime);
+                $date = $parts[0] ?? '';
+                $time = $parts[1] ?? '';
+
+                // Format time with colons
+                $timeFormatted = '';
+                if (strlen($time) >= 4) {
+                    $end = substr($time, -4);
+                    $chunks = str_split($end, 2);
+                    $timeFormatted = implode(':', $chunks);
+                }
+
+                // Format date
+                $dateFormatted = '';
+                if (strlen($date) >= 6) {
+                    $chunks = str_split($date, 2);
+                    $dateFormatted = implode('-', $chunks);
+                }
+
+                $dateCreation = $dateFormatted . " " . $timeFormatted;
+            } else {
+                $dateCreation = 'Unknown';
+            }
+
+            foreach($files as $file_sub) {
+                if ($file_sub === '.' || $file_sub === '..') continue;
+
+                $myarr[] = array(
+                    "id" => substr($time ?? '', -4),
+                    "name" => $username,
+                    "uniqueName" => $sessionPath,
+                    "createdDate" => $dateCreation
+                );
+            }
+            echo json_encode($myarr, JSON_PRETTY_PRINT);
+        }else{
+            echo json_encode(['error' => 'Invalid request']);
+        }
+
+
+
+
+    }else{
+
+        // Get tracks for a specific session
+        if(isset($_POST['t_name'])){
+            $sessionName = sanitizeInput($_POST['t_name']);
+            $fullPath = MUSIC_BASE_DIR . $sessionName;
+
+            // Validate path
+            if (!is_dir($fullPath) || !isValidMusicPath($fullPath)) {
+                logError('Invalid session path in t_name request: ' . $_POST['t_name']);
+                echo json_encode(['error' => 'Invalid session']);
+                exit;
+            }
+
+            $myarr = [];
+            $files = scandir($fullPath);
+
+            // Parse session name
+            $nameParts = explode("-", $sessionName);
+            $username = $nameParts[0];
+            $dateTime = isset($nameParts[1]) && isset($nameParts[2])
+                        ? $nameParts[1] . '-' . $nameParts[2]
+                        : '';
+
+            $date = explode("-", $dateTime);
+            $sessionId = ($date[0] ?? '') . "-" . ($date[1] ?? '');
+            $end = substr($dateTime, -4);
+
+            foreach($files as $file_sub) {
+                if ($file_sub === '.' || $file_sub === '..') continue;
+
+                $relativePath = "music/" . $sessionName . "/" . basename($file_sub);
+
+                $myarr[] = array(
+                    "id" => $sessionId,
+                    "name" => basename($file_sub),
+                    "path" => $relativePath,
+                    $sessionName => $end
+                );
+            }
+
+            echo json_encode($myarr, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+
+        // Get all tracks from all sessions
+        } else if (isset($_POST['all_track'])){
+            $dirs = array_filter(glob(MUSIC_BASE_DIR . '*'), 'is_dir');
+            $myarr = [];
+
+            foreach ($dirs as $key => $value) {
+                // Validate path
+                if (!isValidMusicPath($value)) {
+                    continue;
+                }
+
+                $dirName = basename($value);
+                $files = scandir($value);
+                array_splice($files, 0, 2); // Remove . and ..
+
+                foreach($files as $file_sub) {
+                    $safeName = basename($file_sub);
+                    $myarr[] = array(
+                        "name" => $safeName,
+                        "path" => 'music/' . $dirName . '/' . $safeName
+                    );
+                }
+            }
+
+            $data = json_encode($myarr, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            echo $data;
+
+        } else {
+            echo json_encode(array("Status" => "Invalid request"));
+        }
+    }
+}
+?>

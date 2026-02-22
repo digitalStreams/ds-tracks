@@ -1,0 +1,11 @@
+# ============================================================
+# Openbox Autostart Configuration
+# ============================================================
+# This file is installed to /etc/xdg/openbox/autostart
+# It runs when the Openbox window manager starts
+# ============================================================
+
+# Disable screen blanking
+xset s off &
+xset s noblank &
+xset -dpms &

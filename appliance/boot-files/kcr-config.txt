@@ -1,0 +1,91 @@
+# ============================================================
+# KCR Tracks Appliance Configuration
+# ============================================================
+#
+# Edit this file BEFORE first boot to pre-configure your station.
+# You can also change these settings later via the admin panel.
+#
+# After editing, safely eject the drive and insert into your Pi.
+#
+# Lines starting with # are comments and are ignored.
+# ============================================================
+
+# ------------------------------------------------------------
+# STATION INFORMATION
+# ------------------------------------------------------------
+
+# Your station's full name (displayed in header)
+STATION_NAME=My Community Radio
+
+# Short name for compact displays and hostname (no spaces, letters/numbers only)
+STATION_SHORT_NAME=MCR
+
+# Your station's website URL (optional)
+STATION_WEBSITE=https://example.com
+
+# ------------------------------------------------------------
+# TIMEZONE
+# ------------------------------------------------------------
+# Australian timezones:
+#   Australia/Sydney    - NSW, VIC, ACT, TAS (AEST/AEDT)
+#   Australia/Brisbane  - QLD (AEST, no daylight saving)
+#   Australia/Adelaide  - SA (ACST/ACDT)
+#   Australia/Perth     - WA (AWST)
+#   Australia/Darwin    - NT (ACST)
+#
+# Full list: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+
+TIMEZONE=Australia/Sydney
+
+# ------------------------------------------------------------
+# NETWORK CONFIGURATION
+# ------------------------------------------------------------
+# For wired ethernet with DHCP (recommended), leave these commented out.
+# The Pi will automatically get an IP address from your router.
+
+# WiFi Configuration (uncomment and fill in to use WiFi)
+# WIFI_SSID=YourNetworkName
+# WIFI_PASSWORD=YourPassword
+
+# Static IP Configuration (optional, usually not needed)
+# STATIC_IP=192.168.1.100
+# GATEWAY=192.168.1.1
+# DNS=8.8.8.8
+
+# ------------------------------------------------------------
+# DISPLAY SETTINGS
+# ------------------------------------------------------------
+
+# Screen rotation in degrees: 0, 90, 180, or 270
+# Use 180 if your screen appears upside down
+SCREEN_ROTATION=0
+
+# Hide mouse cursor after inactivity (recommended for touchscreen)
+HIDE_CURSOR=true
+
+# ------------------------------------------------------------
+# ADVANCED OPTIONS
+# ------------------------------------------------------------
+# Leave these at defaults unless you know what you're doing.
+
+# Enable SSH for remote terminal access
+# WARNING: This is a security risk if your Pi is exposed to the internet.
+# Only enable if you need remote access and understand the risks.
+ENABLE_SSH=false
+
+# SSH port (only used if ENABLE_SSH=true)
+SSH_PORT=22
+
+# ============================================================
+# END OF CONFIGURATION
+# ============================================================
+#
+# After saving this file:
+# 1. Safely eject the drive from your computer
+# 2. Insert the drive into your Raspberry Pi
+# 3. Connect the display and power on
+# 4. Wait 2-3 minutes for first-boot setup to complete
+# 5. KCR Tracks will start automatically
+#
+# Need help? Visit: https://yoursite.com/kcr-tracks/support
+# ============================================================

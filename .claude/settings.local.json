@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir /b c:xampphtdocsKCR-Tracks2)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

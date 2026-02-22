@@ -1,0 +1,625 @@
+//  LAYOUT ELEMENTS | RASPBERRY PI TOUCHSCREEN IS 800 x 480 
+
+// STANDARD DIMENSIONS
+
+@height : 447px;
+@width : 795px;
+
+body {
+    font-family: sans-serif;
+    font-size: 13px;
+    margin: 0 !important;
+}
+
+#content {
+    position: relative;
+    width: @width;
+    height: @height;
+
+    div#dsCloseFullScreen {
+        position: absolute;
+        bottom: 5px;
+        left: 8px;
+        z-index: 200;
+        color: white;
+        padding: 6px 12px;
+        border: 1px solid white;
+        display: none;
+
+        &:hover {
+            background: whitesmoke;
+            color: black;
+            cursor: pointer;
+        }
+    }
+}
+
+
+.dsButton:hover {
+    cursor: pointer;
+}
+
+section#dsLogin {
+    display: block;
+    background: #007479;
+    width: @width;
+    height: @height;
+    border: 1px solid #aaa;
+    position: relative;
+
+    .dsHeadline h2 {
+        text-align: center;
+        color: white;
+    }
+
+    #dsMenuButton {
+        position: absolute;
+        bottom: 12px;
+        left: 11px;
+
+        #dsMenu {
+            padding: 6px 40px;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            a {
+                text-decoration: none;
+                color: black;
+            }
+        }
+    }
+
+    div#dsClientLogo img {
+        width: 22%;
+        position: absolute;
+        top: 8px;
+        left: 10px;
+    }
+
+    div#dsLogoDiv img {
+        width: 22%;
+        position: absolute;
+        bottom: 5px;
+        right: 10px;
+    }
+
+    #dsUserList {
+        display: none;
+        height: 300px;
+        position: absolute;
+        width: 190px;
+        border: 1px solid;
+        background: white;
+        bottom: 100px;
+        right: 8px;
+        padding: 8px;
+        border-radius: 10px;
+        box-shadow: 4px 4px 17px rgb(0 0 0 / 70%);
+        z-index: 1000;
+
+        .dsButtonDiv {
+            position: absolute;
+            bottom: 16px;
+            right: -10px;
+
+            button {
+                margin-right: 12px;
+                padding: 6px 12px;
+
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .dsUserListDiv {
+            overflow-y: auto;
+            height: 195px;
+            width: 170px;
+        }
+
+        div.dsUserName {
+            width: 140px;
+            padding: 10px 12px;
+            border-bottom: 1px solid #ccc;
+            font-size: 16px;
+
+            &:hover {
+                cursor: pointer;
+                background: #efefef;
+            }
+        }
+    }
+
+    #dsCurrentUsers {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        z-index: 200;
+        color: white;
+        padding: 6px 12px;
+        border: 1px solid white;
+        background: transparent;
+
+        &:hover {
+            cursor: pointer;
+            background: whitesmoke;
+            color: black;
+        }
+    }
+
+}
+
+section#dsSession {
+    display: none;
+    background: #007479;
+    width: @width;
+    height: @height;
+    border: 1px solid white;
+    position: relative;
+    color: whitesmoke;
+
+    div#dsClientLogo img {
+        width: 14%;
+        position: absolute;
+        top: 5px;
+        left: 10px;
+    }
+
+    div#dsLogoDiv img {
+        width: 14%;
+        position: absolute;
+        bottom: 5px;
+        right: 10px;
+        opacity: 0.85;
+    }
+}
+
+section#dsPlayer {
+    display: none;
+    background: #007479;
+    width: @width;
+    height: @height;
+    border: 1px solid #aaa;
+    position: relative;
+
+    div#fileButtonDiv input {
+        scale: 1.5;
+        margin-left: 220px;
+        margin-top: 20px;
+        color: transparent;
+    }
+
+    div#dsClientLogo img {
+        width: 14%;
+        position: absolute;
+        top: 5px;
+        left: 10px;
+    }
+
+    div#dsLogoDiv img {
+        width: 14%;
+        position: absolute;
+        bottom: 5px;
+        right: 10px;
+        opacity: 0.85;
+    }
+}
+
+#dsUserForm {
+    display: block;
+    width: 100%;
+    max-width: 600px;
+    margin: 150px auto 0;
+}
+
+#dsAudioPlayer {
+    width: 100%;
+}
+
+#dsSessionListDiv {
+    display: block;
+}
+
+#dsSessionList {
+    position: relative;
+    display: block;
+    width: 90%;
+    margin: 32px auto 0;
+    height: 320px;
+    padding: 1px 20px 10px;
+
+    h2 {
+        margin: 16px 0 8px;
+    }
+}
+
+#dsLightbox {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background: black;
+    opacity: 50%;
+    z-index: 1000;
+}
+
+#dsTrackList {
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    display: none;
+    top: 8px;
+    right: 14px;
+    background: whitesmoke;
+    border: 1px solid #aaa;
+    padding: 20px;
+    z-index: 2000;
+}
+
+.dsTrackListDiv {
+    display: block;
+    clear: both;
+    overflow-y: scroll;
+    margin-bottom: 20px;
+    height: 194px;
+    color: black;
+    line-height: 1.5em;
+}
+
+.dsCloseBar {
+    width: 100%;
+    display: block;
+    height: 50px;
+    bottom: 32px;
+    text-align: right;
+    border-top: 1px solid #aaa;
+
+
+    button.dsCloseButton:hover {
+        cursor: pointer;
+    }
+}
+
+
+.dsForm {
+    width: 550px;
+    margin: 50px auto;
+}
+
+.dsButtonDiv {
+    width: 100%;
+    text-align: center;
+}
+
+div#dsPrompt {
+    text-align: left;
+    padding-left: 150px;
+}
+
+.dsButton {
+    padding: 6px 20px;
+}
+
+.dsButton.dsUserButton {
+    height: 40px;
+    margin-left: 20px;
+    width: 125px;
+}
+
+.dsHide {
+    display: none;
+}
+
+.dsHeadline {
+    text-align: center;
+}
+
+input#dsGetName {
+    width: 222px;
+    height: 30px;
+    padding: 3px 12px;
+    font-size: 20px;
+    text-align: center;
+}
+
+
+.dsSelect {
+    display: block;
+
+    #dsUserList {
+        width: 250px;
+        height: 40px;
+        padding: 3px 12px;
+        font-size: 20px;
+        text-align: center;
+        line-height: 2em;
+    }
+}
+
+// .dsInputDiv {
+//     display: none;
+// }
+
+// .dsUserCheckbox {
+//     display: inline;
+// }
+
+
+// FILE UPLOAD CLASSES
+
+#fileButtonDiv {
+    width: 100%;
+    display: block;
+}
+
+div#fileList {
+    width: 45%;
+    max-width: 500px;
+    margin-top: 35px;
+    height: 330px;
+    overflow-y: scroll;
+    border: 1px solid;
+    padding: 12px;
+    border-radius: 4px;
+    float: left;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 14px;
+    background: whitesmoke;
+    margin-left: 20px;
+}
+
+
+// AUDIO PLAYER
+
+div#dsPlayerDContainer {
+    width: 43%;
+    float: left;
+    margin-top: 17px;
+    margin-left: 3%;
+    height: 341px;
+    position: relative;
+
+    #dsMenuButton {
+        position: absolute;
+        bottom: 80px;
+        right: 20px;
+
+        #dsMenu {
+            padding: 6px 40px;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            a {
+                text-decoration: none;
+                color: black;
+            }
+        }
+    }
+}
+
+div#audioPlayer {
+    width: 100%;
+    float: left;
+    margin-top: 110px;
+    padding: 0px;
+    margin-left: 20px;
+    height: 300px;
+}
+
+.dsTrackTitle {
+    width: 300px;
+    text-align: center;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 11px;
+    color: whitesmoke;
+    font-style: italic;
+}
+
+span.dsTitle {
+    font-weight: bold;
+    text-transform: uppercase;
+    color: whitesmoke;
+    font-style: normal;
+}
+
+.dsNotify {
+    padding: 16px 20px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: 400;
+    width: 302px;
+    background: #f1f3f4;
+    border-radius: 30px;
+    height: 54px;
+    box-sizing: border-box;
+    font-size: 14px;
+    text-align: center;
+}
+
+
+//  MUSIC TRACK LIST
+
+.dsAudioFileName {
+    width: 90%;
+    max-width: 400px;
+    border: 1px solid;
+    padding: 8px 12px;
+    border-radius: 8px;
+    box-shadow: 4px 4px 8px #aaa;
+
+    a {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-weight: 500;
+        text-decoration: none;
+        color: black
+    }
+
+    &:hover {
+        background: #cecfcb;
+        cursor: pointer;
+    }
+}
+
+.dsActive {
+    background: #F1F3ED;
+    color: indianred;
+    font-weight: bold;
+}
+
+//  SESSION PAGE
+
+#dsSessionItems {
+    margin-bottom: 12px;
+    overflow-y: scroll;
+    height: 230px;
+    border: solid 1px #ccc;
+    padding: 7px 0 0 15px;
+}
+
+.dsSessionItem {
+    border: 1px solid #aaa;
+    margin: 6px 0;
+}
+
+.dsSessionName {
+    width: 57%;
+    float: left;
+    padding: 8px 12px;
+    margin: 6px 0;
+    border: 1px solid #aaa;
+    display: block;
+    background: whitesmoke;
+    color: black;
+    font-size: 16px;
+
+    &:hover {
+        background: #efefef;
+        cursor: pointer;
+    }
+
+    span.dsSmall.dsItalic {
+        font-size: 0.9em;
+        font-style: italic;
+        color: rgb(99, 99, 99);
+    }
+}
+
+.dsButtonBar.dsRight {
+    text-align: right;
+    position: absolute;
+    bottom: -10px;
+    right: 210px;
+}
+
+//  TOOLTIP CLASSES
+
+.dsTracksPopUp {
+    display: none;
+}
+
+button.dsShowTracks,
+button.dsAddTracks {
+    margin-top: 6px;
+    padding: 9px 6px;
+    margin-right: 13px;
+    float: right;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+
+button.dsAddTracks {
+    padding: 9px 12px;
+    background: rgb(243, 192, 124);
+
+    &:hover {
+        background: rgb(248, 213, 167);
+    }
+}
+
+button.dsCloseButton {
+    position: absolute;
+    bottom: 14px;
+    right: 25px;
+    width: 120px;
+    padding: 6px;
+}
+
+
+//  UTILITY
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.dsRight {
+    text-align: right;
+}
+
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 3px dotted #FFF;
+    border-style: solid solid dotted dotted;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    animation: rotation 2s linear infinite;
+}
+
+.loader::after {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    border: 3px dotted #FF3D00;
+    border-style: solid solid dotted;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    animation: rotationBack 1s linear infinite;
+    transform-origin: center center;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotationBack {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+//  IFRAME CLASSES
+
+#dsIframeDiv {
+    display: none;
+    width: 80%;
+    height: 80vh;
+}

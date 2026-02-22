@@ -1,0 +1,15 @@
+[Unit]
+Description=KCR Tracks First Boot Configuration
+After=network-online.target
+Wants=network-online.target
+ConditionPathExists=/boot/kcr-first-boot-pending
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/kcr-first-boot.sh
+RemainAfterExit=yes
+StandardOutput=journal+console
+StandardError=journal+console
+
+[Install]
+WantedBy=multi-user.target
