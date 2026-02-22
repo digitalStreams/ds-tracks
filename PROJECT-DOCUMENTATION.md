@@ -4,7 +4,7 @@
 
 **Date:** January 2026
 **Prepared for:** Future reference and implementation
-**Session Summary:** User manual update, appliance build system creation
+**Session Summary:** User manual update, appliance build system, USB touch UX redesign
 
 ---
 
@@ -739,6 +739,7 @@ kcr-tracks-v2.0.img (uncompressed):
 | Version | Date | Changes |
 |---------|------|---------|
 | 2.0 | Jan 2026 | Initial appliance build system, updated user manual |
+| 2.1 | Jan 2026 | USB auto-detect, touch file browser, redesigned player |
 
 ---
 
@@ -748,6 +749,89 @@ kcr-tracks-v2.0.img (uncompressed):
 **Original Author:** Peter Smith
 **Documentation:** Claude (Anthropic)
 **License:** MIT
+
+---
+
+## 10. USB Auto-Detect & Touch UX Redesign
+
+### 10.1 Overview
+
+A complete UX redesign for the Raspberry Pi touchscreen that replaces the browser's native file picker with a custom, touch-friendly file browser. USB drives are detected automatically when inserted.
+
+**Full specification:** `USB-UX-SPECIFICATION.md`
+
+### 10.2 New Files Created
+
+| File | Purpose |
+|------|---------|
+| `usb-status.php` | API: returns USB mount status (polled every 2s) |
+| `usb-browse.php` | API: returns directory listing from USB drive |
+| `usb-import.php` | API: copies selected files from USB to music/ |
+| `usb-eject.php` | API: safely unmounts USB drive |
+| `css/touch.css` | Touch-optimised styles (48px+ targets, 800x480) |
+| `js/usb-browser.js` | File browser, user identification, player logic |
+| `appliance/usb/99-kcr-usb.rules` | udev rule for USB auto-detection |
+| `appliance/usb/kcr-usb-mount.sh` | Mounts USB read-only, writes status file |
+| `appliance/usb/kcr-usb-unmount.sh` | Unmounts USB, removes status file |
+| `USB-UX-SPECIFICATION.md` | Full technical and UX specification |
+
+### 10.3 Modified Files
+
+| File | Changes |
+|------|---------|
+| `login.php` | Added touch screens (idle, browser, user-id, player) alongside existing interface |
+| `appliance/build-appliance.sh` | Added Phase 4b for USB mount system installation |
+
+### 10.4 Architecture
+
+```
+USB inserted → udev rule → kcr-usb-mount.sh
+    → Mounts read-only to /media/kcr-usb
+    → Writes /tmp/kcr-usb-status.json
+
+JavaScript polls usb-status.php every 2 seconds
+    → USB detected → Shows file browser
+    → User selects files → Calls usb-import.php
+    → PHP copies files server-side (instant, no HTTP upload)
+    → Player loads with copied tracks
+```
+
+### 10.5 Backward Compatibility
+
+The original login/session/player interface is fully preserved. The touch interface is an additional entry point. When USB detection is unavailable (e.g., running on Windows/XAMPP for development), the system falls back to the original flow via "Return to a previous session" button.
+
+### 10.6 Security
+
+- USB mounted read-only with `noexec,nosuid,nodev` flags
+- All file paths validated with `realpath()` to prevent traversal
+- Extension + MIME type validation on import (same as upload.php)
+- Filenames sanitised before copy
+- `www-data` has sudo permission only for `/bin/umount /media/kcr-usb`
+
+### 10.7 Testing Requirements
+
+**On Windows (UI testing only):**
+- Open login.php - idle screen renders
+- "Return to a previous session" loads original interface
+- USB browser UI can be tested by mocking `usb-status.php` to return `mounted: true`
+
+**On Raspberry Pi (full testing):**
+- Insert USB → screen transitions to file browser
+- Navigate folders, select files
+- Enter name → files copy instantly
+- Player plays tracks
+- Remove USB → returns to idle
+- Reboot → sessions persist
+
+### 10.8 Git Restore Point
+
+If the USB UX changes need to be reverted:
+
+```bash
+git checkout v2.0-pre-usb-ux
+```
+
+This restores the complete codebase to the state before any USB/touch changes were made.
 
 ---
 

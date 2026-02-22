@@ -1,0 +1,844 @@
+/* ============================================================
+   KCR Tracks - Touch-Optimised Stylesheet
+   ============================================================
+   Designed for 800x480 Raspberry Pi 7" touchscreen.
+   All touch targets are 48px minimum height.
+   ============================================================ */
+
+/* ── Reset & Base ──────────────────────────────────────────── */
+
+.touch-screen {
+    font-family: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    user-select: none;
+    overflow: hidden;
+    width: 800px;
+    height: 480px;
+    position: relative;
+    background: #007479;
+}
+
+/* ── Idle Screen ───────────────────────────────────────────── */
+
+#idleScreen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#idleScreen .idle-logo {
+    max-width: 200px;
+    max-height: 80px;
+    margin-bottom: 30px;
+}
+
+#idleScreen .idle-message {
+    color: white;
+    font-size: 22px;
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+#idleScreen .idle-message.usb-detected {
+    color: #90EE90;
+    font-weight: 500;
+}
+
+.idle-button {
+    display: block;
+    width: 320px;
+    padding: 16px 24px;
+    margin: 8px 0;
+    font-size: 18px;
+    border: 2px solid white;
+    border-radius: 8px;
+    background: transparent;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    touch-action: manipulation;
+    min-height: 52px;
+    box-sizing: border-box;
+}
+
+.idle-button:hover,
+.idle-button:active {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.idle-button.primary {
+    background: white;
+    color: #007479;
+    font-weight: 600;
+}
+
+.idle-button.primary:hover,
+.idle-button.primary:active {
+    background: #e8e8e8;
+}
+
+#idleScreen .idle-footer {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+}
+
+/* ── USB File Browser ──────────────────────────────────────── */
+
+#usbBrowser {
+    display: none;
+    flex-direction: column;
+    height: 100%;
+    background: #f5f5f5;
+}
+
+/* Browser Header */
+.browser-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background: #007479;
+    color: white;
+    min-height: 48px;
+    box-sizing: border-box;
+}
+
+.browser-header .header-title {
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.browser-header .back-arrow {
+    font-size: 24px;
+    padding: 4px 12px 4px 0;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.browser-header .back-arrow:hover {
+    opacity: 0.8;
+}
+
+.btn-select-all {
+    padding: 8px 16px;
+    font-size: 14px;
+    border: 1px solid white;
+    border-radius: 6px;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    touch-action: manipulation;
+    min-height: 36px;
+}
+
+.btn-select-all:hover,
+.btn-select-all:active {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-select-all.all-selected {
+    background: white;
+    color: #007479;
+}
+
+/* File List */
+.browser-list {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.browser-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.browser-list::-webkit-scrollbar-track {
+    background: #e0e0e0;
+}
+
+.browser-list::-webkit-scrollbar-thumb {
+    background: #999;
+    border-radius: 4px;
+}
+
+/* Browser Row - Shared */
+.browser-row {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    min-height: 52px;
+    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
+    touch-action: manipulation;
+    background: white;
+}
+
+.browser-row:active {
+    background: #e8f4f5;
+}
+
+/* Folder Row */
+.browser-row.folder {
+    background: #fafafa;
+}
+
+.browser-row.folder:active {
+    background: #e0eeef;
+}
+
+.browser-row .row-icon {
+    width: 32px;
+    font-size: 22px;
+    flex-shrink: 0;
+    text-align: center;
+}
+
+.browser-row .row-name {
+    flex: 1;
+    font-size: 16px;
+    padding: 0 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.browser-row .row-info {
+    font-size: 13px;
+    color: #888;
+    padding-right: 8px;
+    flex-shrink: 0;
+}
+
+.browser-row .row-arrow {
+    font-size: 20px;
+    color: #999;
+    flex-shrink: 0;
+}
+
+/* File Checkbox */
+.browser-row .row-checkbox {
+    width: 28px;
+    height: 28px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+}
+
+.browser-row.selected {
+    background: #e8f4f5;
+}
+
+.browser-row.selected .row-checkbox {
+    background: #007479;
+    border-color: #007479;
+    color: white;
+}
+
+.browser-row.selected .row-checkbox::after {
+    content: '✓';
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+}
+
+/* Browser Footer */
+.browser-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background: #e8e8e8;
+    border-top: 1px solid #ccc;
+    min-height: 52px;
+    box-sizing: border-box;
+}
+
+.browser-footer .selected-count {
+    font-size: 16px;
+    font-weight: 500;
+    color: #555;
+}
+
+.browser-footer .footer-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-browser {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    touch-action: manipulation;
+    min-height: 44px;
+    box-sizing: border-box;
+}
+
+.btn-back {
+    background: #ddd;
+    color: #333;
+}
+
+.btn-back:hover,
+.btn-back:active {
+    background: #ccc;
+}
+
+.btn-import {
+    background: #007479;
+    color: white;
+    font-weight: 600;
+}
+
+.btn-import:hover,
+.btn-import:active {
+    background: #005a5e;
+}
+
+.btn-import:disabled {
+    background: #aaa;
+    color: #ddd;
+    cursor: not-allowed;
+}
+
+/* No Audio Files Message */
+.no-files-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: #888;
+    font-size: 16px;
+    text-align: center;
+    padding: 20px;
+}
+
+.no-files-message .formats {
+    font-size: 14px;
+    color: #aaa;
+    margin-top: 12px;
+}
+
+/* Loading Spinner */
+.browser-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: #888;
+    font-size: 18px;
+}
+
+/* Import Progress */
+.import-progress {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: #007479;
+    color: white;
+    text-align: center;
+    padding: 40px;
+}
+
+.import-progress .progress-message {
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.import-progress .progress-detail {
+    font-size: 16px;
+    opacity: 0.8;
+}
+
+/* ── User Identification Screen ────────────────────────────── */
+
+#userIdScreen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: #007479;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.user-id-logo {
+    max-width: 160px;
+    max-height: 60px;
+    margin-bottom: 20px;
+}
+
+.user-id-panel {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    width: 400px;
+    max-width: 90%;
+    box-sizing: border-box;
+}
+
+.user-id-panel h3 {
+    margin: 0 0 16px;
+    font-size: 18px;
+    color: #333;
+    text-align: center;
+}
+
+.user-id-panel .name-input {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 20px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.user-id-panel .name-input:focus {
+    outline: none;
+    border-color: #007479;
+}
+
+.btn-name-ok {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    margin-top: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    background: #007479;
+    color: white;
+    cursor: pointer;
+    touch-action: manipulation;
+    min-height: 48px;
+}
+
+.btn-name-ok:hover,
+.btn-name-ok:active {
+    background: #005a5e;
+}
+
+.user-divider {
+    text-align: center;
+    color: #aaa;
+    margin: 16px 0;
+    font-size: 14px;
+}
+
+.existing-users-label {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.existing-user-list {
+    max-height: 120px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    border-radius: 8px;
+}
+
+.existing-user-item {
+    padding: 12px 16px;
+    font-size: 18px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    touch-action: manipulation;
+    min-height: 44px;
+    box-sizing: border-box;
+}
+
+.existing-user-item:last-child {
+    border-bottom: none;
+}
+
+.existing-user-item:hover,
+.existing-user-item:active {
+    background: #e8f4f5;
+}
+
+/* ── Touch Player ──────────────────────────────────────────── */
+
+#touchPlayer {
+    display: none;
+    flex-direction: column;
+    height: 100%;
+    background: #007479;
+}
+
+/* Player Header */
+.player-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.2);
+    color: white;
+    min-height: 40px;
+    box-sizing: border-box;
+}
+
+.player-header .player-user {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.btn-add-more {
+    padding: 6px 14px;
+    font-size: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 6px;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.btn-add-more:hover,
+.btn-add-more:active {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Player Body */
+.player-body {
+    display: flex;
+    flex: 1;
+    padding: 10px;
+    gap: 10px;
+    overflow: hidden;
+}
+
+/* Track List (Left Panel) */
+.player-track-list {
+    width: 45%;
+    background: #f5f5f5;
+    border-radius: 8px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.player-track-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.player-track-list::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 3px;
+}
+
+.player-track {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    min-height: 48px;
+    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
+    touch-action: manipulation;
+    font-size: 14px;
+    gap: 8px;
+}
+
+.player-track:active {
+    background: #e0e0e0;
+}
+
+.player-track .track-indicator {
+    width: 20px;
+    flex-shrink: 0;
+    font-size: 14px;
+    text-align: center;
+    color: #999;
+}
+
+.player-track .track-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.player-track.playing {
+    background: #e0f0f1;
+    color: #007479;
+    font-weight: 600;
+}
+
+.player-track.playing .track-indicator {
+    color: #007479;
+}
+
+/* Controls (Right Panel) */
+.player-controls {
+    width: 55%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.player-now-playing {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.player-track-title {
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 20px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Progress Bar */
+.player-progress-container {
+    width: 100%;
+    margin-bottom: 6px;
+    cursor: pointer;
+    touch-action: manipulation;
+    padding: 8px 0;
+}
+
+.player-progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    position: relative;
+}
+
+.player-progress-fill {
+    height: 100%;
+    background: white;
+    border-radius: 3px;
+    width: 0%;
+    position: relative;
+}
+
+.player-progress-fill::after {
+    content: '';
+    position: absolute;
+    right: -6px;
+    top: -5px;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+}
+
+.player-time {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+/* Playback Buttons */
+.player-buttons {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 10px;
+}
+
+.btn-playback {
+    padding: 16px 28px;
+    font-size: 20px;
+    font-weight: 700;
+    border: 2px solid white;
+    border-radius: 10px;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    touch-action: manipulation;
+    min-width: 110px;
+    min-height: 60px;
+    box-sizing: border-box;
+}
+
+.btn-playback:hover,
+.btn-playback:active {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.btn-playback.btn-play {
+    background: white;
+    color: #007479;
+    min-width: 120px;
+}
+
+.btn-playback.btn-play:hover,
+.btn-playback.btn-play:active {
+    background: #e8e8e8;
+}
+
+/* Waiting state (no track selected) */
+.player-waiting {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 18px;
+    text-align: center;
+}
+
+/* Player Footer */
+.player-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.2);
+    min-height: 44px;
+    box-sizing: border-box;
+}
+
+.btn-player-nav {
+    padding: 8px 16px;
+    font-size: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 6px;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    touch-action: manipulation;
+    min-height: 36px;
+}
+
+.btn-player-nav:hover,
+.btn-player-nav:active {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Auto-play Toggle */
+.autoplay-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+}
+
+.toggle-switch {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: background 0.2s;
+}
+
+.toggle-switch.active {
+    background: #4CAF50;
+}
+
+.toggle-switch .toggle-knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: white;
+    transition: left 0.2s;
+}
+
+.toggle-switch.active .toggle-knob {
+    left: 22px;
+}
+
+/* ── Eject Confirmation ────────────────────────────────────── */
+
+.eject-overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 5000;
+    align-items: center;
+    justify-content: center;
+}
+
+.eject-overlay.visible {
+    display: flex;
+}
+
+.eject-panel {
+    background: white;
+    border-radius: 12px;
+    padding: 32px;
+    text-align: center;
+    max-width: 380px;
+}
+
+.eject-panel .eject-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.eject-panel .eject-message {
+    font-size: 20px;
+    margin-bottom: 24px;
+    color: #333;
+}
+
+.eject-panel .eject-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.eject-panel .btn-eject {
+    padding: 12px 24px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    touch-action: manipulation;
+    min-height: 48px;
+    min-width: 120px;
+}
+
+.eject-panel .btn-eject.confirm {
+    background: #007479;
+    color: white;
+}
+
+.eject-panel .btn-eject.cancel {
+    background: #ddd;
+    color: #333;
+}

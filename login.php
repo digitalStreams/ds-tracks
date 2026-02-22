@@ -11,14 +11,107 @@
     <script src="js/js.cookie.min.js"></script>
 
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/touch.css">
 </head>
 
 <body>
     <div id="dsLightbox">
     </div>
-    <div id="content">
+    <div id="content" class="touch-screen">
+
+        <!-- ══════════════════════════════════════════════════
+             TOUCH INTERFACE - USB Browser & Player
+             ══════════════════════════════════════════════════ -->
+
+        <!-- Idle Screen -->
+        <div id="idleScreen" style="display:flex">
+            <img class="idle-logo" src="images/kcr-logo-cropped.png" alt="Station Logo">
+            <div class="idle-message">Insert your USB drive to begin</div>
+            <button class="idle-button primary" onclick="kcrUsb.goToLegacyLogin()">Return to a previous session</button>
+            <div class="idle-footer">
+                <a href="all_track_exporter.php">
+                    <button class="idle-button" style="width:auto;padding:8px 20px;font-size:14px;min-height:36px">Reports</button>
+                </a>
+            </div>
+        </div>
+
+        <!-- USB File Browser -->
+        <div id="usbBrowser" style="display:none">
+            <div class="browser-header">
+                <div class="header-title" id="browserHeaderTitle">USB Drive</div>
+                <button class="btn-select-all" id="btnSelectAll" onclick="kcrUsb.selectAll()">Select All</button>
+            </div>
+            <div class="browser-list" id="browserList"></div>
+            <div class="browser-footer">
+                <span class="selected-count" id="selectedCount">0 selected</span>
+                <div class="footer-buttons">
+                    <button class="btn-browser btn-back" onclick="kcrUsb.goBack()">&#8592; Back</button>
+                    <button class="btn-browser btn-import" id="btnImport" disabled onclick="kcrUsb.showUserIdScreen()">Use These Tracks &#8594;</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Identification -->
+        <div id="userIdScreen" style="display:none">
+            <img class="user-id-logo" src="images/kcr-logo-cropped.png" alt="">
+            <div class="user-id-panel">
+                <h3>Enter your name</h3>
+                <input class="name-input" type="text" id="nameInput" placeholder="Your name"
+                    onkeydown="if(event.key==='Enter')kcrUsb.confirmUsername()">
+                <button class="btn-name-ok" onclick="kcrUsb.confirmUsername()">OK</button>
+                <div class="user-divider">&#8212; or select your name &#8212;</div>
+                <div class="existing-users-label">Previous users:</div>
+                <div class="existing-user-list" id="existingUsersList"></div>
+            </div>
+        </div>
+
+        <!-- Touch Player -->
+        <div id="touchPlayer" style="display:none">
+            <div class="player-header">
+                <span class="player-user" id="playerUser"></span>
+                <button class="btn-add-more" onclick="kcrUsb.addMoreTracks()">+ Add More</button>
+            </div>
+            <div class="player-body">
+                <div class="player-track-list" id="playerTrackList"></div>
+                <div class="player-controls">
+                    <div class="player-waiting">Tap a track to play</div>
+                    <div class="player-now-playing" style="visibility:hidden">Now Playing:</div>
+                    <div class="player-track-title" id="playerTrackTitle"></div>
+                    <div class="player-progress-container" style="visibility:hidden"
+                         onclick="kcrUsb.seekTo(event)" ontouchstart="kcrUsb.seekTo(event)">
+                        <div class="player-progress-bar">
+                            <div class="player-progress-fill"></div>
+                        </div>
+                    </div>
+                    <div class="player-time" style="visibility:hidden">
+                        <span id="timeCurrent">0:00</span>
+                        <span id="timeDuration">0:00</span>
+                    </div>
+                    <div class="player-buttons" style="visibility:hidden">
+                        <button class="btn-playback btn-play" id="btnPlay" onclick="kcrUsb.togglePause()">&#9654; PLAY</button>
+                        <button class="btn-playback" onclick="kcrUsb.nextTrack()">&#9654;&#9654; NEXT</button>
+                    </div>
+                </div>
+            </div>
+            <div class="player-footer">
+                <button class="btn-player-nav" onclick="kcrUsb.goToSessions()">&#8592; Sessions</button>
+                <div class="autoplay-toggle">
+                    Auto-play
+                    <div class="toggle-switch" id="autoPlayToggle" onclick="kcrUsb.toggleAutoPlay()">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+                <button class="btn-player-nav" onclick="kcrUsb.goHome()">&#127968; Home</button>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════
+             ORIGINAL INTERFACE - Login, Sessions, Player
+             (hidden by default, accessible via "Return to session")
+             ══════════════════════════════════════════════════ -->
+
         <!-- <div id="dsCloseFullScreen" onclick="closeFullscreen()">Exit full screen view</div> -->
-        <section id="dsLogin">
+        <section id="dsLogin" style="display:none">
             <div id="dsMenuButton">
                 <a href="all_track_exporter.php">
                     <button id="dsMenu">
@@ -765,6 +858,9 @@
         return n < 10 ? '0' + n : n;
     }
     </script>
+
+    <!-- USB Browser & Touch Player -->
+    <script src="js/usb-browser.js"></script>
 
 </body>
 

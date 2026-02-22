@@ -1,0 +1,11 @@
+# KCR Tracks - USB Auto-Mount Rules
+# Install to: /etc/udev/rules.d/99-kcr-usb.rules
+#
+# Detects USB storage devices and triggers mount/unmount scripts.
+# Only triggers for block devices (not keyboards, mice, etc.)
+
+# When a USB storage partition is added
+ACTION=="add", SUBSYSTEM=="block", ENV{ID_USB_DRIVER}=="usb-storage", ENV{DEVTYPE}=="partition", RUN+="/usr/local/bin/kcr-usb-mount.sh %k"
+
+# When a USB storage partition is removed
+ACTION=="remove", SUBSYSTEM=="block", ENV{ID_USB_DRIVER}=="usb-storage", ENV{DEVTYPE}=="partition", RUN+="/usr/local/bin/kcr-usb-unmount.sh %k"

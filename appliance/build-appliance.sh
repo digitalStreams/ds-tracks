@@ -199,6 +199,39 @@ phase4_install_first_boot() {
     log_success "First-boot system configured"
 }
 
+phase4b_install_usb_system() {
+    log_header "Phase 4b: Configure USB Auto-Mount System"
+
+    log "Creating USB mount point..."
+    mkdir -p /media/kcr-usb
+
+    log "Installing udev rules for USB detection..."
+    cp "$APPLIANCE_DIR/usb/99-kcr-usb.rules" /etc/udev/rules.d/
+    chmod 644 /etc/udev/rules.d/99-kcr-usb.rules
+
+    log "Installing USB mount/unmount scripts..."
+    cp "$APPLIANCE_DIR/usb/kcr-usb-mount.sh" /usr/local/bin/
+    cp "$APPLIANCE_DIR/usb/kcr-usb-unmount.sh" /usr/local/bin/
+    chmod +x /usr/local/bin/kcr-usb-mount.sh
+    chmod +x /usr/local/bin/kcr-usb-unmount.sh
+
+    log "Installing exFAT support (for modern USB drives)..."
+    apt install -y exfat-fuse exfat-utils 2>/dev/null || apt install -y exfatprogs 2>/dev/null || true
+
+    log "Configuring sudo for USB eject (www-data)..."
+    echo "www-data ALL=(ALL) NOPASSWD: /bin/umount /media/kcr-usb" > /etc/sudoers.d/kcr-usb-eject
+    chmod 440 /etc/sudoers.d/kcr-usb-eject
+
+    log "Reloading udev rules..."
+    udevadm control --reload-rules
+
+    log "Creating USB log file..."
+    touch /var/log/kcr-usb.log
+    chmod 644 /var/log/kcr-usb.log
+
+    log_success "USB auto-mount system configured"
+}
+
 phase5_apply_security() {
     log_header "Phase 5: Apply Security Hardening"
 
@@ -372,6 +405,7 @@ main() {
     phase2_install_kcr_tracks
     phase3_install_kiosk
     phase4_install_first_boot
+    phase4b_install_usb_system
     phase5_apply_security
     phase6_configure_display
     phase7_optimize
