@@ -710,7 +710,7 @@
                 if ((userList).length > 0) {
                     $.each(userList, function(key, val) {
                         let dsUser = "<div class='dsUserName' id='" + val + "' >" + val +
-                            "<span class='dsDeleteUser' data-user='" + val + "' title='Delete user and all sessions' onclick='event.stopPropagation(); deleteUser("" + val + "")'>&#128465;</span>" +
+                            "<span class='dsDeleteUser' data-user='" + val + "' title='Delete user and all sessions' onclick='event.stopPropagation(); deleteUser(\"" + val + "\")'>&#128465;</span>" +
                             "</div>";
                         dsUsersDisplay = (dsUsersDisplay) ? dsUsersDisplay + dsUser : dsUser;
                     })
@@ -877,7 +877,7 @@
                 escName + "' data-name='" + escName +
                 "'  onclick='dsPlayAudio(this)' >" +
                 value +
-                "<span class='dsDeleteTrack' data-track='" + escName + "' title='Delete track' onclick='event.stopPropagation(); deleteTrack("" + escName + "")'>&#128465;</span>" +
+                "<span class='dsDeleteTrack' data-track='" + escName + "' title='Delete track' onclick='event.stopPropagation(); deleteTrack(\"" + escName + "\")'>&#128465;</span>" +
                 "</div>"
 
             fileList = (fileList) ? fileList + fileHTML : fileHTML;
