@@ -130,19 +130,19 @@ Both are non-destructive. The Pi auto-login chain (`getty → pi user → .bash_
 
 ## 5. On-Screen Keyboard for Kiosk
 
-**Status:** Planned, not yet implemented
+**Status:** Implemented (March 2026)
 
-**Scope:** The Pi kiosk has no virtual keyboard. Text input fields (username entry) require a physical keyboard or an on-screen alternative like `onboard` or `squeekboard`.
+**Scope:** Custom HTML on-screen keyboard for the Pi kiosk touchscreen, with no OS-level dependencies.
 
-### Implementation Options
-1. **`onboard`** — GTK-based on-screen keyboard, works with X11
-2. **`squeekboard`** — Wayland-focused, may not suit X11 kiosk setup
-3. **Custom HTML keyboard** — Built into the app UI, no OS dependency
-
-### Notes
-- Only needed for the username input field on the login/new session screen
-- A custom HTML keyboard is simplest since it avoids OS-level dependencies
-- Could be triggered by focusing the text input field
+### Implementation
+- **File:** `js/on-screen-keyboard.js` — self-contained IIFE, appended inside `#content`
+- **CSS:** keyboard styles in `css/style.css` (search for “On-Screen Keyboard” section)
+- **Layouts:** 4 modes — lowercase, uppercase, numbers, symbols
+- **Behaviour:** auto-shows on `<input type="text">` focus, hides on Done or tap outside
+- **Shift:** tap once = shift next letter, tap twice = caps lock, tap again = off
+- **Theme:** compact white/off-white corporate style, rounded container, centered (not full-width)
+- **Positioning:** `position: absolute; bottom: 0` inside `#content` (overlays bottom of screen)
+- **Public API:** `window.dsKeyboard.show(inputEl)` / `window.dsKeyboard.hide()`
 
 ---
 

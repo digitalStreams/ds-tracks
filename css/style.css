@@ -838,16 +838,17 @@ button.dsDeleteSession:hover {
    ============================================ */
 
 .ds-keyboard {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #2c2c2c;
-    padding: 6px 4px;
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(230, 230, 230, 0.95);
+    padding: 5px 8px;
     z-index: 10000;
     display: none;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
-    border-top: 1px solid #444;
+    border-radius: 10px;
+    box-shadow: 0 -1px 8px rgba(0,0,0,0.15);
+    border: 1px solid #ccc;
 }
 
 .ds-keyboard.ds-kb-visible {
@@ -857,7 +858,7 @@ button.dsDeleteSession:hover {
 .ds-kb-row {
     display: flex;
     justify-content: center;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
     gap: 3px;
 }
 
@@ -866,60 +867,66 @@ button.dsDeleteSession:hover {
 }
 
 .ds-kb-key {
-    min-width: 32px;
-    height: 44px;
-    border: none;
+    min-width: 36px;
+    height: 36px;
+    border: 1px solid #bbb;
     border-radius: 5px;
-    background: #525252;
-    color: #fff;
-    font-size: 18px;
+    background: #fff;
+    color: #333;
+    font-size: 16px;
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     flex: 0 1 auto;
-    padding: 0 8px;
+    padding: 0 10px;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
     transition: background 0.1s;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
 }
 
 .ds-kb-key:active {
-    background: #777;
+    background: #ddd;
 }
 
 .ds-kb-special {
-    background: #3a3a3a;
-    font-size: 14px;
+    background: #e0e0e0;
+    color: #555;
+    font-size: 13px;
     font-weight: 600;
+    border-color: #aaa;
 }
 
 .ds-kb-space {
     flex: 1 1 40%;
     max-width: 50%;
+    height: 32px;
 }
 
 .ds-kb-backspace {
-    min-width: 50px;
-    font-size: 22px;
+    min-width: 48px;
+    font-size: 20px;
 }
 
 .ds-kb-shift {
-    min-width: 44px;
-    font-size: 22px;
+    min-width: 42px;
+    font-size: 20px;
 }
 
 .ds-kb-shift.ds-kb-active {
-    background: #666;
-    color: #4fc3f7;
+    background: #c8e6ff;
+    border-color: #2979ff;
+    color: #1565c0;
 }
 
 .ds-kb-done {
-    min-width: 60px;
+    min-width: 56px;
     background: #2979ff;
     color: #fff;
     font-weight: 600;
+    border-color: #1565c0;
 }
 
 .ds-kb-done:active {
@@ -927,11 +934,8 @@ button.dsDeleteSession:hover {
 }
 
 .ds-kb-mode {
-    min-width: 44px;
-    font-size: 14px;
+    min-width: 42px;
+    font-size: 13px;
 }
 
-/* Push page content up when keyboard is open */
-body.ds-keyboard-open {
-    padding-bottom: 220px;
-}
+

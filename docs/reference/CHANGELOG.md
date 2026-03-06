@@ -9,6 +9,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## Unreleased
 
 ### FEAT
+- On-screen keyboard for Pi kiosk touchscreen (no physical keyboard needed)
+  - 4 layouts: lowercase, uppercase, numbers, symbols
+  - Auto-shows on text input focus, compact white/corporate theme
+  - Positioned inside #content container, overlays bottom of screen
 - Delete functionality at three levels: individual tracks, sessions, and users
 - All deletes physically remove files from disk to free space
 - Auto-cleanup of empty session directories after last track deleted
@@ -19,10 +23,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fixed Add Tracks creating new sessions instead of adding to existing ones
 - Fixed wrong screen shown after USB import (now returns to player view)
 - Fixed USB browser screen not hiding after import in legacy mode
+- Fixed session label not saving on creation (usb-import.php now uses passed session name)
+- Fixed browseAndImport() missing if-guard causing JS syntax error
+- Fixed USB browser auto-opening on page load (now only on new USB insertion)
 
 ### UX
 - Delete icons on track rows, session rows, and user rows with confirmation dialogs
 - After adding tracks via USB, player view opens showing imported tracks
+- Redesigned session display: label primary, date compact (DD/MM/YY-HH:MM) on same line
+- Removed debug console.logs, added favicon
 
 ---
 

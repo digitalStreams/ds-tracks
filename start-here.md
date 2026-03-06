@@ -25,6 +25,7 @@ DS-Tracks is a Raspberry Pi kiosk application for community radio stations. User
 | `usb-status.php` | Returns USB mount status as JSON |
 | `usb-browse.php` | Lists files/folders on mounted USB |
 | `usb-import.php` | Copies selected files from USB into session directory |
+| `js/on-screen-keyboard.js` | Touch keyboard for Pi kiosk (auto-shows on input focus) |
 | `json.php` | API: session list, track list, session management, delete (track/session/user) |
 | `upload.php` | Legacy file upload handler |
 | `admin_customize.php` | Admin settings page |
@@ -120,7 +121,7 @@ See `docs/deferred-work.md` for full details. Summary:
 2. **Configurable music storage** — SD card vs USB SSD toggle (partially implemented)
 3. **Admin cursor toggle** — Show/hide mouse cursor from admin UI
 4. **Touch restart/reboot** — Emergency restart buttons accessible from kiosk touch screen
-5. **On-screen keyboard** — Pi kiosk has no virtual keyboard for text inputs (needs `onboard` or similar)
+5. ~~On-screen keyboard~~ — Implemented (compact white theme, 4 layouts) — Pi kiosk has no virtual keyboard for text inputs (needs `onboard` or similar)
 6. ~~station-logo.png 404~~ — Fixed (deployed to Pi)
 
 ## Project Structure

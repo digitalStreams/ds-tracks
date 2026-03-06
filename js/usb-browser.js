@@ -776,6 +776,7 @@
     }
 
     function browseAndImport(username, sessionFolder) {
+        if (!usbMounted) {
             alert('Please insert a USB drive to add tracks.');
             return;
         }

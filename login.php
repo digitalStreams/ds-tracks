@@ -13,7 +13,7 @@
     <script src="js/js.cookie.min.js"></script>
     <script src="js/touch-dnd.js"></script>
 
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=6">
     <link rel="stylesheet" href="css/touch.css">
 </head>
 
@@ -1222,7 +1222,7 @@
     <script src="js/usb-browser.js?v=9"></script>
 
     <!-- On-Screen Keyboard -->
-    <script src="js/on-screen-keyboard.js?v=1"></script>
+    <script src="js/on-screen-keyboard.js?v=3"></script>
 
 </body>
 

@@ -56,7 +56,8 @@ function buildKeyboard() {
     var el = document.createElement('div');
     el.id = 'ds-keyboard';
     el.className = 'ds-keyboard';
-    document.body.appendChild(el);
+    var container = document.getElementById('content') || document.body;
+    container.appendChild(el);
     keyboardEl = el;
 
     el.addEventListener('mousedown', function(e) { e.preventDefault(); });
@@ -185,7 +186,6 @@ function showKeyboard(inputEl) {
     activeInput = inputEl;
     if (!keyboardEl) buildKeyboard();
     keyboardEl.classList.add('ds-kb-visible');
-    document.body.classList.add('ds-keyboard-open');
 
     shifted = false;
     capsLock = false;
@@ -201,7 +201,6 @@ function hideKeyboard() {
     if (keyboardEl) {
         keyboardEl.classList.remove('ds-kb-visible');
     }
-    document.body.classList.remove('ds-keyboard-open');
     if (activeInput) {
         activeInput.blur();
         activeInput = null;
