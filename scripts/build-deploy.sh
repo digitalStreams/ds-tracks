@@ -42,6 +42,7 @@ cp "$PROJECT_ROOT"/usb-eject.php "$DEPLOY_DIR/"
 cp "$PROJECT_ROOT"/usb-import.php "$DEPLOY_DIR/"
 cp "$PROJECT_ROOT"/usb-status.php "$DEPLOY_DIR/"
 cp "$PROJECT_ROOT"/usb-export.php "$DEPLOY_DIR/"
+cp "$PROJECT_ROOT"/password-reset.php "$DEPLOY_DIR/"
 
 # CSS (compiled only, no source maps or LESS)
 mkdir -p "$DEPLOY_DIR/css"
