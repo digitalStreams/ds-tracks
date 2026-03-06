@@ -518,7 +518,7 @@
 
     function dsShowFileUpload() {
         //  SHOW USB BROWSER TO SELECT TRACKS
-        dsUsb.browseAndImport(username);
+        dsUsb.browseAndImport(username, usernameDateTime);
     }
 
     function gotoSessionView() {
@@ -537,6 +537,40 @@
         document.getElementById("dsLogin").style.display = 'none';
         document.getElementById("dsSession").style.display = 'none';
         document.getElementById("dsPlayer").style.display = 'block';
+    }
+
+    function loadSessionIntoPlayer(sessionFolder) {
+        $.ajax({
+            url: 'json.php',
+            type: 'POST',
+            data: { u_name: username },
+            success: function(data) {
+                var obj = jQuery.parseJSON(data);
+                var found = false;
+                $.each(obj, function(key, value) {
+                    if (value.name === sessionFolder) {
+                        found = true;
+                        usernameDateTime = sessionFolder;
+                        path = base_url + 'music/' + sessionFolder + '/';
+                        Cookies.set('username', sessionFolder, { expires: 14 });
+
+                        var fileList = '';
+                        $.each(value.music, function(i, track) {
+                            var escName = track.replace("'", '%27');
+                            fileList += "<div id='" + track + "' class='dsAudioFileName' data-url='" + path + escName + "' data-name='" + escName + "' onclick='dsPlayAudio(this)'>" + track + "</div>";
+                        });
+
+                        showPlayerSection();
+                        $('#fileList').html(fileList);
+                        document.getElementById('audioPlayer').innerHTML = "<div class='dsNotify'>Choose a track to play.</div>";
+                        return false;
+                    }
+                });
+                if (!found) {
+                    gotoSessionView();
+                }
+            }
+        });
     }
 
     function showNewSessionPrompt() {
@@ -567,7 +601,7 @@
 
         //  HIDE PROMPT AND SHOW USB BROWSER
         document.getElementById("dsNewSessionPrompt").style.display = "none";
-        dsUsb.browseAndImport(username);
+        dsUsb.browseAndImport(username, usernameDateTime);
     }
 
     function gotoPlayerView() {
@@ -576,6 +610,7 @@
     }
 
     function getSessions() {
+        existingUsers = [];
         jQuery.ajax({
             url: 'json.php',
             type: 'POST',
@@ -731,6 +766,7 @@
             $("#dsCurrentUsers").removeClass("dsActive");
 
         } else {
+            getSessions();
             $("#dsLightbox").fadeIn(200);
             $("#dsUserList").fadeIn(200);
             $("#dsCurrentUsers").html("Hide current users")
@@ -859,7 +895,7 @@
         // alert(dsFolderID);
 
         //  SHOW USB BROWSER TO SELECT TRACKS FOR THIS SESSION
-        dsUsb.browseAndImport(username);
+        dsUsb.browseAndImport(username, dsFolderID);
     });
 
     //  EDIT SESSION LABEL — modal prompt
@@ -1111,7 +1147,7 @@
     </script>
 
     <!-- USB Browser & Touch Player -->
-    <script src="js/usb-browser.js?v=3"></script>
+    <script src="js/usb-browser.js?v=7"></script>
 
 </body>
 

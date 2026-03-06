@@ -91,16 +91,26 @@ if (count($files) > 100) {
     exit;
 }
 
-// Create session directory
-$dateStamp = date('ymd-His');
-$sessionName = $username . '-' . $dateStamp;
-$sessionDir = $musicBaseDir . $sessionName;
+// Create or use existing session directory
+$existingSession = isset($input['session']) ? preg_replace('/[^a-zA-Z0-9_-]/', '', $input['session']) : null;
 
-if (!mkdir($sessionDir, 0755, true)) {
-    logImportError("Failed to create session directory: $sessionDir");
-    http_response_code(500);
-    echo json_encode(['success' => false, 'error' => 'Could not create session directory']);
-    exit;
+if ($existingSession && is_dir($musicBaseDir . $existingSession)) {
+    // Add to existing session
+    $sessionName = $existingSession;
+    $sessionDir = $musicBaseDir . $sessionName;
+    logImportInfo("Adding to existing session: $sessionName");
+} else {
+    // Create new session
+    $dateStamp = date('ymd-His');
+    $sessionName = $username . '-' . $dateStamp;
+    $sessionDir = $musicBaseDir . $sessionName;
+
+    if (!mkdir($sessionDir, 0755, true)) {
+        logImportError("Failed to create session directory: $sessionDir");
+        http_response_code(500);
+        echo json_encode(['success' => false, 'error' => 'Could not create session directory']);
+        exit;
+    }
 }
 
 // Set cookie for compatibility with existing session system

@@ -29,6 +29,7 @@
     var audioElement = null;
     var autoPlay = false;
     var legacyMode = false;        // When true, skip user ID screen and return to legacy session view
+    var legacySessionFolder = null; // When set, import into this existing session folder
 
     // ── Initialisation ───────────────────────────────────────
 
@@ -445,7 +446,8 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 username: username,
-                files: selectedFiles
+                files: selectedFiles,
+                session: legacySessionFolder || undefined
             })
         })
         .then(function(r) { return r.json(); })
@@ -466,10 +468,16 @@
 
                 // Show player or return to legacy session view
                 if (legacyMode) {
+                    var sessionToShow = data.session;
                     legacyMode = false;
-                    // Refresh legacy session list and show it
-                    if (typeof getSessionsList === 'function') getSessionsList();
-                    if (typeof gotoSessionView === 'function') gotoSessionView();
+                    legacySessionFolder = null;
+                    showScreen('dsPlayer');
+                    if (typeof loadSessionIntoPlayer === 'function') {
+                        loadSessionIntoPlayer(sessionToShow);
+                    } else {
+                        if (typeof getSessionsList === 'function') getSessionsList();
+                        showScreen('dsSession');
+                    }
                 } else {
                     renderPlayer();
                     showScreen('touchPlayer');
@@ -757,6 +765,20 @@
     function goToLegacyLogin() {
         // Switch to the original login flow (keyboard/mouse)
         showScreen('dsLogin');  // showScreen auto-stops polling for non-USB screens
+    }
+
+    function browseAndImport(username, sessionFolder) {
+        console.log('[dsUsb] browseAndImport called, username:', username, 'sessionFolder:', sessionFolder);
+            alert('Please insert a USB drive to add tracks.');
+            return;
+        }
+        legacyMode = true;
+        legacySessionFolder = sessionFolder || null;
+        currentUsername = username;
+        selectedFiles = [];
+        showScreen('usbBrowser');
+        restoreBrowserHTML();
+        browsePath('/');
     }
 
     // ── Helpers ───────────────────────────────────────────────
