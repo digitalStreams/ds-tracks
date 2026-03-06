@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# KCR Tracks v2.0 - Raspberry Pi Installer
+# DS-Tracks v2.0 - Raspberry Pi Installer
 # Complete installation script for fresh Raspberry Pi OS
 ###############################################################################
 
@@ -12,9 +12,9 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-APP_NAME="KCR Tracks"
+APP_NAME="DS-Tracks"
 APP_VERSION="2.0"
-INSTALL_DIR="/var/www/html/kcr-tracks"
+INSTALL_DIR="/var/www/html/ds-tracks"
 APACHE_USER="www-data"
 PHP_VERSION="7.4" # Will auto-detect
 
@@ -23,7 +23,7 @@ print_header() {
     echo -e "${BLUE}"
     echo "╔══════════════════════════════════════════════════════════╗"
     echo "║                                                          ║"
-    echo "║          KCR Tracks v2.0 - Raspberry Pi Installer       ║"
+    echo "║          DS-Tracks v2.0 - Raspberry Pi Installer       ║"
     echo "║                                                          ║"
     echo "╚══════════════════════════════════════════════════════════╝"
     echo -e "${NC}"
@@ -99,13 +99,18 @@ install_apache() {
 install_php() {
     print_step "Installing PHP and required extensions..."
 
-    # Auto-detect available PHP version
-    if apt-cache show php8.1 &> /dev/null; then
-        PHP_VERSION="8.1"
-    elif apt-cache show php7.4 &> /dev/null; then
-        PHP_VERSION="7.4"
-    else
-        PHP_VERSION="7.3"
+    # Auto-detect available PHP version (newest first)
+    PHP_VERSION=""
+    for v in 8.4 8.3 8.2 8.1 8.0 7.4; do
+        if apt-cache show "php${v}" &> /dev/null 2>&1; then
+            PHP_VERSION="$v"
+            break
+        fi
+    done
+
+    if [ -z "$PHP_VERSION" ]; then
+        print_error "No supported PHP version found"
+        exit 1
     fi
 
     print_step "Installing PHP ${PHP_VERSION}..."
@@ -167,7 +172,7 @@ configure_apache() {
     IP_ADDR=$(hostname -I | awk '{print $1}')
 
     # Create Apache config
-    cat > /etc/apache2/sites-available/kcr-tracks.conf <<EOF
+    cat > /etc/apache2/sites-available/ds-tracks.conf <<EOF
 <VirtualHost *:80>
     ServerAdmin webmaster@localhost
     DocumentRoot ${INSTALL_DIR}
@@ -189,8 +194,8 @@ configure_apache() {
     </FilesMatch>
 
     # Logging
-    ErrorLog \${APACHE_LOG_DIR}/kcr-tracks-error.log
-    CustomLog \${APACHE_LOG_DIR}/kcr-tracks-access.log combined
+    ErrorLog \${APACHE_LOG_DIR}/ds-tracks-error.log
+    CustomLog \${APACHE_LOG_DIR}/ds-tracks-access.log combined
 
     # PHP settings
     php_value upload_max_filesize 50M
@@ -201,7 +206,7 @@ configure_apache() {
 EOF
 
     # Enable site
-    a2ensite kcr-tracks.conf
+    a2ensite ds-tracks.conf
     a2dissite 000-default.conf 2>/dev/null || true
     systemctl reload apache2
 
@@ -245,7 +250,7 @@ install_application() {
         rm -f "$INSTALL_DIR/security-hardening.sh"
     else
         print_error "Application files not found"
-        print_step "Please place this installer in the KCR-Tracks2 directory"
+        print_step "Please place this installer in the DS-Tracks2 directory"
         exit 1
     fi
 
@@ -260,9 +265,9 @@ install_application() {
 create_systemd_service() {
     print_step "Creating systemd service..."
 
-    cat > /etc/systemd/system/kcr-tracks.service <<EOF
+    cat > /etc/systemd/system/ds-tracks.service <<EOF
 [Unit]
-Description=KCR Tracks Web Application
+Description=DS-Tracks Web Application
 After=network.target apache2.service
 
 [Service]
@@ -275,7 +280,7 @@ WantedBy=multi-user.target
 EOF
 
     systemctl daemon-reload
-    systemctl enable kcr-tracks.service
+    systemctl enable ds-tracks.service
 
     print_success "Systemd service created"
 }
@@ -314,7 +319,7 @@ show_completion() {
     echo "   - Try uploading a test audio file"
     echo "   - Check logs in ${INSTALL_DIR}/logs/"
     echo ""
-    echo -e "${GREEN}Enjoy KCR Tracks!${NC}"
+    echo -e "${GREEN}Enjoy DS-Tracks!${NC}"
     echo ""
 }
 

@@ -1,8 +1,8 @@
-# KCR Tracks v2.0 - Quick Start Guide
+# DS-Tracks v2.0 - Quick Start Guide
 
 ## For Radio Station Administrators
 
-This is a 15-minute quick-start guide to get KCR Tracks running on your Raspberry Pi.
+This is a 15-minute quick-start guide to get DS-Tracks running on your Raspberry Pi.
 
 ---
 
@@ -21,22 +21,22 @@ This is a 15-minute quick-start guide to get KCR Tracks running on your Raspberr
 
 **Option A - Using USB Drive:**
 ```bash
-1. Copy KCR-Tracks2 folder to USB drive
+1. Copy DS-Tracks2 folder to USB drive
 2. Insert USB into Raspberry Pi
 3. Mount: sudo mount /dev/sda1 /mnt
-4. Copy: cp -r /mnt/KCR-Tracks2 /home/pi/
+4. Copy: cp -r /mnt/DS-Tracks2 /home/pi/
 ```
 
 **Option B - Using Network:**
 ```bash
 # From your computer:
-scp -r KCR-Tracks2/ pi@raspberrypi.local:/home/pi/
+scp -r DS-Tracks2/ pi@raspberrypi.local:/home/pi/
 ```
 
 ### Step 2: Run Installer
 
 ```bash
-cd /home/pi/KCR-Tracks2
+cd /home/pi/DS-Tracks2
 chmod +x install-raspberry-pi.sh
 sudo ./install-raspberry-pi.sh
 ```
@@ -57,7 +57,7 @@ http://<raspberry-pi-ip>
 ### 1. Change Admin Password
 
 ```bash
-sudo nano /var/www/html/kcr-tracks/admin_customize.php
+sudo nano /var/www/html/ds-tracks/admin_customize.php
 ```
 
 Find and change:
@@ -71,7 +71,7 @@ Save: `Ctrl+X`, `Y`, `Enter`
 
 ```bash
 # Copy your logo to the Pi
-scp your-logo.png pi@raspberrypi.local:/var/www/html/kcr-tracks/images/station-logo.png
+scp your-logo.png pi@raspberrypi.local:/var/www/html/ds-tracks/images/station-logo.png
 ```
 
 ### 3. Configure Branding
@@ -87,7 +87,7 @@ scp your-logo.png pi@raspberrypi.local:/var/www/html/kcr-tracks/images/station-l
 ## Security (Optional but Recommended)
 
 ```bash
-cd /home/pi/KCR-Tracks2
+cd /home/pi/DS-Tracks2
 chmod +x security-hardening.sh
 sudo ./security-hardening.sh
 ```
@@ -120,13 +120,13 @@ hostname -I  # Get IP address
 
 ### Upload Not Working
 ```bash
-sudo chown -R www-data:www-data /var/www/html/kcr-tracks/music
-sudo chmod 755 /var/www/html/kcr-tracks/music
+sudo chown -R www-data:www-data /var/www/html/ds-tracks/music
+sudo chmod 755 /var/www/html/ds-tracks/music
 ```
 
 ### Check Logs
 ```bash
-sudo tail -f /var/www/html/kcr-tracks/logs/app_errors.log
+sudo tail -f /var/www/html/ds-tracks/logs/app_errors.log
 ```
 
 ---
@@ -137,7 +137,7 @@ sudo tail -f /var/www/html/kcr-tracks/logs/app_errors.log
 2. ✓ Set up regular backups
 3. ✓ Configure static IP
 4. ✓ Consider HTTPS (for external access)
-5. ✓ Read DEPLOYMENT_GUIDE.md for details
+5. ✓ Read DEPLOYMENT-GUIDE.md for details
 
 ---
 
@@ -156,9 +156,9 @@ sudo tail -f /var/www/html/kcr-tracks/logs/app_errors.log
 
 ## Support
 
-- Detailed Guide: `DEPLOYMENT_GUIDE.md`
-- Security Info: `SECURITY_UPDATES.md`
-- User Manual: `KCR-Tracks-User-Manual-D02-2023-03-14.pdf`
+- Detailed Guide: [`DEPLOYMENT-GUIDE.md`](DEPLOYMENT-GUIDE.md)
+- Security Info: [`SECURITY-UPDATES.md`](../archive/SECURITY-UPDATES.md)
+- User Manual: [`KCR-Tracks-User-Manual-D02-2023-03-14.pdf`](../archive/KCR-Tracks-User-Manual-D02-2023-03-14.pdf)
 
 ---
 

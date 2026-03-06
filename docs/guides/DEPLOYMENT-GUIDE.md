@@ -1,4 +1,4 @@
-# KCR Tracks v2.0 - Deployment Guide for Radio Stations
+# DS-Tracks v2.0 - Deployment Guide for Radio Stations
 
 ## Table of Contents
 1. [Hardware Requirements](#hardware-requirements)
@@ -47,7 +47,7 @@
 2. Choose OS: Raspberry Pi OS Lite (64-bit)
 3. Choose Storage: Your SD card
 4. Click Settings (gear icon):
-   - Set hostname: kcr-tracks
+   - Set hostname: ds-tracks
    - Enable SSH
    - Set username and password
    - Configure WiFi (optional)
@@ -61,7 +61,7 @@
 # Wait for boot (first boot takes longer)
 # Find the IP address on your network
 # From another computer, SSH in:
-ssh pi@kcr-tracks.local
+ssh pi@ds-tracks.local
 # or
 ssh pi@<ip-address>
 ```
@@ -81,19 +81,19 @@ sudo reboot
 
 **1. Transfer files to Raspberry Pi:**
 ```bash
-# From your computer, copy the KCR-Tracks2 directory
-scp -r KCR-Tracks2/ pi@kcr-tracks.local:/home/pi/
+# From your computer, copy the DS-Tracks2 directory
+scp -r DS-Tracks2/ pi@ds-tracks.local:/home/pi/
 
 # Or use a USB drive:
 # - Copy files to USB
 # - Insert USB into Raspberry Pi
 # - Mount: sudo mount /dev/sda1 /mnt
-# - Copy: cp -r /mnt/KCR-Tracks2 /home/pi/
+# - Copy: cp -r /mnt/DS-Tracks2 /home/pi/
 ```
 
 **2. Run the installer:**
 ```bash
-cd /home/pi/KCR-Tracks2
+cd /home/pi/DS-Tracks2
 chmod +x install-raspberry-pi.sh
 sudo ./install-raspberry-pi.sh
 ```
@@ -127,16 +127,16 @@ See [MANUAL_INSTALLATION.md](MANUAL_INSTALLATION.md) for step-by-step manual ins
 **2. Upload to Raspberry Pi:**
 ```bash
 # From your computer
-scp logo.png pi@kcr-tracks.local:/var/www/html/kcr-tracks/images/station-logo.png
-scp tracks-logo.png pi@kcr-tracks.local:/var/www/html/kcr-tracks/images/
-scp favicon.ico pi@kcr-tracks.local:/var/www/html/kcr-tracks/images/
+scp logo.png pi@ds-tracks.local:/var/www/html/ds-tracks/images/station-logo.png
+scp tracks-logo.png pi@ds-tracks.local:/var/www/html/ds-tracks/images/
+scp favicon.ico pi@ds-tracks.local:/var/www/html/ds-tracks/images/
 ```
 
 ### Configure Branding
 
 **1. Change the admin password:**
 ```bash
-sudo nano /var/www/html/kcr-tracks/admin_customize.php
+sudo nano /var/www/html/ds-tracks/admin_customize.php
 # Find: $ADMIN_PASSWORD = 'changeme123';
 # Change to a strong password
 # Save: Ctrl+X, Y, Enter
@@ -176,7 +176,7 @@ sudo nano /var/www/html/kcr-tracks/admin_customize.php
 **CRITICAL: Run the security hardening script before going live!**
 
 ```bash
-cd /home/pi/KCR-Tracks2
+cd /home/pi/DS-Tracks2
 chmod +x security-hardening.sh
 sudo ./security-hardening.sh
 ```
@@ -247,7 +247,7 @@ ssh -p 2222 pi@<ip-address>
 # Create a test MP3 file or use an existing one
 # Try uploading through the web interface
 # Check logs:
-sudo tail -f /var/www/html/kcr-tracks/logs/upload_errors.log
+sudo tail -f /var/www/html/ds-tracks/logs/upload_errors.log
 ```
 
 ---
@@ -268,25 +268,25 @@ hostname -I
 sudo ufw status
 
 # Check Apache logs
-sudo tail -f /var/log/apache2/kcr-tracks-error.log
+sudo tail -f /var/log/apache2/ds-tracks-error.log
 ```
 
 #### 2. **Upload fails**
 ```bash
 # Check permissions
-ls -la /var/www/html/kcr-tracks/music
+ls -la /var/www/html/ds-tracks/music
 
 # Should show: drwxr-xr-x www-data www-data
 
 # Fix if needed:
-sudo chown -R www-data:www-data /var/www/html/kcr-tracks/music
-sudo chmod 755 /var/www/html/kcr-tracks/music
+sudo chown -R www-data:www-data /var/www/html/ds-tracks/music
+sudo chmod 755 /var/www/html/ds-tracks/music
 ```
 
 #### 3. **File type rejected**
 - Ensure file is MP3, WAV, OGG, FLAC, or M4A
 - Check file is not corrupted
-- Check logs: `/var/www/html/kcr-tracks/logs/upload_errors.log`
+- Check logs: `/var/www/html/ds-tracks/logs/upload_errors.log`
 
 #### 4. **Audio doesn't play**
 ```bash
@@ -307,7 +307,7 @@ sudo raspi-config
 df -h
 
 # Check music directory size
-du -sh /var/www/html/kcr-tracks/music
+du -sh /var/www/html/ds-tracks/music
 
 # Clean old sessions (carefully!)
 # Navigate to music directory and manually delete old folders
@@ -324,13 +324,13 @@ du -sh /var/www/html/kcr-tracks/music
 ### Weekly Tasks
 ```bash
 # Check logs for errors
-sudo tail -50 /var/www/html/kcr-tracks/logs/app_errors.log
+sudo tail -50 /var/www/html/ds-tracks/logs/app_errors.log
 
 # Check disk space
 df -h
 
 # Verify backups are running
-ls -lh /home/pi/kcr-tracks-backups/
+ls -lh /home/pi/ds-tracks-backups/
 ```
 
 ### Monthly Tasks
@@ -350,23 +350,23 @@ sudo tail -100 /var/log/auth.log
 
 **Manual backup:**
 ```bash
-sudo /usr/local/bin/kcr-tracks-backup.sh
+sudo /usr/local/bin/ds-tracks-backup.sh
 ```
 
 **Restore from backup:**
 ```bash
-cd /home/pi/kcr-tracks-backups
-tar -xzf kcr-tracks_YYYYMMDD_HHMMSS.tar.gz -C /tmp/
-sudo cp -r /tmp/music/* /var/www/html/kcr-tracks/music/
+cd /home/pi/ds-tracks-backups
+tar -xzf ds-tracks_YYYYMMDD_HHMMSS.tar.gz -C /tmp/
+sudo cp -r /tmp/music/* /var/www/html/ds-tracks/music/
 ```
 
 **Off-site backup (recommended):**
 ```bash
 # Copy backups to external drive
-sudo cp /home/pi/kcr-tracks-backups/*.tar.gz /mnt/external-drive/
+sudo cp /home/pi/ds-tracks-backups/*.tar.gz /mnt/external-drive/
 
 # Or use rsync to remote server
-rsync -avz /home/pi/kcr-tracks-backups/ user@backup-server:/backups/kcr-tracks/
+rsync -avz /home/pi/ds-tracks-backups/ user@backup-server:/backups/ds-tracks/
 ```
 
 ### Cleaning Old Sessions
@@ -376,7 +376,7 @@ rsync -avz /home/pi/kcr-tracks-backups/ user@backup-server:/backups/kcr-tracks/
 #!/bin/bash
 # Save as: /usr/local/bin/cleanup-old-sessions.sh
 
-MUSIC_DIR="/var/www/html/kcr-tracks/music"
+MUSIC_DIR="/var/www/html/ds-tracks/music"
 DAYS_OLD=30
 
 find "$MUSIC_DIR" -type d -mtime +$DAYS_OLD -exec rm -rf {} \;
@@ -437,15 +437,15 @@ echo "Test message" | mail -s "Test" your@email.com
 ## Support & Resources
 
 ### Documentation Files
-- `SECURITY_UPDATES.md` - Security improvements details
-- `CHANGES_SUMMARY.md` - Quick reference of changes
+- [`SECURITY-UPDATES.md`](../archive/SECURITY-UPDATES.md) - Security improvements details
+- [`CHANGES-SUMMARY.md`](../archive/CHANGES-SUMMARY.md) - Quick reference of changes
 - `README.md` - User guide
-- `KCR-Tracks-User-Manual-D02-2023-03-14.pdf` - Detailed user manual
+- [`KCR-Tracks-User-Manual-D02-2023-03-14.pdf`](../archive/KCR-Tracks-User-Manual-D02-2023-03-14.pdf) - Detailed user manual
 
 ### Log Files
-- Application errors: `/var/www/html/kcr-tracks/logs/app_errors.log`
-- Upload errors: `/var/www/html/kcr-tracks/logs/upload_errors.log`
-- Apache errors: `/var/log/apache2/kcr-tracks-error.log`
+- Application errors: `/var/www/html/ds-tracks/logs/app_errors.log`
+- Upload errors: `/var/www/html/ds-tracks/logs/upload_errors.log`
+- Apache errors: `/var/log/apache2/ds-tracks-error.log`
 - System logs: `/var/log/syslog`
 
 ### Getting Help
@@ -457,7 +457,7 @@ echo "Test message" | mail -s "Test" your@email.com
 ---
 
 ## Version Information
-- **KCR Tracks Version**: 2.0
+- **DS-Tracks Version**: 2.0
 - **Minimum PHP Version**: 7.3
 - **Recommended Pi Model**: Raspberry Pi 4 (4GB)
 - **Tested On**: Raspberry Pi OS Bullseye (64-bit)

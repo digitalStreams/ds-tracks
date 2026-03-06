@@ -1,8 +1,8 @@
-# KCR Tracks v2.0 - Security Update Summary
+# DS-Tracks v2.0 - Security Update Summary
 
 ## What Was Fixed
 
-Your KCR Tracks application has been comprehensively updated to address all critical security vulnerabilities and improve code quality. Here's what changed:
+Your DS-Tracks application has been comprehensively updated to address all critical security vulnerabilities and improve code quality. Here's what changed:
 
 ## Files Modified
 
@@ -58,7 +58,7 @@ Your KCR Tracks application has been comprehensively updated to address all crit
 ### 7. **config.php** - NEW FILE
 Central configuration file containing:
 - Security constants and settings
-- `KCRSecurity` class with helper functions
+- `DSSecurity` class with helper functions
 - Session configuration
 - Error logging configuration
 - CSRF token generation/validation
@@ -73,7 +73,7 @@ Apache security configuration:
 - Sets proper MIME types for audio
 - Enables compression and caching
 
-### 9. **SECURITY_UPDATES.md** - NEW FILE
+### 9. **SECURITY-UPDATES.md** - NEW FILE
 Complete documentation including:
 - List of all security fixes
 - Installation instructions
@@ -82,7 +82,7 @@ Complete documentation including:
 - Security best practices
 - Log files reference
 
-### 10. **CHANGES_SUMMARY.md** - THIS FILE
+### 10. **CHANGES-SUMMARY.md** - THIS FILE
 Quick reference for what changed
 
 ## What You Need to Do
@@ -189,7 +189,7 @@ chown www-data:www-data logs
 
 ## Next Steps
 
-1. **Read SECURITY_UPDATES.md** for detailed information
+1. **Read SECURITY-UPDATES.md** for detailed information
 2. **Set up the logs directory** as shown above
 3. **Test all functionality** using the checklist
 4. **Monitor logs** for the first few days
@@ -200,7 +200,7 @@ chown www-data:www-data logs
 If you encounter issues:
 1. Check the appropriate log file in `/logs/`
 2. Verify file permissions are correct
-3. Review SECURITY_UPDATES.md for detailed guidance
+3. Review SECURITY-UPDATES.md for detailed guidance
 4. Ensure all new files were uploaded correctly
 
 ## Version Info

@@ -1,4 +1,4 @@
-# KCR Tracks User Guide
+# DS-Tracks User Guide
 
 **Version 2.0**
 
@@ -10,11 +10,11 @@
 
 ## Contents
 
-1. [About KCR Tracks](#1-about-kcr-tracks)
+1. [About DS-Tracks](#1-about-ds-tracks)
    - 1.1 [Copy files to a USB drive](#11-copy-files-to-a-usb-drive)
    - 1.2 [Supported audio formats](#12-supported-audio-formats)
-   - 1.3 [The KCR Tracks appliance](#13-the-kcr-tracks-appliance)
-   - 1.4 [Switching the main keyboard and mouse to KCR Tracks](#14-switching-the-main-keyboard-and-mouse-to-kcr-tracks)
+   - 1.3 [The DS-Tracks appliance](#13-the-ds-tracks-appliance)
+   - 1.4 [Switching the main keyboard and mouse to DS-Tracks](#14-switching-the-main-keyboard-and-mouse-to-ds-tracks)
 2. [First Time User](#2-first-time-user)
    - 2.1 [Entering your username](#21-entering-your-username)
    - 2.2 [Using the on-screen keyboard](#22-using-the-on-screen-keyboard)
@@ -23,7 +23,7 @@
    - 2.5 [Select the USB drive and the tracks](#25-select-the-usb-drive-and-the-tracks)
    - 2.6 [Reporting the tracks uploaded](#26-reporting-the-tracks-uploaded)
    - 2.7 [Selecting a track to play](#27-selecting-a-track-to-play)
-   - 2.8 [Using the KCR Tracks audio player](#28-using-the-kcr-tracks-audio-player)
+   - 2.8 [Using the DS-Tracks audio player](#28-using-the-ds-tracks-audio-player)
 3. [Returning Users](#3-returning-users)
    - 3.1 [Listing previous sessions](#31-listing-previous-sessions)
    - 3.2 [The session list for a user](#32-the-session-list-for-a-user)
@@ -51,17 +51,17 @@
 
 ---
 
-## 1. About KCR Tracks
+## 1. About DS-Tracks
 
-KCR Tracks is designed to let presenters play their own music tracks from a USB drive without the risk of inadvertently introducing malware into KCR's computer network*.
+DS-Tracks is designed to let presenters play their own music tracks from a USB drive without the risk of inadvertently introducing malware into the station's computer network*.
 
-KCR Tracks is a touch-screen appliance connected to the main audio desk. You can use fader XX to activate the input and set the levels.
+DS-Tracks is a touch-screen appliance connected to the main audio desk. You can use fader XX to activate the input and set the levels.
 
-KCR Tracks stores your session tracks for later use, though you can delete them.
+DS-Tracks stores your session tracks for later use, though you can delete them.
 
-KCR Tracks is entirely independent of the Radio-DJ station automation system.
+DS-Tracks is entirely independent of the Radio-DJ station automation system.
 
-> *Malware programs can easily infect USB drives. They can install themselves when the USB drive is plugged into a computer. Later, when that USB is inserted into another computer, the malware infects it. The malware can spread quickly throughout a connected network, causing severe damage. We need to avoid that by isolating the USB from the KCR network, and KCR Tracks does that.
+> *Malware programs can easily infect USB drives. They can install themselves when the USB drive is plugged into a computer. Later, when that USB is inserted into another computer, the malware infects it. The malware can spread quickly throughout a connected network, causing severe damage. We need to avoid that by isolating the USB from the station network, and DS-Tracks does that.
 
 ### 1.1 Copy files to a USB drive
 
@@ -73,7 +73,7 @@ Plug the drive into the USB port located in the circular USB input area on the s
 
 ### 1.2 Supported audio formats
 
-KCR Tracks accepts the following audio file formats:
+DS-Tracks accepts the following audio file formats:
 
 | Format | File Extension | Description |
 |--------|---------------|-------------|
@@ -88,15 +88,15 @@ KCR Tracks accepts the following audio file formats:
 **File naming tips:**
 - Use simple file names with letters, numbers, dashes and underscores
 - Avoid special characters such as # & % $ in file names
-- If a file with the same name already exists, KCR Tracks will automatically rename it
+- If a file with the same name already exists, DS-Tracks will automatically rename it
 
-### 1.3 The KCR Tracks appliance
+### 1.3 The DS-Tracks appliance
 
-Touch the screen of the KCR Tracks Player to turn it on. If it does not respond, there is an in-line switch on the power cord on the right-hand side of the player.
+Touch the screen of the DS-Tracks Player to turn it on. If it does not respond, there is an in-line switch on the power cord on the right-hand side of the player.
 
-<!-- IMAGE: KCR Tracks appliance with touchscreen -->
+<!-- IMAGE: DS-Tracks appliance with touchscreen -->
 
-### 1.4 Switching the main keyboard and mouse to KCR Tracks
+### 1.4 Switching the main keyboard and mouse to DS-Tracks
 
 You can switch the USB selector to the number 1 position labelled USB. It has four push buttons and is located near the main studio monitor on the mixing desk shelf.
 
@@ -106,7 +106,7 @@ You can switch the USB selector to the number 1 position labelled USB. It has fo
 
 ## 2. First Time User
 
-If this is the first time you have used KCR Tracks, it is simple to create an account and upload music tracks.
+If this is the first time you have used DS-Tracks, it is simple to create an account and upload music tracks.
 
 ### 2.1 Entering your username
 
@@ -154,7 +154,7 @@ Select the tracks to import. This is easier if you use the keyboard and mouse, b
 
 ### 2.6 Reporting the tracks uploaded
 
-KCR Tracks will show the list of files it has just imported. Click OK.
+DS-Tracks will show the list of files it has just imported. Click OK.
 
 <!-- IMAGE: Upload confirmation dialog showing imported tracks -->
 
@@ -166,7 +166,7 @@ Your music tracks are now ready to play. Open the USB fader on the desk and clic
 
 <!-- IMAGE: Track list with "Select the track to play" annotation -->
 
-### 2.8 Using the KCR Tracks audio player
+### 2.8 Using the DS-Tracks audio player
 
 The track playing is shown in the audio player along with duration etc. The pause and volume buttons are active. The track is highlighted in red in the tracklist.
 
@@ -180,7 +180,7 @@ Clicking the track button again stops the track.
 - **Volume slider:** Adjust the playback volume
 - **Track title:** Displays the name of the currently playing track
 
-**Note:** Once the track finishes playing, KCR Tracks will wait until you click on another track, allowing you to use the microphone, play a promo or switch to automated playing using Radio DJ.
+**Note:** Once the track finishes playing, DS-Tracks will wait until you click on another track, allowing you to use the microphone, play a promo or switch to automated playing using Radio DJ.
 
 You will need to manage the desk volume sliders in this case.
 
@@ -200,7 +200,7 @@ You can also create a new user if your name is not on the list.
 
 ### 3.2 The session list for a user
 
-KCR Tracks will show all of your saved sessions. They will have your user name and the date & time they were created.
+DS-Tracks will show all of your saved sessions. They will have your user name and the date & time they were created.
 
 <!-- IMAGE: Session list screen -->
 
@@ -240,11 +240,11 @@ The names of the tracks will be updated in the session list for later use.
 
 ## 4. Auto Play Mode
 
-KCR Tracks can automatically play through your entire list of tracks in sequence. This is useful when you want continuous music playback.
+DS-Tracks can automatically play through your entire list of tracks in sequence. This is useful when you want continuous music playback.
 
 ### 4.1 Enable auto-play
 
-KCR Tracks can play the entire list of tracks in a session. Use the "Auto Play" toggle to enable this feature.
+DS-Tracks can play the entire list of tracks in a session. Use the "Auto Play" toggle to enable this feature.
 
 <!-- IMAGE: Track list with Enable auto play toggle -->
 
@@ -295,7 +295,7 @@ Click the confirm delete button to delete or cancel if you have changed your min
 
 ### 4.6 Delete the user
 
-When there is only one session for a user, deleting the last session will also delete that user from the KCR Tracks system.
+When there is only one session for a user, deleting the last session will also delete that user from the DS-Tracks system.
 
 <!-- IMAGE: Warning dialog about user deletion -->
 
@@ -305,7 +305,7 @@ A warning message will appear to confirm this action. Click OK to proceed or Can
 
 ## 5. Reports
 
-KCR Tracks includes reporting features to view and export track information. This is useful for music logging and record-keeping.
+DS-Tracks includes reporting features to view and export track information. This is useful for music logging and record-keeping.
 
 ### 5.1 Accessing Reports
 
@@ -315,7 +315,7 @@ Click the "Reports" button in the bottom-left corner of the main screen to acces
 
 ### 5.2 Viewing all users
 
-The Reports section displays a list of all users who have uploaded tracks to KCR Tracks.
+The Reports section displays a list of all users who have uploaded tracks to DS-Tracks.
 
 <!-- IMAGE: User list report -->
 
@@ -353,7 +353,7 @@ Click the appropriate export button to download the data.
 
 ## 6. Station Customisation (Administrators)
 
-KCR Tracks can be customised to match your station's branding. This section is for station administrators only.
+DS-Tracks can be customised to match your station's branding. This section is for station administrators only.
 
 ### 6.1 Accessing the customisation panel
 
@@ -382,7 +382,7 @@ You can customise the following station details:
 
 ### 6.3 Logo customisation
 
-Upload your station's logos to personalise KCR Tracks:
+Upload your station's logos to personalise DS-Tracks:
 
 | Logo Type | Recommended Size | Usage |
 |-----------|-----------------|-------|
@@ -396,7 +396,7 @@ Upload your station's logos to personalise KCR Tracks:
 
 ### 6.4 Colour scheme
 
-Customise the appearance of KCR Tracks to match your station's brand colours:
+Customise the appearance of DS-Tracks to match your station's brand colours:
 
 | Setting | Description |
 |---------|-------------|
@@ -418,7 +418,7 @@ After making your customisation changes:
 
 1. Review your changes in the preview area
 2. Click "Save Changes" to apply
-3. Refresh the main KCR Tracks page to see your updates
+3. Refresh the main DS-Tracks page to see your updates
 
 <!-- IMAGE: Save changes button -->
 
@@ -475,7 +475,7 @@ When using a physical keyboard, the following shortcuts are available:
 
 ## Appendix C: Session Naming
 
-KCR Tracks automatically names your sessions using the following format:
+DS-Tracks automatically names your sessions using the following format:
 
 ```
 Username-YYMMDD-HHMMSS

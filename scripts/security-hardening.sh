@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# KCR Tracks v2.0 - Raspberry Pi Security Hardening Script
+# DS-Tracks v2.0 - Raspberry Pi Security Hardening Script
 # Hardens Raspberry Pi OS for production use
 ###############################################################################
 
@@ -12,7 +12,7 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 # Configuration
-INSTALL_DIR="/var/www/html/kcr-tracks"
+INSTALL_DIR="/var/www/html/ds-tracks"
 SSH_PORT=22
 NEW_SSH_PORT=2222
 
@@ -20,7 +20,7 @@ print_header() {
     echo -e "${BLUE}"
     echo "╔══════════════════════════════════════════════════════════╗"
     echo "║                                                          ║"
-    echo "║       KCR Tracks - Security Hardening Script            ║"
+    echo "║       DS-Tracks - Security Hardening Script            ║"
     echo "║                                                          ║"
     echo "╚══════════════════════════════════════════════════════════╝"
     echo -e "${NC}"
@@ -231,9 +231,9 @@ harden_apache() {
 
 # Set up log rotation
 setup_log_rotation() {
-    print_step "Setting up log rotation for KCR Tracks..."
+    print_step "Setting up log rotation for DS-Tracks..."
 
-    cat > /etc/logrotate.d/kcr-tracks <<EOF
+    cat > /etc/logrotate.d/ds-tracks <<EOF
 ${INSTALL_DIR}/logs/*.log {
     weekly
     rotate 4
@@ -252,30 +252,30 @@ EOF
 create_backup_script() {
     print_step "Creating backup script..."
 
-    cat > /usr/local/bin/kcr-tracks-backup.sh <<'EOF'
+    cat > /usr/local/bin/ds-tracks-backup.sh <<'EOF'
 #!/bin/bash
-# KCR Tracks Backup Script
+# DS-Tracks Backup Script
 
-BACKUP_DIR="/home/pi/kcr-tracks-backups"
+BACKUP_DIR="/home/pi/ds-tracks-backups"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-SOURCE_DIR="/var/www/html/kcr-tracks/music"
+SOURCE_DIR="/var/www/html/ds-tracks/music"
 
 mkdir -p "$BACKUP_DIR"
 
 # Create backup
-tar -czf "$BACKUP_DIR/kcr-tracks_${TIMESTAMP}.tar.gz" "$SOURCE_DIR"
+tar -czf "$BACKUP_DIR/ds-tracks_${TIMESTAMP}.tar.gz" "$SOURCE_DIR"
 
 # Keep only last 7 backups
 cd "$BACKUP_DIR"
-ls -t kcr-tracks_*.tar.gz | tail -n +8 | xargs -r rm
+ls -t ds-tracks_*.tar.gz | tail -n +8 | xargs -r rm
 
-echo "Backup completed: kcr-tracks_${TIMESTAMP}.tar.gz"
+echo "Backup completed: ds-tracks_${TIMESTAMP}.tar.gz"
 EOF
 
-    chmod +x /usr/local/bin/kcr-tracks-backup.sh
+    chmod +x /usr/local/bin/ds-tracks-backup.sh
 
     # Add to crontab (weekly backup)
-    (crontab -l 2>/dev/null; echo "0 2 * * 0 /usr/local/bin/kcr-tracks-backup.sh") | crontab -
+    (crontab -l 2>/dev/null; echo "0 2 * * 0 /usr/local/bin/ds-tracks-backup.sh") | crontab -
 
     print_success "Backup script created (runs weekly)"
 }
@@ -312,7 +312,7 @@ remind_passwords() {
     echo "1. Change Pi user password:"
     echo "   passwd"
     echo ""
-    echo "2. Change KCR Tracks admin password in:"
+    echo "2. Change DS-Tracks admin password in:"
     echo "   ${INSTALL_DIR}/admin_customize.php"
     echo ""
 }
@@ -320,7 +320,7 @@ remind_passwords() {
 # Create security checklist
 create_security_checklist() {
     cat > /home/pi/SECURITY_CHECKLIST.txt <<EOF
-KCR Tracks - Security Checklist
+DS-Tracks - Security Checklist
 ================================
 
 Completed by this script:
@@ -356,10 +356,10 @@ Important files:
 - SSH config: /etc/ssh/sshd_config
 - Firewall: ufw status
 - Fail2Ban: /etc/fail2ban/jail.local
-- Backups: /home/pi/kcr-tracks-backups/
-- Logs: /var/www/html/kcr-tracks/logs/
+- Backups: /home/pi/ds-tracks-backups/
+- Logs: /var/www/html/ds-tracks/logs/
 
-For more information, see SECURITY_UPDATES.md in the application directory.
+For more information, see docs/archive/SECURITY-UPDATES.md in the application directory.
 EOF
 
     chown pi:pi /home/pi/SECURITY_CHECKLIST.txt

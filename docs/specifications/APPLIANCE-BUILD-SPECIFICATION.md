@@ -1,4 +1,4 @@
-# KCR Tracks Raspberry Pi Appliance Build Specification
+# DS-Tracks Raspberry Pi Appliance Build Specification
 
 **Version:** 1.0
 **Date:** January 2026
@@ -9,11 +9,11 @@
 
 ## Executive Summary
 
-This specification documents how to create a pre-configured Raspberry Pi disk image for KCR Tracks that can be distributed to radio stations. The goal is a "flash and boot" appliance requiring no Linux knowledge from end users.
+This specification documents how to create a pre-configured Raspberry Pi disk image for DS-Tracks that can be distributed to radio stations. The goal is a "flash and boot" appliance requiring no Linux knowledge from end users.
 
 ### Codebase Assessment Result: APPROVED
 
-The current KCR-Tracks2 v2.0 codebase has been reviewed and is **highly suitable** for appliance deployment with only minor enhancements needed.
+The current DS-Tracks2 v2.0 codebase has been reviewed and is **highly suitable** for appliance deployment with only minor enhancements needed.
 
 | Component | Readiness | Action Required |
 |-----------|-----------|-----------------|
@@ -51,9 +51,9 @@ The current KCR-Tracks2 v2.0 codebase has been reviewed and is **highly suitable
 ├─────────────────────────────────────────────────────────────┤
 │  1. Download disk image                                      │
 │  2. Flash to SSD using Raspberry Pi Imager                  │
-│  3. (Optional) Edit kcr-config.txt on boot partition        │
+│  3. (Optional) Edit ds-config.txt on boot partition        │
 │  4. Insert SSD, connect screen, power on                    │
-│  5. KCR Tracks loads automatically in kiosk mode            │
+│  5. DS-Tracks loads automatically in kiosk mode            │
 │  6. Ready to use - no configuration required                │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -73,9 +73,9 @@ The current KCR-Tracks2 v2.0 codebase has been reviewed and is **highly suitable
 │         └───────────────┴────────────────────┘               │
 │                         │                                    │
 │              ┌──────────┴──────────┐                        │
-│              │    KCR Tracks v2    │                        │
+│              │    DS-Tracks v2    │                        │
 │              │  /var/www/html/     │                        │
-│              │    kcr-tracks/      │                        │
+│              │    ds-tracks/      │                        │
 │              └─────────────────────┘                        │
 │                         │                                    │
 │              ┌──────────┴──────────┐                        │
@@ -136,7 +136,7 @@ For appliance deployment, USB SSD is strongly recommended over microSD:
 │  512MB   │    8GB       │    [Remaining Space]             │
 │          │              │    Auto-expands on first boot    │
 ├──────────┼──────────────┼──────────────────────────────────┤
-│ Config   │ OS + App     │ /var/www/html/kcr-tracks/music/  │
+│ Config   │ OS + App     │ /var/www/html/ds-tracks/music/  │
 │ files    │              │ Symlinked from app directory     │
 │ editable │ Read-mostly  │ User data - preserve on updates  │
 │ on Win   │              │                                  │
@@ -151,14 +151,14 @@ The FAT32 boot partition is readable/writable on Windows, allowing pre-boot conf
 /boot/
 ├── config.txt              # Standard Pi config
 ├── cmdline.txt             # Boot parameters
-├── kcr-config.txt          # KCR Tracks configuration (NEW)
+├── ds-config.txt          # DS-Tracks configuration (NEW)
 └── ssh                     # Empty file enables SSH (optional)
 ```
 
-### 3.3 kcr-config.txt Format
+### 3.3 ds-config.txt Format
 
 ```ini
-# KCR Tracks Appliance Configuration
+# DS-Tracks Appliance Configuration
 # Edit this file before first boot, or via admin panel after boot
 
 # Station Information
@@ -234,18 +234,18 @@ Phase 5: Image Creation (30 mins)
 
 ### 5.1 First-Boot Service
 
-Create `/etc/systemd/system/kcr-first-boot.service`:
+Create `/etc/systemd/system/ds-first-boot.service`:
 
 ```ini
 [Unit]
-Description=KCR Tracks First Boot Configuration
+Description=DS-Tracks First Boot Configuration
 After=network.target
-ConditionPathExists=/boot/kcr-first-boot-pending
+ConditionPathExists=/boot/ds-first-boot-pending
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/kcr-first-boot.sh
-ExecStartPost=/bin/rm -f /boot/kcr-first-boot-pending
+ExecStart=/usr/local/bin/ds-first-boot.sh
+ExecStartPost=/bin/rm -f /boot/ds-first-boot-pending
 RemainAfterExit=yes
 
 [Install]
@@ -254,10 +254,10 @@ WantedBy=multi-user.target
 
 ### 5.2 First-Boot Script Functions
 
-The `/usr/local/bin/kcr-first-boot.sh` script should:
+The `/usr/local/bin/ds-first-boot.sh` script should:
 
 1. **Expand music partition** to fill available space
-2. **Read kcr-config.txt** and apply settings
+2. **Read ds-config.txt** and apply settings
 3. **Configure WiFi** if credentials provided
 4. **Set timezone**
 5. **Update branding.php** with station name
@@ -285,7 +285,7 @@ parted -s $DEVICE resizepart 3 100%
 resize2fs $MUSIC_PART
 
 # Create symlink if not exists
-ln -sf /mnt/music /var/www/html/kcr-tracks/music
+ln -sf /mnt/music /var/www/html/ds-tracks/music
 ```
 
 ---
@@ -354,7 +354,7 @@ chromium-browser \
     --no-first-run \
     --start-fullscreen \
     --autoplay-policy=no-user-gesture-required \
-    http://localhost/kcr-tracks/login.php
+    http://localhost/ds-tracks/login.php
 ```
 
 ### 6.4 Touchscreen Calibration
@@ -381,10 +381,10 @@ Based on the codebase review, the following modifications are recommended but **
 
 **Current:**
 ```javascript
-var base_url = window.location.origin + "/kcr-tracks/";
+var base_url = window.location.origin + "/ds-tracks/";
 ```
 
-**Issue:** Assumes installation at `/kcr-tracks/` path
+**Issue:** Assumes installation at `/ds-tracks/` path
 
 **Impact:** None for standard appliance (uses default path)
 
@@ -425,23 +425,23 @@ fi
 
 ### 7.2 New Files Required
 
-#### File 1: /usr/local/bin/kcr-first-boot.sh
+#### File 1: /usr/local/bin/ds-first-boot.sh
 
 Purpose: First-boot configuration script
 
 ```bash
 #!/bin/bash
-# KCR Tracks First Boot Configuration
+# DS-Tracks First Boot Configuration
 # This script runs once on first boot
 
 set -e
-LOG="/var/log/kcr-first-boot.log"
+LOG="/var/log/ds-first-boot.log"
 
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') $1" | tee -a "$LOG"
 }
 
-log "Starting KCR Tracks first boot configuration..."
+log "Starting DS-Tracks first boot configuration..."
 
 # 1. Expand music partition
 log "Expanding music partition..."
@@ -455,7 +455,7 @@ else
 fi
 
 # 2. Read configuration from boot partition
-CONFIG_FILE="/boot/kcr-config.txt"
+CONFIG_FILE="/boot/ds-config.txt"
 if [ -f "$CONFIG_FILE" ]; then
     log "Reading configuration from $CONFIG_FILE"
     source "$CONFIG_FILE"
@@ -464,20 +464,20 @@ if [ -f "$CONFIG_FILE" ]; then
     if [ -n "$STATION_NAME" ]; then
         log "Setting station name: $STATION_NAME"
         sed -i "s/stationName = \".*\"/stationName = \"$STATION_NAME\"/" \
-            /var/www/html/kcr-tracks/branding.php
+            /var/www/html/ds-tracks/branding.php
     fi
 
     if [ -n "$STATION_SHORT_NAME" ]; then
         log "Setting short name: $STATION_SHORT_NAME"
         sed -i "s/stationShortName = \".*\"/stationShortName = \"$STATION_SHORT_NAME\"/" \
-            /var/www/html/kcr-tracks/branding.php
-        hostnamectl set-hostname "kcr-$STATION_SHORT_NAME"
+            /var/www/html/ds-tracks/branding.php
+        hostnamectl set-hostname "ds-$STATION_SHORT_NAME"
     fi
 
     if [ -n "$STATION_WEBSITE" ]; then
         log "Setting website: $STATION_WEBSITE"
         sed -i "s|stationWebsite = \".*\"|stationWebsite = \"$STATION_WEBSITE\"|" \
-            /var/www/html/kcr-tracks/branding.php
+            /var/www/html/ds-tracks/branding.php
     fi
 
     # Configure WiFi if provided
@@ -516,16 +516,16 @@ fi
 
 # 3. Generate instance ID for support
 INSTANCE_ID=$(cat /proc/sys/kernel/random/uuid | cut -d'-' -f1)
-echo "$INSTANCE_ID" > /var/www/html/kcr-tracks/.instance-id
+echo "$INSTANCE_ID" > /var/www/html/ds-tracks/.instance-id
 log "Instance ID: $INSTANCE_ID"
 
 # 4. Set correct permissions
 log "Setting permissions..."
-chown -R www-data:www-data /var/www/html/kcr-tracks/
-chmod -R 755 /var/www/html/kcr-tracks/
-chmod -R 644 /var/www/html/kcr-tracks/*.php
-chmod 755 /var/www/html/kcr-tracks/music
-chmod 755 /var/www/html/kcr-tracks/logs
+chown -R www-data:www-data /var/www/html/ds-tracks/
+chmod -R 755 /var/www/html/ds-tracks/
+chmod -R 644 /var/www/html/ds-tracks/*.php
+chmod 755 /var/www/html/ds-tracks/music
+chmod 755 /var/www/html/ds-tracks/logs
 
 # 5. Clear config file passwords (security)
 if [ -f "$CONFIG_FILE" ]; then
@@ -542,11 +542,11 @@ reboot
 
 ---
 
-#### File 2: /boot/kcr-config.txt (Template)
+#### File 2: /boot/ds-config.txt (Template)
 
 ```ini
 # ============================================================
-# KCR Tracks Appliance Configuration
+# DS-Tracks Appliance Configuration
 # ============================================================
 # Edit this file BEFORE first boot to pre-configure your station.
 # You can also change these settings later via the admin panel.
@@ -635,18 +635,18 @@ sudo raspi-config nonint do_change_locale en_AU.UTF-8
 sudo raspi-config nonint do_change_timezone Australia/Sydney
 ```
 
-#### Step 2: Install KCR Tracks
+#### Step 2: Install DS-Tracks
 
 ```bash
 # Copy application files to Pi
-scp -r /path/to/KCR-Tracks2 pi@raspberrypi.local:/tmp/
+scp -r /path/to/DS-Tracks2 pi@raspberrypi.local:/tmp/
 
 # Run installer
-cd /tmp/KCR-Tracks2
+cd /tmp/DS-Tracks2
 sudo ./install-raspberry-pi.sh
 
 # Verify installation
-curl -I http://localhost/kcr-tracks/
+curl -I http://localhost/ds-tracks/
 ```
 
 #### Step 3: Install Kiosk Components
@@ -677,18 +677,18 @@ EOF
 
 ```bash
 # Install first-boot script
-sudo cp kcr-first-boot.sh /usr/local/bin/
-sudo chmod +x /usr/local/bin/kcr-first-boot.sh
+sudo cp ds-first-boot.sh /usr/local/bin/
+sudo chmod +x /usr/local/bin/ds-first-boot.sh
 
 # Install first-boot service
-sudo cp kcr-first-boot.service /etc/systemd/system/
-sudo systemctl enable kcr-first-boot.service
+sudo cp ds-first-boot.service /etc/systemd/system/
+sudo systemctl enable ds-first-boot.service
 
 # Create first-boot trigger file
-sudo touch /boot/kcr-first-boot-pending
+sudo touch /boot/ds-first-boot-pending
 
 # Install config template
-sudo cp kcr-config.txt /boot/
+sudo cp ds-config.txt /boot/
 ```
 
 #### Step 5: Apply Security Hardening
@@ -740,17 +740,17 @@ On another Linux machine:
 lsblk
 
 # Create image (replace sdX with actual device)
-sudo dd if=/dev/sdX of=kcr-tracks-appliance-v2.0.img bs=4M status=progress
+sudo dd if=/dev/sdX of=ds-tracks-appliance-v2.0.img bs=4M status=progress
 
 # Shrink image (optional but recommended)
 # Use PiShrink: https://github.com/Drewsif/PiShrink
 wget https://raw.githubusercontent.com/Drewsif/PiShrink/master/pishrink.sh
 chmod +x pishrink.sh
-sudo ./pishrink.sh kcr-tracks-appliance-v2.0.img
+sudo ./pishrink.sh ds-tracks-appliance-v2.0.img
 
 # Compress
-xz -9 -T0 kcr-tracks-appliance-v2.0.img
-# Creates: kcr-tracks-appliance-v2.0.img.xz
+xz -9 -T0 ds-tracks-appliance-v2.0.img
+# Creates: ds-tracks-appliance-v2.0.img.xz
 ```
 
 ### 8.3 Image Distribution
@@ -770,10 +770,10 @@ Final image size estimates:
 ### 9.1 Download Package Structure
 
 ```
-KCR-Tracks-Appliance-v2.0/
-├── kcr-tracks-appliance-v2.0.img.xz     # Compressed disk image (~1GB)
+DS-Tracks-Appliance-v2.0/
+├── ds-tracks-appliance-v2.0.img.xz     # Compressed disk image (~1GB)
 ├── README.txt                            # Quick start instructions
-├── kcr-config-example.txt               # Example configuration file
+├── ds-config-example.txt               # Example configuration file
 ├── FLASHING-GUIDE.pdf                   # Visual guide with screenshots
 └── checksums.txt                         # SHA256 checksums for verification
 ```
@@ -781,25 +781,25 @@ KCR-Tracks-Appliance-v2.0/
 ### 9.2 README.txt Contents
 
 ```
-KCR TRACKS APPLIANCE v2.0
+DS-TRACKS APPLIANCE v2.0
 =========================
 
 Quick Start:
 1. Download and install Raspberry Pi Imager from https://www.raspberrypi.com/software/
-2. Extract kcr-tracks-appliance-v2.0.img.xz
+2. Extract ds-tracks-appliance-v2.0.img.xz
 3. Flash the .img file to your SSD/SD card using Raspberry Pi Imager
-4. (Optional) Open the boot drive on your computer and edit kcr-config.txt
+4. (Optional) Open the boot drive on your computer and edit ds-config.txt
 5. Insert the SSD/SD card into your Raspberry Pi
 6. Connect the display and power on
-7. KCR Tracks will start automatically
+7. DS-Tracks will start automatically
 
 For detailed instructions, see FLASHING-GUIDE.pdf
 
-Support: https://github.com/your-repo/kcr-tracks/issues
+Support: https://github.com/your-repo/ds-tracks/issues
 
 Verify your download:
-  Windows: certutil -hashfile kcr-tracks-appliance-v2.0.img SHA256
-  Mac/Linux: sha256sum kcr-tracks-appliance-v2.0.img
+  Windows: certutil -hashfile ds-tracks-appliance-v2.0.img SHA256
+  Mac/Linux: sha256sum ds-tracks-appliance-v2.0.img
   Compare with checksums.txt
 ```
 
@@ -814,7 +814,7 @@ Verify your download:
 | Test | Expected Result | Pass |
 |------|-----------------|------|
 | Flash image to new SSD | Completes without error | ☐ |
-| First boot (no config) | Boots to KCR Tracks kiosk | ☐ |
+| First boot (no config) | Boots to DS-Tracks kiosk | ☐ |
 | First boot (with config) | Applies station name from config | ☐ |
 | Partition expansion | Music partition fills SSD | ☐ |
 | Screen rotation | Applies SCREEN_ROTATION setting | ☐ |
@@ -875,7 +875,7 @@ Verify your download:
 2. **Requirements** - Hardware needed, Raspberry Pi Imager download
 3. **Extracting the Image** - How to decompress .xz file
 4. **Flashing** - Step-by-step with screenshots
-5. **Pre-Configuration** - Editing kcr-config.txt (optional)
+5. **Pre-Configuration** - Editing ds-config.txt (optional)
 6. **First Boot** - What to expect
 7. **Verification** - Confirming it works
 8. **Next Steps** - Admin panel access, customisation
@@ -903,9 +903,9 @@ The following are noted for potential future versions:
 
 | File | Location | Purpose |
 |------|----------|---------|
-| kcr-first-boot.sh | /usr/local/bin/ | First-boot configuration |
-| kcr-first-boot.service | /etc/systemd/system/ | Systemd service |
-| kcr-config.txt | /boot/ | User configuration template |
+| ds-first-boot.sh | /usr/local/bin/ | First-boot configuration |
+| ds-first-boot.service | /etc/systemd/system/ | Systemd service |
+| ds-config.txt | /boot/ | User configuration template |
 | autologin.conf | /etc/systemd/system/getty@tty1.service.d/ | Auto-login |
 | .bash_profile | /home/pi/ | Start X on login |
 | .xinitrc | /home/pi/ | Kiosk mode startup |
@@ -942,23 +942,23 @@ The following are noted for potential future versions:
 ### Useful Commands for Support
 
 ```bash
-# Check KCR Tracks status
+# Check DS-Tracks status
 systemctl status apache2
 
 # View application logs
-tail -f /var/www/html/kcr-tracks/logs/app_errors.log
+tail -f /var/www/html/ds-tracks/logs/app_errors.log
 
 # Check disk space
 df -h
 
 # View first-boot log
-cat /var/log/kcr-first-boot.log
+cat /var/log/ds-first-boot.log
 
 # Restart kiosk
 sudo systemctl restart getty@tty1
 
 # Check instance ID
-cat /var/www/html/kcr-tracks/.instance-id
+cat /var/www/html/ds-tracks/.instance-id
 
 # Manual partition expansion
 sudo parted /dev/sda resizepart 3 100%

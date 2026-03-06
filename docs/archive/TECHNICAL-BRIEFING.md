@@ -1,4 +1,4 @@
-# KCR Tracks v2.0 - Complete Technical Briefing Document
+# DS-Tracks v2.0 - Complete Technical Briefing Document
 
 **Date:** October 2025
 **Version:** 2.0
@@ -28,7 +28,7 @@
 ## 1. Executive Summary
 
 ### Project Overview
-KCR Tracks is a PHP-based web application designed for community radio stations to allow presenters to safely upload and play music from USB drives without risking malware infection of the station's network.
+DS-Tracks is a PHP-based web application designed for community radio stations to allow presenters to safely upload and play music from USB drives without risking malware infection of the station's network.
 
 ### Original State (v1.2)
 - **Functional:** Yes - met basic requirements
@@ -66,7 +66,7 @@ KCR Tracks is a PHP-based web application designed for community radio stations 
 
 **File Structure:**
 ```
-KCR-Tracks2/
+DS-Tracks2/
 ├── music/              # User uploads (directories named: username-YYMMDD-HHMMSS)
 ├── images/             # Logos and graphics
 ├── css/                # Stylesheets
@@ -466,7 +466,7 @@ define('MAX_FILE_SIZE', 50 * 1024 * 1024);
 define('ALLOWED_AUDIO_EXTENSIONS', ['mp3', 'wav', 'ogg', 'flac', 'm4a']);
 
 // Security class
-class KCRSecurity {
+class DSSecurity {
     public static function sanitizeUsername($username)
     public static function sanitizeSessionName($sessionName)
     public static function isValidMusicPath($path)
@@ -582,8 +582,8 @@ memory_limit = 256M
 **Apache Virtual Host Created:**
 ```apache
 <VirtualHost *:80>
-    DocumentRoot /var/www/html/kcr-tracks
-    <Directory /var/www/html/kcr-tracks>
+    DocumentRoot /var/www/html/ds-tracks
+    <Directory /var/www/html/ds-tracks>
         Options -Indexes +FollowSymLinks
         AllowOverride All
         Require all granted
@@ -632,7 +632,7 @@ memory_limit = 256M
    - Disable directory listing
 
 5. **Monitoring & Backups:**
-   - Log rotation for KCR Tracks logs
+   - Log rotation for DS-Tracks logs
    - Automated backup script (weekly cron)
    - Disk space monitoring (daily check)
    - Keep last 7 backups
@@ -645,12 +645,12 @@ memory_limit = 256M
 
 **Backup Script Created:**
 ```bash
-/usr/local/bin/kcr-tracks-backup.sh
+/usr/local/bin/ds-tracks-backup.sh
 # Runs weekly via cron
 # Backs up music directory
 # Compresses with gzip
 # Keeps last 7 backups
-# Location: /home/pi/kcr-tracks-backups/
+# Location: /home/pi/ds-tracks-backups/
 ```
 
 **Disk Monitoring Script:**
@@ -990,7 +990,7 @@ memory_limit = 256M
 
 **Contents:**
 - Configuration constants
-- KCRSecurity class with 9 methods
+- DSSecurity class with 9 methods
 - Helper functions
 - Session configuration
 - Error logging configuration
@@ -1091,14 +1091,14 @@ memory_limit = 256M
 
 **Testing:** Tested on Raspberry Pi OS Bullseye
 
-#### 7.16 QUICK_START.md (NEW)
+#### 7.16 QUICK-START.md (NEW)
 **Lines:** 150
 **Purpose:** 15-minute setup guide
 **Impact:** HIGH - user documentation
 
 **Target Audience:** Radio station administrators
 
-#### 7.17 DEPLOYMENT_GUIDE.md (NEW)
+#### 7.17 DEPLOYMENT-GUIDE.md (NEW)
 **Lines:** 750
 **Purpose:** Complete deployment manual
 **Impact:** HIGH - comprehensive documentation
@@ -1111,7 +1111,7 @@ memory_limit = 256M
 - Troubleshooting
 - Maintenance procedures
 
-#### 7.18 README_DISTRIBUTION.md (NEW)
+#### 7.18 README-DISTRIBUTION.md (NEW)
 **Lines:** 400
 **Purpose:** Distribution package information
 **Impact:** HIGH - marketing/distribution
@@ -1147,7 +1147,7 @@ memory_limit = 256M
                             ↓
 ┌────────────────────────────────────────────────────────────┐
 │ Step 3: Transfer Files                                     │
-│ - SCP KCR-Tracks2 folder to /home/pi/                      │
+│ - SCP DS-Tracks2 folder to /home/pi/                      │
 │ - OR copy via USB drive                                    │
 └────────────────────────────────────────────────────────────┘
                             ↓
@@ -1270,16 +1270,16 @@ memory_limit = 256M
    - Directory listing disabled globally
 
 5. **Monitoring:**
-   - Log rotation for KCR Tracks logs
+   - Log rotation for DS-Tracks logs
    - Backup script creation (weekly cron)
    - Disk space monitoring (daily cron)
    - Security checklist generation
 
 6. **Backup System:**
-   - Script: `/usr/local/bin/kcr-tracks-backup.sh`
+   - Script: `/usr/local/bin/ds-tracks-backup.sh`
    - Frequency: Weekly (Sunday 2 AM)
    - Retention: Last 7 backups
-   - Location: `/home/pi/kcr-tracks-backups/`
+   - Location: `/home/pi/ds-tracks-backups/`
    - Compression: gzip
 
 7. **Disk Monitoring:**
@@ -1382,9 +1382,9 @@ memory_limit = 256M
 
 **Station Information:**
 ```php
-public static $stationName = "Kiama Community Radio";
-public static $stationShortName = "KCR";
-public static $stationWebsite = "https://kiamaradio.org.au";
+public static $stationName = "My Station";
+public static $stationShortName = "DS";
+public static $stationWebsite = "https://example.com";
 ```
 
 **Usage in Application:**
@@ -1394,7 +1394,7 @@ public static $stationWebsite = "https://kiamaradio.org.au";
 
 **Logos:**
 ```php
-public static $logoPath = "images/kcr-logo-cropped.png";
+public static $logoPath = "images/station-logo.png";
 public static $tracksLogoPath = "images/tracks-logo.png";
 public static $faviconPath = "images/favicon.ico";
 ```
@@ -1491,13 +1491,13 @@ Branding::getCSSVariables() outputs:
 **Upload Process:**
 ```bash
 # Method 1: SCP from computer
-scp logo.png pi@raspberrypi:/var/www/html/kcr-tracks/images/station-logo.png
+scp logo.png pi@raspberrypi:/var/www/html/ds-tracks/images/station-logo.png
 
 # Method 2: USB drive
 # Copy to USB, insert into Pi:
 sudo mount /dev/sda1 /mnt
-sudo cp /mnt/logo.png /var/www/html/kcr-tracks/images/station-logo.png
-sudo chown www-data:www-data /var/www/html/kcr-tracks/images/station-logo.png
+sudo cp /mnt/logo.png /var/www/html/ds-tracks/images/station-logo.png
+sudo chown www-data:www-data /var/www/html/ds-tracks/images/station-logo.png
 
 # Method 3: Web upload (future enhancement)
 ```
@@ -1509,7 +1509,7 @@ sudo chown www-data:www-data /var/www/html/kcr-tracks/images/station-logo.png
 1. **Primary Color:**
    - Your station's main brand color
    - Used for: headers, main buttons, backgrounds
-   - Example: Teal (#1a7a7a) for KCR
+   - Example: Teal (#1a7a7a) for DS
 
 2. **Primary Dark:**
    - Darker shade of primary (15-20% darker)
@@ -1725,42 +1725,42 @@ apt list --upgradable
 
 ### Backup System
 
-**Backup Script (/usr/local/bin/kcr-tracks-backup.sh):**
+**Backup Script (/usr/local/bin/ds-tracks-backup.sh):**
 ```bash
 #!/bin/bash
-BACKUP_DIR="/home/pi/kcr-tracks-backups"
+BACKUP_DIR="/home/pi/ds-tracks-backups"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-SOURCE_DIR="/var/www/html/kcr-tracks/music"
+SOURCE_DIR="/var/www/html/ds-tracks/music"
 
 mkdir -p "$BACKUP_DIR"
 
 # Create backup
-tar -czf "$BACKUP_DIR/kcr-tracks_${TIMESTAMP}.tar.gz" "$SOURCE_DIR"
+tar -czf "$BACKUP_DIR/ds-tracks_${TIMESTAMP}.tar.gz" "$SOURCE_DIR"
 
 # Keep only last 7 backups
 cd "$BACKUP_DIR"
-ls -t kcr-tracks_*.tar.gz | tail -n +8 | xargs -r rm
+ls -t ds-tracks_*.tar.gz | tail -n +8 | xargs -r rm
 
-echo "Backup completed: kcr-tracks_${TIMESTAMP}.tar.gz"
+echo "Backup completed: ds-tracks_${TIMESTAMP}.tar.gz"
 ```
 
 **Cron Schedule:**
 ```bash
 # Weekly backup (Sunday 2 AM)
-0 2 * * 0 /usr/local/bin/kcr-tracks-backup.sh
+0 2 * * 0 /usr/local/bin/ds-tracks-backup.sh
 ```
 
 **Manual Backup:**
 ```bash
-sudo /usr/local/bin/kcr-tracks-backup.sh
+sudo /usr/local/bin/ds-tracks-backup.sh
 ```
 
 **Restore from Backup:**
 ```bash
-cd /home/pi/kcr-tracks-backups
-tar -xzf kcr-tracks_YYYYMMDD_HHMMSS.tar.gz -C /tmp/
-sudo cp -r /tmp/music/* /var/www/html/kcr-tracks/music/
-sudo chown -R www-data:www-data /var/www/html/kcr-tracks/music/
+cd /home/pi/ds-tracks-backups
+tar -xzf ds-tracks_YYYYMMDD_HHMMSS.tar.gz -C /tmp/
+sudo cp -r /tmp/music/* /var/www/html/ds-tracks/music/
+sudo chown -R www-data:www-data /var/www/html/ds-tracks/music/
 ```
 
 ### Disk Space Monitoring
@@ -1790,14 +1790,14 @@ sudo /usr/local/bin/check-disk-space.sh
 
 # Check disk usage
 df -h
-du -sh /var/www/html/kcr-tracks/music
+du -sh /var/www/html/ds-tracks/music
 ```
 
 ### Log Rotation
 
-**Configuration (/etc/logrotate.d/kcr-tracks):**
+**Configuration (/etc/logrotate.d/ds-tracks):**
 ```
-/var/www/html/kcr-tracks/logs/*.log {
+/var/www/html/ds-tracks/logs/*.log {
     weekly            # Rotate weekly
     rotate 4          # Keep 4 weeks
     compress          # Compress old logs
@@ -1811,10 +1811,10 @@ du -sh /var/www/html/kcr-tracks/music
 **Testing:**
 ```bash
 # Force rotation (testing)
-sudo logrotate -f /etc/logrotate.d/kcr-tracks
+sudo logrotate -f /etc/logrotate.d/ds-tracks
 
 # Check rotated logs
-ls -lh /var/www/html/kcr-tracks/logs/
+ls -lh /var/www/html/ds-tracks/logs/
 ```
 
 ### Security Checklist
@@ -2024,7 +2024,7 @@ sudo fail2ban-client set sshd unbanip <ip>  # Works ✅
 
 1. **Implement CSRF Protection**
    - Add CSRF tokens to all forms
-   - Use `KCRSecurity::generateCSRFToken()`
+   - Use `DSSecurity::generateCSRFToken()`
    - Validate on POST requests
    - **Impact:** Prevent cross-site request forgery
    - **Effort:** 2-3 hours
@@ -2207,13 +2207,13 @@ sudo fail2ban-client set sshd unbanip <ip>  # Works ✅
 **Review Logs:**
 ```bash
 # Check for errors
-sudo tail -50 /var/www/html/kcr-tracks/logs/app_errors.log
+sudo tail -50 /var/www/html/ds-tracks/logs/app_errors.log
 
 # Check upload activity
-sudo tail -50 /var/www/html/kcr-tracks/logs/upload_errors.log
+sudo tail -50 /var/www/html/ds-tracks/logs/upload_errors.log
 
 # Check API errors
-sudo tail -50 /var/www/html/kcr-tracks/logs/api_errors.log
+sudo tail -50 /var/www/html/ds-tracks/logs/api_errors.log
 ```
 
 **Check Disk Space:**
@@ -2222,7 +2222,7 @@ sudo tail -50 /var/www/html/kcr-tracks/logs/api_errors.log
 df -h
 
 # Music directory size
-du -sh /var/www/html/kcr-tracks/music
+du -sh /var/www/html/ds-tracks/music
 
 # If low, consider cleanup or larger SD card
 ```
@@ -2230,7 +2230,7 @@ du -sh /var/www/html/kcr-tracks/music
 **Verify Backups:**
 ```bash
 # Check backup directory
-ls -lh /home/pi/kcr-tracks-backups/
+ls -lh /home/pi/ds-tracks-backups/
 
 # Should see weekly backups
 # Most recent should be from this week
@@ -2263,19 +2263,19 @@ sudo tail -100 /var/log/auth.log | grep Failed
 **Backup Verification:**
 ```bash
 # Test restore from most recent backup
-cd /home/pi/kcr-tracks-backups
-LATEST=$(ls -t kcr-tracks_*.tar.gz | head -1)
+cd /home/pi/ds-tracks-backups
+LATEST=$(ls -t ds-tracks_*.tar.gz | head -1)
 tar -tzf $LATEST  # List contents, should see music files
 ```
 
 **Cleanup Old Sessions (Optional):**
 ```bash
 # Find sessions older than 60 days
-find /var/www/html/kcr-tracks/music -type d -mtime +60
+find /var/www/html/ds-tracks/music -type d -mtime +60
 
 # Review list, then delete if appropriate
 # BE CAREFUL - this deletes presenter music!
-find /var/www/html/kcr-tracks/music -type d -mtime +60 -exec rm -rf {} \;
+find /var/www/html/ds-tracks/music -type d -mtime +60 -exec rm -rf {} \;
 ```
 
 ### Quarterly Maintenance
@@ -2292,7 +2292,7 @@ sudo ufw status verbose
 sudo apt-get autoremove
 
 # Review Apache logs
-sudo tail -200 /var/log/apache2/kcr-tracks-error.log
+sudo tail -200 /var/log/apache2/ds-tracks-error.log
 ```
 
 **Performance Review:**
@@ -2361,18 +2361,18 @@ sudo systemctl restart apache2
 **Problem: Uploads failing**
 ```bash
 # Check permissions
-ls -la /var/www/html/kcr-tracks/music
+ls -la /var/www/html/ds-tracks/music
 # Should show: drwxr-xr-x www-data www-data
 
 # Fix if needed
-sudo chown -R www-data:www-data /var/www/html/kcr-tracks/music
-sudo chmod 755 /var/www/html/kcr-tracks/music
+sudo chown -R www-data:www-data /var/www/html/ds-tracks/music
+sudo chmod 755 /var/www/html/ds-tracks/music
 
 # Check disk space
 df -h
 
 # Check logs
-sudo tail -50 /var/www/html/kcr-tracks/logs/upload_errors.log
+sudo tail -50 /var/www/html/ds-tracks/logs/upload_errors.log
 ```
 
 **Problem: Audio not playing**
@@ -2388,7 +2388,7 @@ sudo raspi-config
 # Select: System Options > Audio
 
 # Check Apache can access audio files
-ls -la /var/www/html/kcr-tracks/music/*/
+ls -la /var/www/html/ds-tracks/music/*/
 # Files should be readable (644)
 ```
 
@@ -2425,10 +2425,10 @@ sudo cat /etc/ssh/sshd_config | grep Port
 
 **Log Files to Monitor:**
 ```
-/var/www/html/kcr-tracks/logs/app_errors.log    - Application errors
-/var/www/html/kcr-tracks/logs/upload_errors.log - Upload issues
-/var/www/html/kcr-tracks/logs/api_errors.log    - API problems
-/var/log/apache2/kcr-tracks-error.log           - Web server errors
+/var/www/html/ds-tracks/logs/app_errors.log    - Application errors
+/var/www/html/ds-tracks/logs/upload_errors.log - Upload issues
+/var/www/html/ds-tracks/logs/api_errors.log    - API problems
+/var/log/apache2/ds-tracks-error.log           - Web server errors
 /var/log/fail2ban.log                           - Security events
 /var/log/auth.log                               - SSH attempts
 /var/log/syslog                                 - System messages
@@ -2457,7 +2457,7 @@ tls_starttls on
 sudo chmod 600 /etc/msmtprc
 
 # Test
-echo "Test email" | mail -s "Test from KCR Tracks" your-email@gmail.com
+echo "Test email" | mail -s "Test from DS-Tracks" your-email@gmail.com
 
 # Add to monitoring scripts
 # Modify /usr/local/bin/check-disk-space.sh to send email on alert
@@ -2469,24 +2469,24 @@ echo "Test email" | mail -s "Test from KCR Tracks" your-email@gmail.com
 ```bash
 # Full system backup (music + application)
 sudo tar -czf /home/pi/full-backup-$(date +%Y%m%d).tar.gz \
-  /var/www/html/kcr-tracks/music \
-  /var/www/html/kcr-tracks/images \
-  /var/www/html/kcr-tracks/branding.php
+  /var/www/html/ds-tracks/music \
+  /var/www/html/ds-tracks/images \
+  /var/www/html/ds-tracks/branding.php
 
 # Music only (automatic script)
-sudo /usr/local/bin/kcr-tracks-backup.sh
+sudo /usr/local/bin/ds-tracks-backup.sh
 ```
 
 **Off-Site Backup:**
 ```bash
 # Copy to external drive
-sudo cp /home/pi/kcr-tracks-backups/*.tar.gz /mnt/external-drive/
+sudo cp /home/pi/ds-tracks-backups/*.tar.gz /mnt/external-drive/
 
 # Or sync to remote server
-rsync -avz /home/pi/kcr-tracks-backups/ user@backup-server:/backups/kcr/
+rsync -avz /home/pi/ds-tracks-backups/ user@backup-server:/backups/ds-tracks/
 
 # Or use cloud storage (rclone)
-rclone sync /home/pi/kcr-tracks-backups/ remote:kcr-backups/
+rclone sync /home/pi/ds-tracks-backups/ remote:ds-tracks-backups/
 ```
 
 **Restore Procedure:**
@@ -2495,15 +2495,15 @@ rclone sync /home/pi/kcr-tracks-backups/ remote:kcr-backups/
 sudo systemctl stop apache2
 
 # 2. Restore music directory
-cd /home/pi/kcr-tracks-backups
-tar -xzf kcr-tracks_YYYYMMDD_HHMMSS.tar.gz -C /tmp/
-sudo rm -rf /var/www/html/kcr-tracks/music/*
-sudo cp -r /tmp/music/* /var/www/html/kcr-tracks/music/
+cd /home/pi/ds-tracks-backups
+tar -xzf ds-tracks_YYYYMMDD_HHMMSS.tar.gz -C /tmp/
+sudo rm -rf /var/www/html/ds-tracks/music/*
+sudo cp -r /tmp/music/* /var/www/html/ds-tracks/music/
 
 # 3. Fix permissions
-sudo chown -R www-data:www-data /var/www/html/kcr-tracks/music
-sudo chmod 755 /var/www/html/kcr-tracks/music
-find /var/www/html/kcr-tracks/music -type f -exec sudo chmod 644 {} \;
+sudo chown -R www-data:www-data /var/www/html/ds-tracks/music
+sudo chmod 755 /var/www/html/ds-tracks/music
+find /var/www/html/ds-tracks/music -type f -exec sudo chmod 644 {} \;
 
 # 4. Start Apache
 sudo systemctl start apache2
@@ -2534,7 +2534,7 @@ sudo systemctl start apache2
 ### Appendix A: File Structure Reference
 
 ```
-/var/www/html/kcr-tracks/
+/var/www/html/ds-tracks/
 ├── config.php                      # Central configuration
 ├── branding.php                    # Branding configuration
 ├── admin_customize.php             # Admin interface
@@ -2559,7 +2559,7 @@ sudo systemctl start apache2
 │   ├── api_errors.log
 │   └── music_errors.log
 ├── images/                         # Logos and graphics
-│   ├── kcr-logo-cropped.png
+│   ├── station-logo.png
 │   ├── tracks-logo.png
 │   └── favicon.ico
 ├── css/                            # Stylesheets
@@ -2592,7 +2592,7 @@ sudo systemctl start apache2
 
 | Backup Type | Frequency | Retention | Location |
 |-------------|-----------|-----------|----------|
-| Music files | Weekly | 7 backups | /home/pi/kcr-tracks-backups/ |
+| Music files | Weekly | 7 backups | /home/pi/ds-tracks-backups/ |
 | Application | Manual | N/A | User responsibility |
 | System | Manual | N/A | User responsibility |
 
@@ -2675,21 +2675,21 @@ sudo systemctl start apache2
 ### Appendix J: Contact & Support
 
 **Documentation:**
-- Quick Start: QUICK_START.md
-- Deployment: DEPLOYMENT_GUIDE.md
-- Security: SECURITY_UPDATES.md
-- Changes: CHANGES_SUMMARY.md
-- User Manual: KCR-Tracks-User-Manual-D02-2023-03-14.pdf
+- Quick Start: QUICK-START.md (in docs/guides/)
+- Deployment: DEPLOYMENT-GUIDE.md (in docs/guides/)
+- Security: SECURITY-UPDATES.md (in docs/archive/)
+- Changes: CHANGES-SUMMARY.md (in docs/archive/)
+- User Manual: KCR-Tracks-User-Manual-D02-2023-03-14.pdf (in docs/archive/)
 
 **Log Files:**
-- Application: /var/www/html/kcr-tracks/logs/
+- Application: /var/www/html/ds-tracks/logs/
 - Apache: /var/log/apache2/
 - System: /var/log/syslog
 
 **Configuration Files:**
-- Application: /var/www/html/kcr-tracks/config.php
-- Branding: /var/www/html/kcr-tracks/branding.php
-- Apache: /etc/apache2/sites-available/kcr-tracks.conf
+- Application: /var/www/html/ds-tracks/config.php
+- Branding: /var/www/html/ds-tracks/branding.php
+- Apache: /etc/apache2/sites-available/ds-tracks.conf
 - PHP: /etc/php/7.4/apache2/php.ini
 - Firewall: sudo ufw status
 - SSH: /etc/ssh/sshd_config
@@ -2699,7 +2699,7 @@ sudo systemctl start apache2
 
 ## Conclusion
 
-KCR Tracks v2.0 represents a complete transformation from a functional but insecure application to a production-grade, distributable system suitable for community radio stations worldwide.
+DS-Tracks v2.0 represents a complete transformation from a functional but insecure application to a production-grade, distributable system suitable for community radio stations worldwide.
 
 ### Key Achievements
 
@@ -2729,7 +2729,7 @@ KCR Tracks v2.0 represents a complete transformation from a functional but insec
 
 ### Final Recommendations
 
-**For Original Developer (KCR):**
+**For Original Developer (DS):**
 1. Deploy v2.0 to production immediately
 2. Train staff on new admin interface
 3. Monitor logs for first month
@@ -2737,7 +2737,7 @@ KCR Tracks v2.0 represents a complete transformation from a functional but insec
 5. Consider contributing improvements back
 
 **For New Adopters (Other Stations):**
-1. Follow QUICK_START.md for 15-minute setup
+1. Follow QUICK-START.md (in docs/guides/) for 15-minute setup
 2. Customize branding via admin interface
 3. Run security hardening script
 4. Train presenters
@@ -2771,7 +2771,7 @@ KCR Tracks v2.0 represents a complete transformation from a functional but insec
 
 ### Acknowledgments
 
-This security review and enhancement project has successfully transformed KCR Tracks into a professional, distributable system while maintaining the simplicity and practicality that made the original version useful.
+This security review and enhancement project has successfully transformed DS-Tracks into a professional, distributable system while maintaining the simplicity and practicality that made the original version useful.
 
 The system is now ready for deployment at radio stations worldwide, with comprehensive documentation, automated installation, and production-grade security.
 

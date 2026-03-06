@@ -1,4 +1,4 @@
-# KCR Tracks v2.0 - Project Documentation
+# DS-Tracks v2.0 - Project Documentation
 
 ## Complete Documentation of Work Completed
 
@@ -36,16 +36,16 @@
 | Deliverable | Status | File |
 |-------------|--------|------|
 | User Manual Assessment | Complete | Provided in conversation |
-| Updated User Manual (v2.0) | Complete | `KCR-Tracks-User-Manual-V2.md` |
+| Updated User Manual (v2.0) | Complete | `docs/archive/DS-Tracks-User-Manual-V2.md` |
 | Codebase Assessment | Complete | Embedded in specification |
-| Appliance Build Specification | Complete | `APPLIANCE-BUILD-SPECIFICATION.md` |
+| Appliance Build Specification | Complete | `docs/specifications/APPLIANCE-BUILD-SPECIFICATION.md` |
 | Appliance Build System | Complete | `appliance/` folder |
-| End-User Installation Guide | Complete | `INSTALLATION-GUIDE.md` |
+| End-User Installation Guide | Complete | `docs/guides/INSTALLATION-GUIDE.md` |
 | Project Documentation | Complete | This file |
 
 ### Key Finding
 
-**The KCR Tracks v2.0 codebase is 95% ready for Raspberry Pi appliance deployment.** Only minor enhancements are recommended (not required). The build system created can produce distributable images immediately.
+**The DS-Tracks v2.0 codebase is 95% ready for Raspberry Pi appliance deployment.** Only minor enhancements are recommended (not required). The build system created can produce distributable images immediately.
 
 ---
 
@@ -66,20 +66,25 @@
 ### 2.2 Files Created
 
 ```
-KCR-Tracks2/
-├── KCR-Tracks-User-Manual-V2.md       # Updated user manual
-├── APPLIANCE-BUILD-SPECIFICATION.md   # Technical specification
-├── INSTALLATION-GUIDE.md              # End-user installation guide
-├── PROJECT-DOCUMENTATION.md           # This file
+DS-Tracks2/
+├── docs/
+│   ├── archive/
+│   │   └── DS-Tracks-User-Manual-V2.md       # Updated user manual
+│   ├── specifications/
+│   │   └── APPLIANCE-BUILD-SPECIFICATION.md   # Technical specification
+│   ├── guides/
+│   │   └── INSTALLATION-GUIDE.md              # End-user installation guide
+│   └── archive/
+│       └── PROJECT-DOCUMENTATION.md           # This file
 └── appliance/
     ├── README.md                      # Build system documentation
     ├── build-appliance.sh             # Master build script
     ├── imager-manifest.json           # Raspberry Pi Imager integration
     ├── boot-files/
-    │   └── kcr-config.txt             # User configuration template
+    │   └── ds-config.txt             # User configuration template
     ├── first-boot/
-    │   ├── kcr-first-boot.sh          # First-boot configuration script
-    │   └── kcr-first-boot.service     # Systemd service definition
+    │   ├── ds-first-boot.sh          # First-boot configuration script
+    │   └── ds-first-boot.service     # Systemd service definition
     └── kiosk/
         ├── xinitrc                    # X session kiosk configuration
         ├── bash_profile               # Auto-start X on login
@@ -92,7 +97,7 @@ KCR-Tracks2/
 
 ### 3.1 Assessment of Original Manual (v1.2)
 
-The original PDF manual (`KCR-Tracks-User-Manual-D02-2023-03-14.pdf`) was reviewed against the current codebase.
+The original PDF manual (`DS-Tracks-User-Manual-D02-2023-03-14.pdf`) was reviewed against the current codebase.
 
 **Rating: 6/10 - Adequate for Basic Use**
 
@@ -120,7 +125,7 @@ The original PDF manual (`KCR-Tracks-User-Manual-D02-2023-03-14.pdf`) was review
 
 ### 3.2 Updated Manual (v2.0)
 
-**File:** `KCR-Tracks-User-Manual-V2.md`
+**File:** `DS-Tracks-User-Manual-V2.md`
 
 #### New Sections Added
 
@@ -166,7 +171,7 @@ The following files were analysed for appliance suitability:
 | Installation Scripts | `install-raspberry-pi.sh`, `security-hardening.sh`, `setup.sh` |
 | Configuration | `config.php`, `branding.php`, `.htaccess` |
 | Application Code | `login.php`, `upload.php`, `json.php`, `music.php` |
-| Documentation | `DEPLOYMENT_GUIDE.md`, `QUICK_START.md`, `TECHNICAL_BRIEFING.md` |
+| Documentation | `DEPLOYMENT-GUIDE.md`, `QUICK-START.md`, `TECHNICAL-BRIEFING.md` |
 
 ### 4.2 Assessment Results
 
@@ -186,10 +191,10 @@ The following files were analysed for appliance suitability:
 
 ```javascript
 // Location: login.php, lines 135, 188, 205
-var base_url = window.location.origin + "/kcr-tracks/";
+var base_url = window.location.origin + "/ds-tracks/";
 ```
 
-- **Impact:** Assumes installation at `/kcr-tracks/` path
+- **Impact:** Assumes installation at `/ds-tracks/` path
 - **For Appliance:** No issue - standard path matches installer default
 - **Recommendation:** No change required for appliance deployment
 
@@ -218,7 +223,7 @@ var base_url = window.location.origin + "/kcr-tracks/";
 
 The appliance build system creates a "flash and boot" Raspberry Pi image that:
 
-- Boots directly to KCR Tracks in kiosk mode
+- Boots directly to DS-Tracks in kiosk mode
 - Auto-expands storage to fill any size SSD
 - Reads user configuration from a Windows-editable file
 - Requires no Linux knowledge from end users
@@ -234,7 +239,7 @@ The appliance build system creates a "flash and boot" Raspberry Pi image that:
 │                    ↓                                        │
 │  2. Flash to SSD using Raspberry Pi Imager                 │
 │                    ↓                                        │
-│  3. (Optional) Edit kcr-config.txt on boot partition       │
+│  3. (Optional) Edit ds-config.txt on boot partition       │
 │                    ↓                                        │
 │  4. Insert SSD into Pi, power on                           │
 │                    ↓                                        │
@@ -244,7 +249,7 @@ The appliance build system creates a "flash and boot" Raspberry Pi image that:
 │     • Configures network                                   │
 │     • Reboots                                              │
 │                    ↓                                        │
-│  6. KCR Tracks kiosk mode starts                           │
+│  6. DS-Tracks kiosk mode starts                           │
 │                    ↓                                        │
 │  7. Ready to use!                                          │
 │                                                             │
@@ -255,14 +260,14 @@ The appliance build system creates a "flash and boot" Raspberry Pi image that:
 
 #### build-appliance.sh (Master Build Script)
 
-**Purpose:** Transforms a fresh Raspberry Pi OS installation into a KCR Tracks appliance ready for imaging.
+**Purpose:** Transforms a fresh Raspberry Pi OS installation into a DS-Tracks appliance ready for imaging.
 
 **Phases:**
 
 | Phase | Description | Duration |
 |-------|-------------|----------|
 | 1 | System update and package installation | ~10 mins |
-| 2 | KCR Tracks installation (runs existing installer) | ~10 mins |
+| 2 | DS-Tracks installation (runs existing installer) | ~10 mins |
 | 3 | Kiosk components (X11, Chromium, auto-login) | ~10 mins |
 | 4 | First-boot system configuration | ~2 mins |
 | 5 | Security hardening (firewall, SSH disabled) | ~5 mins |
@@ -272,11 +277,11 @@ The appliance build system creates a "flash and boot" Raspberry Pi image that:
 
 **Usage:**
 ```bash
-cd /tmp/KCR-Tracks2/appliance
+cd /tmp/DS-Tracks2/appliance
 sudo ./build-appliance.sh
 ```
 
-#### kcr-first-boot.sh (First-Boot Configuration)
+#### ds-first-boot.sh (First-Boot Configuration)
 
 **Purpose:** Runs automatically on the end user's first boot to personalise their appliance.
 
@@ -294,9 +299,9 @@ sudo ./build-appliance.sh
 | `generate_instance_id()` | Creates unique ID for support purposes |
 | `clear_sensitive_config()` | Removes passwords from config file |
 
-**Trigger:** Runs when `/boot/kcr-first-boot-pending` file exists. File is deleted after successful run.
+**Trigger:** Runs when `/boot/ds-first-boot-pending` file exists. File is deleted after successful run.
 
-#### kcr-config.txt (User Configuration)
+#### ds-config.txt (User Configuration)
 
 **Purpose:** Allows users to pre-configure their appliance before first boot. Editable on Windows/Mac.
 
@@ -332,16 +337,16 @@ sudo ./build-appliance.sh
 - Cursor hidden after 0.5 seconds of inactivity
 - Screen never blanks or sleeps
 - If Chromium crashes, it automatically restarts
-- Opens `http://localhost/kcr-tracks/login.php`
+- Opens `http://localhost/ds-tracks/login.php`
 
 #### imager-manifest.json (Raspberry Pi Imager Integration)
 
-**Purpose:** Makes KCR Tracks appear as an option in Raspberry Pi Imager's OS selection menu.
+**Purpose:** Makes DS-Tracks appear as an option in Raspberry Pi Imager's OS selection menu.
 
 **How It Works:**
 1. Host this JSON file on your web server
 2. Users add your manifest URL to Raspberry Pi Imager (Settings → Custom Repository)
-3. KCR Tracks appears in the "Other" category
+3. DS-Tracks appears in the "Other" category
 4. Selecting it downloads and flashes automatically
 
 **Requires Updates:**
@@ -378,10 +383,10 @@ Users can buy any size SSD (64GB, 128GB, 256GB, 512GB, 1TB) and the system autom
 
 | File | Purpose | Audience |
 |------|---------|----------|
-| `KCR-Tracks-User-Manual-V2.md` | How to use KCR Tracks | Presenters |
-| `INSTALLATION-GUIDE.md` | How to flash and set up the appliance | Station IT/managers |
-| `APPLIANCE-BUILD-SPECIFICATION.md` | Technical specification for appliance | Developers |
-| `PROJECT-DOCUMENTATION.md` | This file - complete project documentation | Reference |
+| `docs/archive/DS-Tracks-User-Manual-V2.md` | How to use DS-Tracks | Presenters |
+| `docs/guides/INSTALLATION-GUIDE.md` | How to flash and set up the appliance | Station IT/managers |
+| `docs/specifications/APPLIANCE-BUILD-SPECIFICATION.md` | Technical specification for appliance | Developers |
+| `docs/archive/PROJECT-DOCUMENTATION.md` | This file - complete project documentation | Reference |
 | `appliance/README.md` | How to use the build system | Developers |
 
 ### 6.2 Build System Files
@@ -389,9 +394,9 @@ Users can buy any size SSD (64GB, 128GB, 256GB, 512GB, 1TB) and the system autom
 | File | Purpose | When Used |
 |------|---------|-----------|
 | `appliance/build-appliance.sh` | Configures Pi for imaging | Once, during image creation |
-| `appliance/first-boot/kcr-first-boot.sh` | Configures user's appliance | Once, on user's first boot |
-| `appliance/first-boot/kcr-first-boot.service` | Systemd service definition | Installed during build |
-| `appliance/boot-files/kcr-config.txt` | User configuration template | Copied to boot partition |
+| `appliance/first-boot/ds-first-boot.sh` | Configures user's appliance | Once, on user's first boot |
+| `appliance/first-boot/ds-first-boot.service` | Systemd service definition | Installed during build |
+| `appliance/boot-files/ds-config.txt` | User configuration template | Copied to boot partition |
 | `appliance/kiosk/xinitrc` | X session startup | Every boot |
 | `appliance/kiosk/bash_profile` | Auto-start X | Every login |
 | `appliance/kiosk/openbox-autostart` | Window manager config | Every X session |
@@ -401,7 +406,7 @@ Users can buy any size SSD (64GB, 128GB, 256GB, 512GB, 1TB) and the system autom
 
 | File | Purpose | Notes |
 |------|---------|-------|
-| `install-raspberry-pi.sh` | Installs KCR Tracks | Called by build-appliance.sh |
+| `install-raspberry-pi.sh` | Installs DS-Tracks | Called by build-appliance.sh |
 | `security-hardening.sh` | Security configuration | Not used in appliance (security pre-applied) |
 | `config.php` | Application configuration | No changes needed |
 | `branding.php` | Station branding | Modified by first-boot script |
@@ -427,24 +432,24 @@ Users can buy any size SSD (64GB, 128GB, 256GB, 512GB, 1TB) and the system autom
 
 **In `INSTALLATION-GUIDE.md`:**
 ```markdown
-Line ~380: https://yoursite.com/kcr-tracks/docs
-Line ~381: https://yoursite.com/kcr-tracks/faq
-Line ~382: https://yoursite.com/kcr-tracks/forum
-Line ~386: https://github.com/your-repo/kcr-tracks/issues
+Line ~380: https://yoursite.com/ds-tracks/docs
+Line ~381: https://yoursite.com/ds-tracks/faq
+Line ~382: https://yoursite.com/ds-tracks/forum
+Line ~386: https://github.com/your-repo/ds-tracks/issues
 Line ~389: support@yoursite.com
 ```
 
 **In `appliance/imager-manifest.json`:**
 ```json
-"icon": "https://yoursite.com/downloads/kcr-tracks-icon.png"
-"url": "https://yoursite.com/downloads/kcr-tracks-v2.0.img.xz"
-"website": "https://yoursite.com/kcr-tracks"
+"icon": "https://yoursite.com/downloads/ds-tracks-icon.png"
+"url": "https://yoursite.com/downloads/ds-tracks-v2.0.img.xz"
+"website": "https://yoursite.com/ds-tracks"
 "extract_sha256": "REPLACE_WITH_ACTUAL_SHA256_HASH"
 ```
 
-**In `appliance/boot-files/kcr-config.txt`:**
+**In `appliance/boot-files/ds-config.txt`:**
 ```
-Line ~85: https://yoursite.com/kcr-tracks/support
+Line ~85: https://yoursite.com/ds-tracks/support
 ```
 
 ### 7.3 Optional Enhancements
@@ -465,7 +470,7 @@ Before distributing the image, verify:
 - [ ] Image flashes successfully with Raspberry Pi Imager
 - [ ] First boot completes without errors
 - [ ] Filesystem expands to fill SSD
-- [ ] Station name appears from kcr-config.txt
+- [ ] Station name appears from ds-config.txt
 - [ ] Kiosk mode starts automatically
 - [ ] No login prompt visible
 
@@ -481,7 +486,7 @@ Before distributing the image, verify:
 - [ ] Admin panel accessible from another device
 
 **Configuration Tests:**
-- [ ] WiFi connects when credentials in kcr-config.txt
+- [ ] WiFi connects when credentials in ds-config.txt
 - [ ] Timezone applies correctly
 - [ ] Screen rotation works (if applicable)
 - [ ] SSH accessible when ENABLE_SSH=true
@@ -532,25 +537,25 @@ passwd
 sudo apt update && sudo apt upgrade -y
 ```
 
-#### Step 3: Transfer KCR Tracks Files (5 minutes)
+#### Step 3: Transfer DS-Tracks Files (5 minutes)
 
 **Option A: From another computer via SCP**
 ```bash
-scp -r /path/to/KCR-Tracks2 pi@raspberrypi.local:/tmp/
+scp -r /path/to/DS-Tracks2 pi@raspberrypi.local:/tmp/
 ```
 
 **Option B: From USB drive**
 ```bash
-# Insert USB drive with KCR-Tracks2 folder
+# Insert USB drive with DS-Tracks2 folder
 sudo mount /dev/sda1 /mnt
-cp -r /mnt/KCR-Tracks2 /tmp/
+cp -r /mnt/DS-Tracks2 /tmp/
 sudo umount /mnt
 ```
 
 #### Step 4: Run Build Script (45 minutes)
 
 ```bash
-cd /tmp/KCR-Tracks2/appliance
+cd /tmp/DS-Tracks2/appliance
 chmod +x build-appliance.sh
 sudo ./build-appliance.sh
 ```
@@ -574,7 +579,7 @@ On a Linux computer (or WSL2 on Windows):
 lsblk
 
 # Create image (replace sdX with actual device, e.g., sdb)
-sudo dd if=/dev/sdX of=kcr-tracks-v2.0.img bs=4M status=progress
+sudo dd if=/dev/sdX of=ds-tracks-v2.0.img bs=4M status=progress
 
 # This creates a full-size image (e.g., 32GB for a 32GB card)
 ```
@@ -587,7 +592,7 @@ wget https://raw.githubusercontent.com/Drewsif/PiShrink/master/pishrink.sh
 chmod +x pishrink.sh
 
 # Shrink the image
-sudo ./pishrink.sh kcr-tracks-v2.0.img
+sudo ./pishrink.sh ds-tracks-v2.0.img
 
 # Image is now ~4GB instead of 32GB
 ```
@@ -596,18 +601,18 @@ sudo ./pishrink.sh kcr-tracks-v2.0.img
 
 ```bash
 # Compress with xz (best compression, slower)
-xz -9 -T0 kcr-tracks-v2.0.img
+xz -9 -T0 ds-tracks-v2.0.img
 
 # Or compress with gzip (faster, larger file)
-gzip -9 kcr-tracks-v2.0.img
+gzip -9 ds-tracks-v2.0.img
 
-# Result: kcr-tracks-v2.0.img.xz (~1GB)
+# Result: ds-tracks-v2.0.img.xz (~1GB)
 ```
 
 #### Step 9: Generate Checksum (1 minute)
 
 ```bash
-sha256sum kcr-tracks-v2.0.img.xz > checksums.txt
+sha256sum ds-tracks-v2.0.img.xz > checksums.txt
 cat checksums.txt
 ```
 
@@ -618,7 +623,7 @@ cat checksums.txt
 3. Verify:
    - First boot runs automatically
    - Kiosk mode starts
-   - KCR Tracks is functional
+   - DS-Tracks is functional
 
 ### 8.2 Setting Up Distribution
 
@@ -628,7 +633,7 @@ cat checksums.txt
 2. Set price to $0.00 (free)
 3. Make it a "Downloadable" product
 4. Upload the following files:
-   - `kcr-tracks-v2.0.img.xz` (~1GB)
+   - `ds-tracks-v2.0.img.xz` (~1GB)
    - `INSTALLATION-GUIDE.pdf`
    - `checksums.txt`
 5. Set download limit (0 = unlimited)
@@ -640,7 +645,7 @@ cat checksums.txt
    - Actual image URL
    - Actual SHA256 hash
    - Actual file sizes
-2. Host the JSON file at a stable URL (e.g., `https://yoursite.com/kcr-tracks/imager.json`)
+2. Host the JSON file at a stable URL (e.g., `https://yoursite.com/ds-tracks/imager.json`)
 3. Share the URL with users
 4. Users add the URL in Raspberry Pi Imager → Settings → Custom Repository
 
@@ -654,14 +659,14 @@ cat checksums.txt
 
 | File | Size | Description |
 |------|------|-------------|
-| `KCR-Tracks-v2.0.img.xz` | ~1 GB | Compressed disk image |
+| `DS-Tracks-v2.0.img.xz` | ~1 GB | Compressed disk image |
 | `INSTALLATION-GUIDE.pdf` | ~2 MB | Visual step-by-step guide |
 | `checksums.txt` | 1 KB | SHA256 for verification |
 
 ### 9.2 User Journey
 
 ```
-1. User discovers KCR Tracks
+1. User discovers DS-Tracks
          ↓
 2. Visits your website
          ↓
@@ -673,7 +678,7 @@ cat checksums.txt
          ↓
 6. Flashes image to SSD
          ↓
-7. Edits kcr-config.txt (optional)
+7. Edits ds-config.txt (optional)
          ↓
 8. Inserts SSD into Pi, powers on
          ↓
@@ -725,11 +730,11 @@ Generate these after building your final image:
 SHA256 Checksums
 ================
 
-kcr-tracks-v2.0.img.xz:
-[Generate with: sha256sum kcr-tracks-v2.0.img.xz]
+ds-tracks-v2.0.img.xz:
+[Generate with: sha256sum ds-tracks-v2.0.img.xz]
 
-kcr-tracks-v2.0.img (uncompressed):
-[Generate with: sha256sum kcr-tracks-v2.0.img]
+ds-tracks-v2.0.img (uncompressed):
+[Generate with: sha256sum ds-tracks-v2.0.img]
 ```
 
 ---
@@ -745,7 +750,7 @@ kcr-tracks-v2.0.img (uncompressed):
 
 ## Appendix C: Contact and Support
 
-**Project:** KCR Tracks
+**Project:** DS-Tracks
 **Original Author:** Peter Smith
 **Documentation:** Claude (Anthropic)
 **License:** MIT
@@ -758,7 +763,7 @@ kcr-tracks-v2.0.img (uncompressed):
 
 A complete UX redesign for the Raspberry Pi touchscreen that replaces the browser's native file picker with a custom, touch-friendly file browser. USB drives are detected automatically when inserted.
 
-**Full specification:** `USB-UX-SPECIFICATION.md`
+**Full specification:** `docs/specifications/USB-UX-SPECIFICATION.md`
 
 ### 10.2 New Files Created
 
@@ -770,10 +775,10 @@ A complete UX redesign for the Raspberry Pi touchscreen that replaces the browse
 | `usb-eject.php` | API: safely unmounts USB drive |
 | `css/touch.css` | Touch-optimised styles (48px+ targets, 800x480) |
 | `js/usb-browser.js` | File browser, user identification, player logic |
-| `appliance/usb/99-kcr-usb.rules` | udev rule for USB auto-detection |
-| `appliance/usb/kcr-usb-mount.sh` | Mounts USB read-only, writes status file |
-| `appliance/usb/kcr-usb-unmount.sh` | Unmounts USB, removes status file |
-| `USB-UX-SPECIFICATION.md` | Full technical and UX specification |
+| `appliance/usb/99-ds-usb.rules` | udev rule for USB auto-detection |
+| `appliance/usb/ds-usb-mount.sh` | Mounts USB read-only, writes status file |
+| `appliance/usb/ds-usb-unmount.sh` | Unmounts USB, removes status file |
+| `docs/specifications/USB-UX-SPECIFICATION.md` | Full technical and UX specification |
 
 ### 10.3 Modified Files
 
@@ -785,9 +790,9 @@ A complete UX redesign for the Raspberry Pi touchscreen that replaces the browse
 ### 10.4 Architecture
 
 ```
-USB inserted → udev rule → kcr-usb-mount.sh
-    → Mounts read-only to /media/kcr-usb
-    → Writes /tmp/kcr-usb-status.json
+USB inserted → udev rule → ds-usb-mount.sh
+    → Mounts read-only to /media/ds-usb
+    → Writes /tmp/ds-usb-status.json
 
 JavaScript polls usb-status.php every 2 seconds
     → USB detected → Shows file browser
@@ -806,7 +811,7 @@ The original login/session/player interface is fully preserved. The touch interf
 - All file paths validated with `realpath()` to prevent traversal
 - Extension + MIME type validation on import (same as upload.php)
 - Filenames sanitised before copy
-- `www-data` has sudo permission only for `/bin/umount /media/kcr-usb`
+- `www-data` has sudo permission only for `/bin/umount /media/ds-usb`
 
 ### 10.7 Testing Requirements
 

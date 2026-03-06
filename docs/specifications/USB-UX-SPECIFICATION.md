@@ -1,4 +1,4 @@
-# KCR Tracks - USB Auto-Detect & Touch UX Specification
+# DS-Tracks - USB Auto-Detect & Touch UX Specification
 
 **Version:** 1.0
 **Date:** January 2026
@@ -260,16 +260,16 @@ Shown after user taps "Use These Tracks" if username is not yet known.
 │                                                              │
 │  USB inserted → udev rule triggers                           │
 │       ↓                                                      │
-│  kcr-usb-mount.sh runs:                                      │
+│  ds-usb-mount.sh runs:                                      │
 │    1. Identifies filesystem                                  │
-│    2. Mounts to /media/kcr-usb                              │
-│    3. Writes /tmp/kcr-usb-status.json                       │
+│    2. Mounts to /media/ds-usb                              │
+│    3. Writes /tmp/ds-usb-status.json                       │
 │                                                              │
 │  USB removed → udev rule triggers                            │
 │       ↓                                                      │
-│  kcr-usb-unmount.sh runs:                                    │
-│    1. Unmounts /media/kcr-usb                               │
-│    2. Removes /tmp/kcr-usb-status.json                      │
+│  ds-usb-unmount.sh runs:                                    │
+│    1. Unmounts /media/ds-usb                               │
+│    2. Removes /tmp/ds-usb-status.json                      │
 ├──────────────────────────────────────────────────────────────┤
 │                      PHP API LAYER                            │
 │                                                              │
@@ -302,8 +302,8 @@ Shown after user taps "Use These Tracks" if username is not yet known.
 
 | Path | Purpose |
 |------|---------|
-| `/media/kcr-usb` | USB drive mount point |
-| `/tmp/kcr-usb-status.json` | Status file (created/deleted by mount scripts) |
+| `/media/ds-usb` | USB drive mount point |
+| `/tmp/ds-usb-status.json` | Status file (created/deleted by mount scripts) |
 
 ### 4.3 USB Status JSON Format
 
@@ -314,7 +314,7 @@ Shown after user taps "Use These Tracks" if username is not yet known.
     "device": "/dev/sda1",
     "filesystem": "vfat",
     "size": "16G",
-    "mountpoint": "/media/kcr-usb",
+    "mountpoint": "/media/ds-usb",
     "timestamp": "2026-01-22T14:30:00"
 }
 ```
@@ -367,7 +367,7 @@ Shown after user taps "Use These Tracks" if username is not yet known.
     "tracks": [
         {
             "name": "01 Opening Theme.mp3",
-            "url": "/kcr-tracks/music/Peter-260122-143022/01_Opening_Theme.mp3"
+            "url": "/ds-tracks/music/Peter-260122-143022/01_Opening_Theme.mp3"
         }
     ]
 }
@@ -381,8 +381,8 @@ Shown after user taps "Use These Tracks" if username is not yet known.
 
 | Risk | Mitigation |
 |------|------------|
-| Path traversal via browse API | Validate all paths are within /media/kcr-usb |
-| Malicious filenames | Reuse existing sanitizeFilename() from KCRSecurity |
+| Path traversal via browse API | Validate all paths are within /media/ds-usb |
+| Malicious filenames | Reuse existing sanitizeFilename() from DSSecurity |
 | Non-audio files | Extension + MIME type validation before copy |
 | Symlink attacks | Use realpath() to resolve before access |
 | Executable files on USB | Never execute anything from USB; read-only mount |
@@ -397,7 +397,7 @@ Shown after user taps "Use These Tracks" if username is not yet known.
 
 ### 5.3 PHP Security
 
-- usb-browse.php only reads from `/media/kcr-usb` (validated with realpath)
+- usb-browse.php only reads from `/media/ds-usb` (validated with realpath)
 - usb-import.php applies all existing upload validations (extension, MIME, size)
 - No user input is used in shell commands
 - All filenames sanitised before filesystem operations
@@ -411,9 +411,9 @@ Shown after user taps "Use These Tracks" if username is not yet known.
 
 | File | Type | Purpose |
 |------|------|---------|
-| `appliance/usb/99-kcr-usb.rules` | udev rule | Detects USB insert/remove |
-| `appliance/usb/kcr-usb-mount.sh` | Shell script | Mounts USB, writes status |
-| `appliance/usb/kcr-usb-unmount.sh` | Shell script | Unmounts USB, removes status |
+| `appliance/usb/99-ds-usb.rules` | udev rule | Detects USB insert/remove |
+| `appliance/usb/ds-usb-mount.sh` | Shell script | Mounts USB, writes status |
+| `appliance/usb/ds-usb-unmount.sh` | Shell script | Unmounts USB, removes status |
 | `usb-status.php` | PHP API | Returns USB mount status |
 | `usb-browse.php` | PHP API | Returns directory listing |
 | `usb-import.php` | PHP API | Copies files from USB to music/ |

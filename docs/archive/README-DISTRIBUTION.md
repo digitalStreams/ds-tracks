@@ -1,8 +1,8 @@
-# KCR Tracks v2.0 - Distribution Package
+# DS-Tracks v2.0 - Distribution Package
 
 ## Overview
 
-KCR Tracks is a secure, self-contained music playback system designed for community radio stations. It allows presenters to safely upload and play their own music from USB drives without risking malware infection of the station's network.
+DS-Tracks is a secure, self-contained music playback system designed for community radio stations. It allows presenters to safely upload and play their own music from USB drives without risking malware infection of the station's network.
 
 **Perfect for:** Community radio stations, college radio, hospital radio, or any broadcast environment where presenters bring their own music.
 
@@ -40,11 +40,11 @@ KCR Tracks is a secure, self-contained music playback system designed for commun
 - `config.php` - Central configuration file
 
 ### Documentation
-- `QUICK_START.md` - **Start here!** 15-minute setup guide
-- `DEPLOYMENT_GUIDE.md` - Complete deployment instructions
-- `SECURITY_UPDATES.md` - Security features and improvements
-- `CHANGES_SUMMARY.md` - What's new in v2.0
-- `KCR-Tracks-User-Manual-D02-2023-03-14.pdf` - End-user manual
+- `QUICK-START.md` - **Start here!** 15-minute setup guide (in `docs/guides/`)
+- `DEPLOYMENT-GUIDE.md` - Complete deployment instructions (in `docs/guides/`)
+- `SECURITY-UPDATES.md` - Security features and improvements (in `docs/archive/`)
+- `CHANGES-SUMMARY.md` - What's new in v2.0 (in `docs/archive/`)
+- `KCR-Tracks-User-Manual-D02-2023-03-14.pdf` - End-user manual (in `docs/archive/`)
 
 ### Security & Configuration
 - `.htaccess` - Apache security configuration
@@ -64,7 +64,7 @@ KCR Tracks is a secure, self-contained music playback system designed for commun
 ```bash
 # Copy files to Raspberry Pi
 # Run installer
-cd KCR-Tracks2
+cd DS-Tracks2
 chmod +x install-raspberry-pi.sh
 sudo ./install-raspberry-pi.sh
 ```
@@ -83,7 +83,7 @@ chmod +x security-hardening.sh
 sudo ./security-hardening.sh
 ```
 
-**Done!** See [QUICK_START.md](QUICK_START.md) for detailed steps.
+**Done!** See [QUICK-START.md](../guides/QUICK-START.md) for detailed steps.
 
 ---
 
@@ -201,12 +201,12 @@ sudo ./security-hardening.sh
 - ✓ Use commercially
 
 **Please:**
-- Keep the "Powered by KCR Tracks" attribution (can be disabled in settings)
+- Keep the "Powered by DS-Tracks" attribution (can be disabled in settings)
 - Report bugs and improvements
 - Share your customizations with the community
 
 ### Credits
-- Original concept: Kiama Community Radio (KCR)
+- Original concept: Digital Streams Media (DS)
 - Version 1.0: Peter Smith, Digital Streams Media
 - Version 2.0 Security Hardening: 2025
 - User Manual: Peter Smith
@@ -218,20 +218,20 @@ sudo ./security-hardening.sh
 ### Getting Help
 
 1. **Read the docs first:**
-   - QUICK_START.md
-   - DEPLOYMENT_GUIDE.md
+   - QUICK-START.md (in docs/guides/)
+   - DEPLOYMENT-GUIDE.md (in docs/guides/)
    - User manual PDF
 
 2. **Check the logs:**
-   - `/var/www/html/kcr-tracks/logs/`
+   - `/var/www/html/ds-tracks/logs/`
 
 3. **Common issues:**
-   - See DEPLOYMENT_GUIDE.md troubleshooting section
+   - See DEPLOYMENT-GUIDE.md troubleshooting section (in docs/guides/)
 
 ### Reporting Issues
 
 When reporting issues, include:
-- KCR Tracks version (2.0)
+- DS-Tracks version (2.0)
 - Raspberry Pi model
 - OS version
 - Error messages from logs
@@ -287,7 +287,7 @@ A: Presenters are responsible for ensuring they have rights to broadcast music. 
 A: Currently standalone. Plays to audio output, just like a CD player.
 
 **Q: How do I delete old sessions?**
-A: See DEPLOYMENT_GUIDE.md for cleanup scripts.
+A: See DEPLOYMENT-GUIDE.md (in docs/guides/) for cleanup scripts.
 
 ---
 
@@ -310,20 +310,20 @@ A: See DEPLOYMENT_GUIDE.md for cleanup scripts.
 
 ## Quick Links
 
-- 📖 [Quick Start Guide](QUICK_START.md) - 15-minute setup
-- 📘 [Deployment Guide](DEPLOYMENT_GUIDE.md) - Complete instructions
-- 🔒 [Security Updates](SECURITY_UPDATES.md) - Security features
-- 📋 [Changes Summary](CHANGES_SUMMARY.md) - What's new
-- 👥 [User Manual](KCR-Tracks-User-Manual-D02-2023-03-14.pdf) - For presenters
+- [Quick Start Guide](../guides/QUICK-START.md) - 15-minute setup
+- [Deployment Guide](../guides/DEPLOYMENT-GUIDE.md) - Complete instructions
+- [Security Updates](SECURITY-UPDATES.md) - Security features
+- [Changes Summary](CHANGES-SUMMARY.md) - What's new
+- [User Manual](KCR-Tracks-User-Manual-D02-2023-03-14.pdf) - For presenters
 
 ---
 
 ## Thank You
 
-Thank you for choosing KCR Tracks for your radio station. We hope it makes your presenters' lives easier and your broadcasts better!
+Thank you for choosing DS-Tracks for your radio station. We hope it makes your presenters' lives easier and your broadcasts better!
 
 **Happy Broadcasting!** 📻🎵
 
 ---
 
-*KCR Tracks v2.0 - Making community radio better, one track at a time.*
+*DS-Tracks v2.0 - Making community radio better, one track at a time.*

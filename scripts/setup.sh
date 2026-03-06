@@ -1,9 +1,9 @@
 #!/bin/bash
-# KCR Tracks v2.0 - Setup Script for Raspberry Pi
+# DS-Tracks v2.0 - Setup Script for Raspberry Pi
 # This script sets up the necessary directories and permissions
 
 echo "====================================="
-echo "KCR Tracks v2.0 - Setup Script"
+echo "DS-Tracks v2.0 - Setup Script"
 echo "====================================="
 echo ""
 
@@ -60,6 +60,6 @@ echo "3. Test file upload functionality"
 echo "4. Check logs/app_errors.log for any issues"
 echo ""
 echo "For detailed information, see:"
-echo "- CHANGES_SUMMARY.md"
-echo "- SECURITY_UPDATES.md"
+echo "- docs/archive/CHANGES-SUMMARY.md"
+echo "- docs/archive/SECURITY-UPDATES.md"
 echo ""

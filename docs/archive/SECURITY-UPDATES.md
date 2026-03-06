@@ -1,7 +1,7 @@
-# KCR Tracks - Security Updates v2.0
+# DS-Tracks - Security Updates v2.0
 
 ## Overview
-This document outlines the security improvements made to KCR Tracks to address critical vulnerabilities.
+This document outlines the security improvements made to DS-Tracks to address critical vulnerabilities.
 
 ## Security Improvements Implemented
 
@@ -104,7 +104,7 @@ This document outlines the security improvements made to KCR Tracks to address c
 3. Add new files:
    - `config.php`
    - `.htaccess`
-   - `SECURITY_UPDATES.md` (this file)
+   - `SECURITY-UPDATES.md` (this file)
 4. Create `/logs/` directory and set permissions to 755
 5. Test file uploads and session management
 
@@ -121,19 +121,19 @@ Set appropriate permissions on your Raspberry Pi:
 
 ```bash
 # Set directory permissions
-chmod 755 /path/to/KCR-Tracks2
-chmod 755 /path/to/KCR-Tracks2/music
-chmod 755 /path/to/KCR-Tracks2/logs
+chmod 755 /path/to/DS-Tracks2
+chmod 755 /path/to/DS-Tracks2/music
+chmod 755 /path/to/DS-Tracks2/logs
 
 # Set file permissions
-chmod 644 /path/to/KCR-Tracks2/*.php
-chmod 644 /path/to/KCR-Tracks2/.htaccess
-chmod 644 /path/to/KCR-Tracks2/*.css
-chmod 644 /path/to/KCR-Tracks2/*.js
+chmod 644 /path/to/DS-Tracks2/*.php
+chmod 644 /path/to/DS-Tracks2/.htaccess
+chmod 644 /path/to/DS-Tracks2/*.css
+chmod 644 /path/to/DS-Tracks2/*.js
 
 # Ensure web server can write to these directories
-chown -R www-data:www-data /path/to/KCR-Tracks2/music
-chown -R www-data:www-data /path/to/KCR-Tracks2/logs
+chown -R www-data:www-data /path/to/DS-Tracks2/music
+chown -R www-data:www-data /path/to/DS-Tracks2/logs
 ```
 
 ## Security Best Practices

@@ -1,4 +1,4 @@
-# KCR Tracks - Build Day Guide
+# DS-Tracks - Build Day Guide
 
 ## How to Create a Ready-to-Go Appliance Image
 
@@ -19,7 +19,7 @@ You choose how to store music files:
 | **USB SSD** (default) | OS on SD card, music on separate USB drive | Large music libraries, upgradeable storage |
 | **SD card only** | Everything on one SD card | Simpler setup, smaller libraries |
 
-This is set in a config file (`kcr-config.txt`) — you can change it any time.
+This is set in a config file (`ds-config.txt`) — you can change it any time.
 
 ---
 
@@ -70,7 +70,7 @@ Do these steps at your desk. They take about 10 minutes.
 7. It will ask **"Would you like to apply OS customisation settings?"**
    - Click **EDIT SETTINGS**
    - On the **GENERAL** tab:
-     - Set hostname: `kcr-tracks`
+     - Set hostname: `ds-tracks`
      - Set username: `pi`
      - Set password: `raspberry` (you'll change this later)
      - Skip the WiFi section (we're using ethernet cable)
@@ -84,10 +84,10 @@ Do these steps at your desk. They take about 10 minutes.
 10. When it says "Write Successful" click **CONTINUE**
 11. Remove the SD card from your PC
 
-### Step 3: Copy KCR Tracks to a USB Stick
+### Step 3: Copy DS-Tracks to a USB Stick
 
 1. Insert a USB thumb drive into your PC
-2. Copy the entire **KCR-Tracks2** folder onto the USB stick
+2. Copy the entire **DS-Tracks2** folder onto the USB stick
 3. Safely eject the USB stick
 
 You're now ready for build day.
@@ -115,7 +115,7 @@ You'll see text scrolling on the screen. Wait about 30 seconds.
 When you see a login prompt:
 
 ```
-kcr-tracks login:
+ds-tracks login:
 ```
 
 Type:
@@ -130,14 +130,14 @@ Press Enter.
 
 You'll see a command prompt that looks like:
 ```
-pi@kcr-tracks:~ $
+pi@ds-tracks:~ $
 ```
 
 **This is the Linux command line. Don't panic. You only need to type a few commands.**
 
 ### Step 3: Copy Files from USB Stick (2 minutes)
 
-Insert your USB thumb drive (the one with KCR-Tracks2 on it) into any USB port on the Pi.
+Insert your USB thumb drive (the one with DS-Tracks2 on it) into any USB port on the Pi.
 
 Wait 5 seconds, then type these commands **exactly as shown**. Press Enter after each one:
 
@@ -156,12 +156,12 @@ sudo mount /dev/sdb1 /mnt/usb
 
 Now copy the files:
 ```
-cp -r /mnt/usb/KCR-Tracks2 /tmp/
+cp -r /mnt/usb/DS-Tracks2 /tmp/
 ```
 
 Check it worked:
 ```
-ls /tmp/KCR-Tracks2/
+ls /tmp/DS-Tracks2/
 ```
 
 You should see a list of files including `login.php`, `config.php`, `appliance/` etc.
@@ -178,7 +178,7 @@ sudo umount /mnt/usb
 This is the big one. Type these two commands:
 
 ```
-cd /tmp/KCR-Tracks2/appliance
+cd /tmp/DS-Tracks2/appliance
 ```
 
 ```
@@ -190,12 +190,13 @@ sudo bash build-appliance.sh
 The script will:
 - Update the operating system
 - Install the web server (Apache) and PHP
-- Install KCR Tracks
+- Install DS-Tracks
 - Install the touchscreen kiosk
 - Configure USB auto-detection
 - Set up the file browser
 - Configure the music drive mount point
 - Apply security settings
+- Remove unnecessary software (Bluetooth, WiFi, documentation) to free up space
 - Set all permissions correctly
 - Clean up
 
@@ -207,7 +208,7 @@ When it finishes, you'll see a green message:
 
 ```
 ============================================================
- KCR Tracks Appliance Build Complete!
+ DS-Tracks Appliance Build Complete!
 ============================================================
 ```
 
@@ -223,11 +224,11 @@ The script will:
 1. Find your USB SSD
 2. Show you the drive details
 3. Ask you to confirm (type **YES** and press Enter)
-4. Format it and label it as "KCR-MUSIC"
+4. Format it and label it as "DS-MUSIC"
 
 **WARNING:** This erases everything on the USB SSD. Make sure it's the right drive!
 
-**If you're using SD card storage instead**, skip this step entirely. You can change the storage mode later by editing `kcr-config.txt` on the boot partition (set `MUSIC_STORAGE=sdcard`).
+**If you're using SD card storage instead**, skip this step entirely. You can change the storage mode later from the admin panel (Customize Branding → Music Storage).
 
 ### Step 6: Shutdown (1 minute)
 
@@ -259,7 +260,7 @@ Now you'll save the SD card as a file on your PC, so you can make copies.
 2. Open **Win32 Disk Imager**
 3. In the **Image File** box, click the folder icon
 4. Choose where to save it (e.g., Desktop)
-5. Name it: `KCR-Tracks-Master.img`
+5. Name it: `DS-Tracks-Master.img`
 6. Make sure the correct drive letter is selected (your SD card)
 7. Click **Read**
 8. Wait (5-10 minutes for a 16GB card)
@@ -273,13 +274,13 @@ Now you'll save the SD card as a file on your PC, so you can make copies.
 
 Each station needs:
 - A cloned **SD card** (from your master image)
-- A formatted **USB SSD** labelled KCR-MUSIC (only if using USB storage)
+- A formatted **USB SSD** labelled DS-MUSIC (only if using USB storage)
 
 ### For the SD Card
 
 1. Insert a **blank** SD card into your PC
 2. Open **Win32 Disk Imager**
-3. In **Image File**, browse to your `KCR-Tracks-Master.img`
+3. In **Image File**, browse to your `DS-Tracks-Master.img`
 4. Select the drive letter of the blank card
 5. Click **Write**
 6. Click **Yes** to confirm
@@ -303,36 +304,34 @@ You have two options:
 **Option B - Clone from your master music drive:**
 1. Connect your master music USB SSD to your PC via USB
 2. Open Win32 Disk Imager
-3. Read it to a file: `KCR-Music-Master.img`
+3. Read it to a file: `DS-Music-Master.img`
 4. Write that file to new USB SSDs
 5. (This copies the format and label automatically)
 
-### Customise the Station Name and Storage Mode (Optional)
+### Customise the Station Name (Optional)
 
 After writing the SD card, it will show a small partition called **bootfs** or **boot** in Windows Explorer.
 
 1. Open that drive
-2. Find the file `kcr-config.txt`
+2. Find the file `ds-config.txt`
 3. Open it with Notepad
 4. Change the station name:
    ```
-   STATION_NAME=Kiama Community Radio
-   STATION_SHORT_NAME=KCR
+   STATION_NAME=My Station
+   STATION_SHORT_NAME=DS
    ```
-5. To use SD card storage instead of USB SSD, change:
-   ```
-   MUSIC_STORAGE=sdcard
-   ```
-6. Save and close
+5. Save and close
 6. Safely eject the card
+
+**Music storage mode** (USB SSD vs SD card) can be changed from the admin panel once the station is running — no need to edit config files.
 
 ### Assemble and Boot
 
 1. Insert the cloned SD card into the target Raspberry Pi
-2. If using USB storage, plug in the KCR-MUSIC USB SSD
+2. If using USB storage, plug in the DS-MUSIC USB SSD
 3. Connect the display and power
 4. Wait 2-3 minutes for first-boot setup
-5. KCR Tracks appears on screen
+5. DS-Tracks appears on screen
 6. Done - it's ready to use!
 
 The first boot takes a bit longer because it sets up the system and checks the music drive. After that, it boots in about 30 seconds.
@@ -346,7 +345,7 @@ The first boot takes a bit longer because it sets up the system and checks the m
 | Problem | Solution |
 |---------|----------|
 | "Permission denied" | Make sure you typed `sudo` at the start |
-| "No such file or directory" | Check you typed the path correctly. Try `ls /tmp/KCR-Tracks2/appliance/` to see if the file is there |
+| "No such file or directory" | Check you typed the path correctly. Try `ls /tmp/DS-Tracks2/appliance/` to see if the file is there |
 | "Could not resolve host" | The Pi isn't connected to the internet. Check the ethernet cable |
 | Script stops with red text | Read the error message. Usually it's a network issue. Try running the script again |
 | USB stick not detected | Try a different USB port. Try `sudo mount /dev/sdb1 /mnt/usb` instead |
@@ -358,8 +357,8 @@ The first boot takes a bit longer because it sets up the system and checks the m
 | "No USB drives found" | Make sure the USB SSD is plugged in. Try a different USB port |
 | Wrong drive shown | If multiple USB drives are connected, remove all except the SSD |
 | Music not saving | Check the USB SSD is plugged in and the light is on |
-| "Music drive not found" on boot | Plug in the KCR-MUSIC USB SSD and reboot, or switch to SD card mode |
-| Want to switch to SD card | Edit `kcr-config.txt`: set `MUSIC_STORAGE=sdcard`, then reboot |
+| "Music drive not found" on boot | Plug in the DS-MUSIC USB SSD and reboot, or switch to SD card mode |
+| Want to switch to SD card | Use the admin panel: Customize Branding → Music Storage → SD Card → Apply |
 
 ### Cloning Problems
 
@@ -375,8 +374,8 @@ The first boot takes a bit longer because it sets up the system and checks the m
 |---------|----------|
 | Screen is black | Check HDMI cable. Try the other HDMI port on the Pi |
 | Stuck on boot text | Wait 2-3 minutes - first boot takes time |
-| Station name is wrong | Edit `kcr-config.txt` on the boot partition from Windows |
-| "No USB drive" error in app | Make sure the KCR-MUSIC USB SSD is plugged in |
+| Station name is wrong | Edit `ds-config.txt` on the boot partition from Windows |
+| "No USB drive" error in app | Make sure the DS-MUSIC USB SSD is plugged in |
 
 ---
 
@@ -386,7 +385,7 @@ Print this and keep it with your Pi kit.
 
 ```
 ═══════════════════════════════════════════════
-  KCR TRACKS BUILD - QUICK REFERENCE
+  DS-TRACKS BUILD - QUICK REFERENCE
 ═══════════════════════════════════════════════
 
   LOGIN:     pi / raspberry
@@ -394,11 +393,11 @@ Print this and keep it with your Pi kit.
   COPY FILES FROM USB:
     sudo mkdir -p /mnt/usb
     sudo mount /dev/sda1 /mnt/usb
-    cp -r /mnt/usb/KCR-Tracks2 /tmp/
+    cp -r /mnt/usb/DS-Tracks2 /tmp/
     sudo umount /mnt/usb
 
   BUILD:
-    cd /tmp/KCR-Tracks2/appliance
+    cd /tmp/DS-Tracks2/appliance
     sudo bash build-appliance.sh
 
   SET UP MUSIC DRIVE (USB SSD mode only):
@@ -419,13 +418,13 @@ Print this and keep it with your Pi kit.
 
 | Item | What It Is |
 |------|-----------|
-| `KCR-Tracks-Master.img` on your PC | Your golden master SD card image |
+| `DS-Tracks-Master.img` on your PC | Your golden master SD card image |
 | Cloned SD cards | Ready-to-boot drives for each station |
-| KCR-MUSIC USB SSDs (if using USB mode) | Music storage drives for each station |
+| DS-MUSIC USB SSDs (if using USB mode) | Music storage drives for each station |
 
 To make more stations in future:
-1. Write `KCR-Tracks-Master.img` to a new SD card (5 minutes, Win32 Disk Imager)
-2. Optionally edit `kcr-config.txt` to set station name and storage mode
+1. Write `DS-Tracks-Master.img` to a new SD card (5 minutes, Win32 Disk Imager)
+2. Optionally edit `ds-config.txt` to set the station name
 3. If USB mode: format a USB SSD (boot Pi, run one command, shutdown)
 4. Done!
 
