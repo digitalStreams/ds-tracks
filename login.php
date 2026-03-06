@@ -278,13 +278,15 @@
         if (username.length > 3) {
             usernameDateTime = username + "-" + dsDateStamp();
 
+            Cookies.set('username', usernameDateTime, { expires: 14 });
+
             if ($.inArray(username, existingUsers) != -1) {
                 getSessionsList();
 
                 gotoSessionView();
 
             } else {
-                gotoPlayerView();
+                gotoSessionView();
             }
         } else {
             alert("Please enter your name - must be longer than three characters");
@@ -321,7 +323,6 @@
         document.getElementById("audioPlayer").innerHTML = "";
 
         //  UPLOAD: add to existing session or new session
-        $("#dsPlayer").hasClass("dsAddFileFlag") ? dsAddToSession() : uploadFile();
     }
 
     //  UPLOAD FILES AND BUILD TRACK LIST
@@ -421,7 +422,6 @@
         document.getElementById("audioPlayer").style.display = '';
         document.getElementById("audioPlayer").innerHTML =
             "<div class='dsNotify'>Choose a track to play.</div>";
-        $("#dsPlayer").removeClass("dsAddFileFlag");
         document.getElementById("fileupload").value = null;
     }
 
@@ -517,9 +517,8 @@
     }
 
     function dsShowFileUpload() {
-        //  SHOW FILE UPLOAD INPUT AND OPEN FILE DIALOG IMMEDIATELY
-        $("#dsPlayer").addClass("dsAddFileFlag");
-        document.getElementById("fileupload").click();
+        //  SHOW USB BROWSER TO SELECT TRACKS
+        dsUsb.browseAndImport(username);
     }
 
     function gotoSessionView() {
@@ -566,15 +565,14 @@
             });
         }
 
-        //  HIDE PROMPT AND OPEN FILE DIALOG
+        //  HIDE PROMPT AND SHOW USB BROWSER
         document.getElementById("dsNewSessionPrompt").style.display = "none";
-        document.getElementById("fileupload").click();
+        dsUsb.browseAndImport(username);
     }
 
     function gotoPlayerView() {
         //  FOR BRAND NEW USERS (from dsSaveName) — set cookie + open file dialog
         Cookies.set('username', usernameDateTime, { expires: 14 });
-        document.getElementById("fileupload").click();
     }
 
     function getSessions() {
@@ -860,9 +858,8 @@
         })
         // alert(dsFolderID);
 
-        //  SET FLAG AND OPEN FILE DIALOG — onchange handler navigates to player
-        $("#dsPlayer").addClass("dsAddFileFlag");
-        document.getElementById("fileupload").click();
+        //  SHOW USB BROWSER TO SELECT TRACKS FOR THIS SESSION
+        dsUsb.browseAndImport(username);
     });
 
     //  EDIT SESSION LABEL — modal prompt
@@ -1114,7 +1111,7 @@
     </script>
 
     <!-- USB Browser & Touch Player -->
-    <script src="js/usb-browser.js?v=2"></script>
+    <script src="js/usb-browser.js?v=3"></script>
 
 </body>
 

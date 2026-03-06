@@ -28,6 +28,7 @@
     var currentTrackIndex = -1;
     var audioElement = null;
     var autoPlay = false;
+    var legacyMode = false;        // When true, skip user ID screen and return to legacy session view
 
     // ── Initialisation ───────────────────────────────────────
 
@@ -337,6 +338,12 @@
     function showUserIdScreen() {
         if (selectedFiles.length === 0) return;
 
+        // In legacy mode, skip user ID � we already have the username
+        if (legacyMode && currentUsername) {
+            importFiles(currentUsername);
+            return;
+        }
+
         showScreen('userIdScreen');
         renderExistingUsers();
 
@@ -380,7 +387,9 @@
         if (!container) return;
 
         if (existingUsers.length === 0) {
-            container.parentElement.style.display = 'none';
+            container.style.display = 'none';
+            var label = document.querySelector('.existing-users-label');
+            if (label) label.style.display = 'none';
             var divider = document.querySelector('.user-divider');
             if (divider) divider.style.display = 'none';
             return;
@@ -455,9 +464,16 @@
                 // Restore browser HTML for later use
                 restoreBrowserHTML();
 
-                // Show player
-                renderPlayer();
-                showScreen('touchPlayer');
+                // Show player or return to legacy session view
+                if (legacyMode) {
+                    legacyMode = false;
+                    // Refresh legacy session list and show it
+                    if (typeof getSessionsList === 'function') getSessionsList();
+                    if (typeof gotoSessionView === 'function') gotoSessionView();
+                } else {
+                    renderPlayer();
+                    showScreen('touchPlayer');
+                }
             } else {
                 restoreBrowserHTML();
                 alert('Import failed: ' + (data.error || 'Unknown error'));
@@ -781,7 +797,9 @@
         goHome: goHome,
         goToSessions: goToSessions,
         addMoreTracks: addMoreTracks,
-        goToLegacyLogin: goToLegacyLogin
+        goToLegacyLogin: goToLegacyLogin,
+        browseAndImport: browseAndImport,
+        isUsbMounted: function() { return usbMounted; }
     };
 
     // ── Auto-Initialise ──────────────────────────────────────
