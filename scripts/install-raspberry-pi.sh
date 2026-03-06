@@ -250,7 +250,7 @@ install_application() {
         rm -f "$INSTALL_DIR/security-hardening.sh"
     else
         print_error "Application files not found"
-        print_step "Please place this installer in the DS-Tracks2 directory"
+        print_step "Please place this installer in the ds-tracks directory"
         exit 1
     fi
 

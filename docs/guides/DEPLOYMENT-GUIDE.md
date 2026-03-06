@@ -81,19 +81,19 @@ sudo reboot
 
 **1. Transfer files to Raspberry Pi:**
 ```bash
-# From your computer, copy the DS-Tracks2 directory
-scp -r DS-Tracks2/ pi@ds-tracks.local:/home/pi/
+# From your computer, copy the ds-tracks directory
+scp -r ds-tracks/ pi@ds-tracks.local:/home/pi/
 
 # Or use a USB drive:
 # - Copy files to USB
 # - Insert USB into Raspberry Pi
 # - Mount: sudo mount /dev/sda1 /mnt
-# - Copy: cp -r /mnt/DS-Tracks2 /home/pi/
+# - Copy: cp -r /mnt/ds-tracks /home/pi/
 ```
 
 **2. Run the installer:**
 ```bash
-cd /home/pi/DS-Tracks2
+cd /home/pi/ds-tracks
 chmod +x install-raspberry-pi.sh
 sudo ./install-raspberry-pi.sh
 ```
@@ -176,7 +176,7 @@ sudo nano /var/www/html/ds-tracks/admin_customize.php
 **CRITICAL: Run the security hardening script before going live!**
 
 ```bash
-cd /home/pi/DS-Tracks2
+cd /home/pi/ds-tracks
 chmod +x security-hardening.sh
 sudo ./security-hardening.sh
 ```

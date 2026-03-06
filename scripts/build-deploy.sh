@@ -5,10 +5,10 @@
 # Creates a clean deploy/ folder containing only the files
 # needed for installation on the Raspberry Pi.
 #
-# Run this from the DS-Tracks2 project root:
+# Run this from the ds-tracks project root:
 #   bash scripts/build-deploy.sh
 #
-# The resulting deploy/DS-Tracks2/ folder is what gets
+# The resulting deploy/ds-tracks/ folder is what gets
 # copied to the USB stick for Build Day.
 # ============================================================
 
@@ -16,7 +16,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-DEPLOY_DIR="$PROJECT_ROOT/deploy/DS-Tracks2"
+DEPLOY_DIR="$PROJECT_ROOT/deploy/ds-tracks"
 
 echo "Building deployment package..."
 echo ""
@@ -93,7 +93,7 @@ fi
 # ---- Summary ----
 
 echo "Deployment package created at:"
-echo "  deploy/DS-Tracks2/"
+echo "  deploy/ds-tracks/"
 echo ""
 
 # Count files
@@ -103,4 +103,4 @@ DIR_SIZE=$(du -sh "$DEPLOY_DIR" | cut -f1)
 echo "  Files: $FILE_COUNT"
 echo "  Size:  $DIR_SIZE"
 echo ""
-echo "Copy deploy/DS-Tracks2/ to your USB stick for Build Day."
+echo "Copy deploy/ds-tracks/ to your USB stick for Build Day."

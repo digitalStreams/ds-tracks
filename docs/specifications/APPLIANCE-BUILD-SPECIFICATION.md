@@ -13,7 +13,7 @@ This specification documents how to create a pre-configured Raspberry Pi disk im
 
 ### Codebase Assessment Result: APPROVED
 
-The current DS-Tracks2 v2.0 codebase has been reviewed and is **highly suitable** for appliance deployment with only minor enhancements needed.
+The current ds-tracks v2.0 codebase has been reviewed and is **highly suitable** for appliance deployment with only minor enhancements needed.
 
 | Component | Readiness | Action Required |
 |-----------|-----------|-----------------|
@@ -639,10 +639,10 @@ sudo raspi-config nonint do_change_timezone Australia/Sydney
 
 ```bash
 # Copy application files to Pi
-scp -r /path/to/DS-Tracks2 pi@raspberrypi.local:/tmp/
+scp -r /path/to/ds-tracks pi@raspberrypi.local:/tmp/
 
 # Run installer
-cd /tmp/DS-Tracks2
+cd /tmp/ds-tracks
 sudo ./install-raspberry-pi.sh
 
 # Verify installation

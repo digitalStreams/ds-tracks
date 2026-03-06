@@ -87,7 +87,7 @@ Do these steps at your desk. They take about 10 minutes.
 ### Step 3: Copy DS-Tracks to a USB Stick
 
 1. Insert a USB thumb drive into your PC
-2. Copy the entire **DS-Tracks2** folder onto the USB stick
+2. Copy the entire **ds-tracks** folder onto the USB stick
 3. Safely eject the USB stick
 
 You're now ready for build day.
@@ -137,7 +137,7 @@ pi@ds-tracks:~ $
 
 ### Step 3: Copy Files from USB Stick (2 minutes)
 
-Insert your USB thumb drive (the one with DS-Tracks2 on it) into any USB port on the Pi.
+Insert your USB thumb drive (the one with ds-tracks on it) into any USB port on the Pi.
 
 Wait 5 seconds, then type these commands **exactly as shown**. Press Enter after each one:
 
@@ -156,12 +156,12 @@ sudo mount /dev/sdb1 /mnt/usb
 
 Now copy the files:
 ```
-cp -r /mnt/usb/DS-Tracks2 /tmp/
+cp -r /mnt/usb/ds-tracks /tmp/
 ```
 
 Check it worked:
 ```
-ls /tmp/DS-Tracks2/
+ls /tmp/ds-tracks/
 ```
 
 You should see a list of files including `login.php`, `config.php`, `appliance/` etc.
@@ -178,7 +178,7 @@ sudo umount /mnt/usb
 This is the big one. Type these two commands:
 
 ```
-cd /tmp/DS-Tracks2/appliance
+cd /tmp/ds-tracks/appliance
 ```
 
 ```
@@ -345,7 +345,7 @@ The first boot takes a bit longer because it sets up the system and checks the m
 | Problem | Solution |
 |---------|----------|
 | "Permission denied" | Make sure you typed `sudo` at the start |
-| "No such file or directory" | Check you typed the path correctly. Try `ls /tmp/DS-Tracks2/appliance/` to see if the file is there |
+| "No such file or directory" | Check you typed the path correctly. Try `ls /tmp/ds-tracks/appliance/` to see if the file is there |
 | "Could not resolve host" | The Pi isn't connected to the internet. Check the ethernet cable |
 | Script stops with red text | Read the error message. Usually it's a network issue. Try running the script again |
 | USB stick not detected | Try a different USB port. Try `sudo mount /dev/sdb1 /mnt/usb` instead |
@@ -393,11 +393,11 @@ Print this and keep it with your Pi kit.
   COPY FILES FROM USB:
     sudo mkdir -p /mnt/usb
     sudo mount /dev/sda1 /mnt/usb
-    cp -r /mnt/usb/DS-Tracks2 /tmp/
+    cp -r /mnt/usb/ds-tracks /tmp/
     sudo umount /mnt/usb
 
   BUILD:
-    cd /tmp/DS-Tracks2/appliance
+    cd /tmp/ds-tracks/appliance
     sudo bash build-appliance.sh
 
   SET UP MUSIC DRIVE (USB SSD mode only):

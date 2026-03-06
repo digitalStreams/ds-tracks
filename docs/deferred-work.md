@@ -61,3 +61,67 @@ Approximately 1 hour of careful find-and-replace work across all files.
 **Scope:** Allow users to choose between storing music on the SD card or on a separate USB SSD, via a setting in the config file.
 
 See separate implementation — this was approved and is being built.
+
+---
+
+## 3. Admin UI Toggle for Mouse Cursor Visibility
+
+**Status:** Planned, not yet implemented
+
+**Scope:** Add a "Show mouse cursor" toggle to the admin settings page (`admin_customize.php`), allowing administrators to switch between touchscreen-only mode (cursor hidden) and mouse+keyboard mode (cursor visible).
+
+### Current State
+- `HIDE_CURSOR` setting already exists in `/boot/firmware/kcr-config.txt`
+- `.bash_profile` and `.xinitrc` already read this setting and conditionally hide the cursor
+- Changing the setting currently requires SSH access or editing the config file manually
+
+### Implementation
+1. Add checkbox/toggle to admin settings UI
+2. PHP save action writes `HIDE_CURSOR=true|false` to the config file
+3. Requires `sudo` access to write to `/boot/firmware/` — needs a helper script (check how music storage toggle handles this)
+4. Display note: "Takes effect after reboot"
+5. Optionally offer a "Reboot now" button
+
+### Notes
+- `unclutter` auto-hides the cursor after 0.5s of inactivity regardless of this setting (nice UX for mouse users)
+- Two layers control cursor: X server (`-nocursor` flag) and Chromium (`--cursor=none` flag) — both must respect the config
+
+---
+
+## 4. Touch-Screen Restart / Reboot Controls
+
+**Status:** Planned, not yet implemented
+
+**Scope:** Provide emergency restart and reboot options accessible from the kiosk touch interface, without needing SSH or physical access.
+
+### Two Levels
+
+| Action | What it does | Speed | When to use |
+|--------|-------------|-------|-------------|
+| **Restart App** | Kills and restarts the X session / Chromium kiosk | ~5 seconds | UI freeze, JavaScript hang, cached state issues |
+| **Reboot System** | Full OS reboot (`sudo reboot`) | ~30-60 seconds | USB detection stuck, Apache hung, network problems |
+
+Both are non-destructive. The Pi auto-login chain (`getty → pi user → .bash_profile → startx → .xinitrc → Chromium`) brings the kiosk back to the idle screen automatically — no manual login required.
+
+### UI Placement
+
+1. **Admin settings page** (`admin_customize.php`) — "Restart App" and "Reboot System" buttons with confirmation dialogs
+2. **Hidden emergency gesture on idle screen** — long-press (3+ seconds) on the station logo/header area as a fallback when the app is unresponsive
+
+### Implementation
+
+1. Create `reboot.php` endpoint that accepts `action=restart|reboot`
+2. Add sudoers entries for `www-data` (tightly scoped):
+   ```
+   www-data ALL=(ALL) NOPASSWD: /sbin/reboot
+   www-data ALL=(ALL) NOPASSWD: /bin/systemctl restart getty@tty1
+   ```
+3. Admin page: two buttons with confirmation dialog ("Reboot now? The system will restart in ~30 seconds")
+4. Idle screen: hidden long-press handler on logo area → shows restart/reboot confirmation
+5. PHP endpoint validates the action parameter and executes the appropriate command
+
+### Security
+
+- Sudoers entries limited to only `reboot` and `getty restart` — no other commands
+- Confirmation dialog prevents accidental triggers
+- Hidden gesture requires 3-second press to activate

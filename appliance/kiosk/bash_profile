@@ -14,6 +14,18 @@ if [ -z "$DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
     # Log the startup
     echo "[$(date)] Starting DS-Tracks kiosk mode..." >> /var/log/ds-kiosk.log
 
-    # Start X server with our xinitrc
-    exec startx -- -nocursor 2>> /var/log/ds-kiosk.log
+    # Read cursor config
+    HIDE_CURSOR="true"
+    if [ -f /boot/firmware/kcr-config.txt ]; then
+        HIDE_CURSOR=$(grep "^HIDE_CURSOR=" /boot/firmware/kcr-config.txt | cut -d'=' -f2 || echo "true")
+    elif [ -f /boot/kcr-config.txt ]; then
+        HIDE_CURSOR=$(grep "^HIDE_CURSOR=" /boot/kcr-config.txt | cut -d'=' -f2 || echo "true")
+    fi
+
+    # Start X server — hide cursor only if configured
+    if [ "$HIDE_CURSOR" = "true" ]; then
+        exec startx -- -nocursor 2>> /var/log/ds-kiosk.log
+    else
+        exec startx 2>> /var/log/ds-kiosk.log
+    fi
 fi

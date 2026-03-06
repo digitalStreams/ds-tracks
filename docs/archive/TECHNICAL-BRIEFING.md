@@ -66,7 +66,7 @@ DS-Tracks is a PHP-based web application designed for community radio stations t
 
 **File Structure:**
 ```
-DS-Tracks2/
+ds-tracks/
 ├── music/              # User uploads (directories named: username-YYMMDD-HHMMSS)
 ├── images/             # Logos and graphics
 ├── css/                # Stylesheets
@@ -1147,7 +1147,7 @@ memory_limit = 256M
                             ↓
 ┌────────────────────────────────────────────────────────────┐
 │ Step 3: Transfer Files                                     │
-│ - SCP DS-Tracks2 folder to /home/pi/                      │
+│ - SCP ds-tracks folder to /home/pi/                      │
 │ - OR copy via USB drive                                    │
 └────────────────────────────────────────────────────────────┘
                             ↓

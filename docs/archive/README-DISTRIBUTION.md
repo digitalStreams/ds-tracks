@@ -64,7 +64,7 @@ DS-Tracks is a secure, self-contained music playback system designed for communi
 ```bash
 # Copy files to Raspberry Pi
 # Run installer
-cd DS-Tracks2
+cd ds-tracks
 chmod +x install-raspberry-pi.sh
 sudo ./install-raspberry-pi.sh
 ```

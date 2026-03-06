@@ -35,14 +35,14 @@ appliance/
 
 2. **Boot the Pi** and connect via SSH or keyboard
 
-3. **Copy DS-Tracks2** folder to the Pi:
+3. **Copy ds-tracks** folder to the Pi:
    ```bash
-   scp -r /path/to/DS-Tracks2 pi@raspberrypi.local:/tmp/
+   scp -r /path/to/ds-tracks pi@raspberrypi.local:/tmp/
    ```
 
 4. **Run the build script**:
    ```bash
-   cd /tmp/DS-Tracks2/appliance
+   cd /tmp/ds-tracks/appliance
    sudo ./build-appliance.sh
    ```
 
@@ -158,9 +158,9 @@ User-editable configuration file on the boot partition. Can be edited on Windows
 
 ### "Source not found"
 
-Ensure DS-Tracks2 is in `/tmp/`:
+Ensure ds-tracks is in `/tmp/`:
 ```bash
-ls /tmp/DS-Tracks2/install-raspberry-pi.sh
+ls /tmp/ds-tracks/install-raspberry-pi.sh
 ```
 
 ### "Permission denied"

@@ -66,7 +66,7 @@
 ### 2.2 Files Created
 
 ```
-DS-Tracks2/
+ds-tracks/
 ├── docs/
 │   ├── archive/
 │   │   └── DS-Tracks-User-Manual-V2.md       # Updated user manual
@@ -277,7 +277,7 @@ The appliance build system creates a "flash and boot" Raspberry Pi image that:
 
 **Usage:**
 ```bash
-cd /tmp/DS-Tracks2/appliance
+cd /tmp/ds-tracks/appliance
 sudo ./build-appliance.sh
 ```
 
@@ -541,21 +541,21 @@ sudo apt update && sudo apt upgrade -y
 
 **Option A: From another computer via SCP**
 ```bash
-scp -r /path/to/DS-Tracks2 pi@raspberrypi.local:/tmp/
+scp -r /path/to/ds-tracks pi@raspberrypi.local:/tmp/
 ```
 
 **Option B: From USB drive**
 ```bash
-# Insert USB drive with DS-Tracks2 folder
+# Insert USB drive with ds-tracks folder
 sudo mount /dev/sda1 /mnt
-cp -r /mnt/DS-Tracks2 /tmp/
+cp -r /mnt/ds-tracks /tmp/
 sudo umount /mnt
 ```
 
 #### Step 4: Run Build Script (45 minutes)
 
 ```bash
-cd /tmp/DS-Tracks2/appliance
+cd /tmp/ds-tracks/appliance
 chmod +x build-appliance.sh
 sudo ./build-appliance.sh
 ```

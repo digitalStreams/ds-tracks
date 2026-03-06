@@ -21,22 +21,22 @@ This is a 15-minute quick-start guide to get DS-Tracks running on your Raspberry
 
 **Option A - Using USB Drive:**
 ```bash
-1. Copy DS-Tracks2 folder to USB drive
+1. Copy ds-tracks folder to USB drive
 2. Insert USB into Raspberry Pi
 3. Mount: sudo mount /dev/sda1 /mnt
-4. Copy: cp -r /mnt/DS-Tracks2 /home/pi/
+4. Copy: cp -r /mnt/ds-tracks /home/pi/
 ```
 
 **Option B - Using Network:**
 ```bash
 # From your computer:
-scp -r DS-Tracks2/ pi@raspberrypi.local:/home/pi/
+scp -r ds-tracks/ pi@raspberrypi.local:/home/pi/
 ```
 
 ### Step 2: Run Installer
 
 ```bash
-cd /home/pi/DS-Tracks2
+cd /home/pi/ds-tracks
 chmod +x install-raspberry-pi.sh
 sudo ./install-raspberry-pi.sh
 ```
@@ -87,7 +87,7 @@ scp your-logo.png pi@raspberrypi.local:/var/www/html/ds-tracks/images/station-lo
 ## Security (Optional but Recommended)
 
 ```bash
-cd /home/pi/DS-Tracks2
+cd /home/pi/ds-tracks
 chmod +x security-hardening.sh
 sudo ./security-hardening.sh
 ```

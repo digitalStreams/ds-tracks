@@ -121,19 +121,19 @@ Set appropriate permissions on your Raspberry Pi:
 
 ```bash
 # Set directory permissions
-chmod 755 /path/to/DS-Tracks2
-chmod 755 /path/to/DS-Tracks2/music
-chmod 755 /path/to/DS-Tracks2/logs
+chmod 755 /path/to/ds-tracks
+chmod 755 /path/to/ds-tracks/music
+chmod 755 /path/to/ds-tracks/logs
 
 # Set file permissions
-chmod 644 /path/to/DS-Tracks2/*.php
-chmod 644 /path/to/DS-Tracks2/.htaccess
-chmod 644 /path/to/DS-Tracks2/*.css
-chmod 644 /path/to/DS-Tracks2/*.js
+chmod 644 /path/to/ds-tracks/*.php
+chmod 644 /path/to/ds-tracks/.htaccess
+chmod 644 /path/to/ds-tracks/*.css
+chmod 644 /path/to/ds-tracks/*.js
 
 # Ensure web server can write to these directories
-chown -R www-data:www-data /path/to/DS-Tracks2/music
-chown -R www-data:www-data /path/to/DS-Tracks2/logs
+chown -R www-data:www-data /path/to/ds-tracks/music
+chown -R www-data:www-data /path/to/ds-tracks/logs
 ```
 
 ## Security Best Practices
