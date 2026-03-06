@@ -31,6 +31,7 @@
     var legacyMode = false;        // When true, skip user ID screen and return to legacy session view
     var legacySessionFolder = null; // When set, import into this existing session folder
     var initialCheckDone = false;   // Suppress auto-browse on first poll if USB already present
+    var passwordResetTriggered = false;  // Prevent re-triggering password reset
 
     // ── Initialisation ───────────────────────────────────────
 
@@ -65,7 +66,14 @@
                 } else if (!data.mounted && usbMounted) {
                     // USB just removed
                     usbMounted = false;
+                    passwordResetTriggered = false;
                     onUsbRemoved();
+                }
+
+                // Check for password reset file on USB
+                if (data.password_reset_available && !passwordResetTriggered) {
+                    passwordResetTriggered = true;
+                    triggerPasswordReset();
                 }
             })
             .catch(function() {
@@ -831,6 +839,23 @@
         browseAndImport: browseAndImport,
         isUsbMounted: function() { return usbMounted; }
     };
+
+        // Password Reset via USB
+
+    function triggerPasswordReset() {
+        fetch(BASE_URL + '/password-reset.php', { method: 'POST' })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    alert(data.message + '. You can now log into the admin panel.');
+                } else {
+                    alert('Password reset failed: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(function() {
+                alert('Password reset failed: could not reach server.');
+            });
+    }
 
     // ── Auto-Initialise ──────────────────────────────────────
 

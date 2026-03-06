@@ -1222,7 +1222,7 @@
     </script>
 
     <!-- USB Browser & Touch Player -->
-    <script src="js/usb-browser.js?v=9"></script>
+    <script src="js/usb-browser.js?v=10"></script>
 
     <!-- On-Screen Keyboard -->
     <script src="js/on-screen-keyboard.js?v=4"></script>

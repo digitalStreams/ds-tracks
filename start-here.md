@@ -24,6 +24,7 @@ DS-Tracks is a Raspberry Pi kiosk application for community radio stations. User
 | `css/style.css` | Legacy interface styles |
 | `usb-status.php` | Returns USB mount status as JSON |
 | `usb-browse.php` | Lists files/folders on mounted USB |
+| `password-reset.php` | Resets admin password via USB file (DS-RESET-PASSWORD.txt) |
 | `usb-import.php` | Copies selected files from USB into session directory |
 | `js/on-screen-keyboard.js` | Touch keyboard for Pi kiosk (auto-shows on input focus) |
 | `usb-export.php` | Admin-only: export all music sessions to USB drive with metadata |
