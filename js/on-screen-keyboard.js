@@ -217,8 +217,11 @@ function init() {
 
     document.addEventListener('click', function(e) {
         if (!keyboardEl || !keyboardEl.classList.contains('ds-kb-visible')) return;
-        if (keyboardEl.contains(e.target)) return;
         if (e.target.tagName === 'INPUT') return;
+        // Use bounding rect because renderKeys() may have replaced the clicked button
+        var rect = keyboardEl.getBoundingClientRect();
+        if (e.clientX >= rect.left && e.clientX <= rect.right &&
+            e.clientY >= rect.top && e.clientY <= rect.bottom) return;
         hideKeyboard();
     });
 }

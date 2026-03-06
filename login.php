@@ -13,7 +13,7 @@
     <script src="js/js.cookie.min.js"></script>
     <script src="js/touch-dnd.js"></script>
 
-    <link rel="stylesheet" href="css/style.css?v=6">
+    <link rel="stylesheet" href="css/style.css?v=7">
     <link rel="stylesheet" href="css/touch.css">
 </head>
 
@@ -789,15 +789,15 @@
                         '<span class="dsEditLabel" data-session="' + directoryName +
                         '" title="Edit session name">&#9998;</span>' +
                         '</div>' +
+                        '<button title="Delete this session and all tracks." data-folder="' +
+                        value.name +
+                        '" class="dsDeleteSession">&#128465;</button>' +
                         '<button title="Add new tracks to this session." data-folder=' +
                         value.name +
                         ' class="dsAddTracks">Add Tracks</button>' +
                         '<button title="Click item to preview tracks in this session." data-tracks=' +
                         tracks +
-                        ' class="dsShowTracks">Show Tracks</button>' +
-                        '<button title="Delete this session and all tracks." data-folder="' +
-                        value.name +
-                        '" class="dsDeleteSession">&#128465;</button>';
+                        ' class="dsShowTracks">Show Tracks</button>';
 
                     allSessions = (allSessions) ? mySession + allSessions : mySession;
                 })
@@ -1222,7 +1222,7 @@
     <script src="js/usb-browser.js?v=9"></script>
 
     <!-- On-Screen Keyboard -->
-    <script src="js/on-screen-keyboard.js?v=3"></script>
+    <script src="js/on-screen-keyboard.js?v=4"></script>
 
 </body>
 
