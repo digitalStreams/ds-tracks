@@ -1,10 +1,10 @@
 <?php
 /**
- * KCR Tracks - Customization Admin Interface
+ * DS-Tracks - Customization Admin Interface
  * Simple interface to customize branding without editing code
  */
 
-define('KCR_TRACKS', true);
+define('DS_TRACKS', true);
 require_once 'config.php';
 
 // Simple password protection - CHANGE THIS PASSWORD!
@@ -46,9 +46,9 @@ if (isset($_POST['save_storage']) && isset($_SESSION['admin_logged_in'])) {
 // Handle customization save
 if (isset($_POST['save_branding']) && isset($_SESSION['admin_logged_in'])) {
     $config = "<?php\n";
-    $config .= "/**\n * KCR Tracks - Branding & Customization Configuration\n";
+    $config .= "/**\n * DS-Tracks - Branding & Customization Configuration\n";
     $config .= " * Auto-generated on " . date('Y-m-d H:i:s') . "\n */\n\n";
-    $config .= "if (!defined('KCR_TRACKS')) {\n    define('KCR_TRACKS', true);\n}\n\n";
+    $config .= "if (!defined('DS_TRACKS')) {\n    define('DS_TRACKS', true);\n}\n\n";
     $config .= "class Branding {\n\n";
 
     // Station info
@@ -63,7 +63,7 @@ if (isset($_POST['save_branding']) && isset($_SESSION['admin_logged_in'])) {
 
     // Logos
     $config .= "    // Logo Configuration\n";
-    $config .= "    public static \$logoPath = " . var_export($_POST['logo_path'] ?? 'images/kcr-logo-cropped.png', true) . ";\n";
+    $config .= "    public static \$logoPath = " . var_export($_POST['logo_path'] ?? 'images/station-logo.png', true) . ";\n";
     $config .= "    public static \$tracksLogoPath = " . var_export($_POST['tracks_logo_path'] ?? 'images/tracks-logo.png', true) . ";\n";
     $config .= "    public static \$faviconPath = " . var_export($_POST['favicon_path'] ?? 'images/favicon.ico', true) . ";\n\n";
 
@@ -106,7 +106,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Admin Login - KCR Tracks</title>
+        <title>Admin Login - DS-Tracks</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -168,7 +168,7 @@ require_once 'branding.php';
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Customize Branding - KCR Tracks</title>
+    <title>Customize Branding - DS-Tracks</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -312,7 +312,7 @@ require_once 'branding.php';
 
                 <label>Short Name:</label>
                 <input type="text" name="station_short" value="<?php echo htmlspecialchars(Branding::$stationShortName); ?>" required>
-                <p class="hint">Abbreviation or short name (e.g., "KCR")</p>
+                <p class="hint">Abbreviation or short name (e.g., "DS")</p>
 
                 <label>Website URL:</label>
                 <input type="url" name="station_website" value="<?php echo htmlspecialchars(Branding::$stationWebsite); ?>">
@@ -381,7 +381,7 @@ require_once 'branding.php';
                     // Detect current mode
                     $musicPath = __DIR__ . '/music';
                     $currentMode = is_link($musicPath) ? 'usb' : 'sdcard';
-                    $usbMounted = is_dir('/mnt/kcr-music') && @file_exists('/mnt/kcr-music/music');
+                    $usbMounted = is_dir('/mnt/ds-music') && @file_exists('/mnt/ds-music/music');
                 ?>
 
                 <div class="storage-options">
@@ -393,8 +393,8 @@ require_once 'branding.php';
                     <label class="storage-option">
                         <input type="radio" name="music_storage" value="usb" <?php echo $currentMode === 'usb' ? 'checked' : ''; ?>>
                         <strong>USB SSD</strong> — Music stored on separate USB drive
-                        <span class="hint">Best for large libraries. Requires a USB drive labelled KCR-MUSIC.
-                        <?php if (!$usbMounted && $currentMode !== 'usb') echo '<br><em>No KCR-MUSIC drive detected.</em>'; ?></span>
+                        <span class="hint">Best for large libraries. Requires a USB drive labelled DS-MUSIC.
+                        <?php if (!$usbMounted && $currentMode !== 'usb') echo '<br><em>No DS-MUSIC drive detected.</em>'; ?></span>
                     </label>
                 </div>
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * KCR Tracks - USB Safe Eject API
+ * DS-Tracks - USB Safe Eject API
  *
  * Safely unmounts the USB drive so the user can remove it.
  *
@@ -9,8 +9,8 @@
 
 header('Content-Type: application/json');
 
-$mountPoint = '/media/kcr-usb';
-$statusFile = '/tmp/kcr-usb-status.json';
+$mountPoint = '/media/ds-usb';
+$statusFile = '/tmp/ds-usb-status.json';
 
 // Check if USB is mounted
 if (!file_exists($statusFile)) {

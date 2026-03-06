@@ -1,5 +1,5 @@
 /**
- * KCR Tracks - USB File Browser & Touch Player
+ * DS-Tracks - USB File Browser & Touch Player
  *
  * Handles USB detection, file browsing, import, and playback
  * for the touch-optimised Raspberry Pi interface.
@@ -10,7 +10,9 @@
 
     // ── Configuration ────────────────────────────────────────
 
-    var BASE_URL = window.location.origin + '/kcr-tracks';
+    // Auto-detect base URL from the current page location
+    var pathDir = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+    var BASE_URL = window.location.origin + pathDir;
     var USB_POLL_INTERVAL = 2000;   // Check USB status every 2 seconds
     var pollTimer = null;
     var usbMounted = false;
@@ -31,9 +33,8 @@
 
     function init() {
         loadExistingUsers();
-        startUsbPolling();
         setupAudio();
-        showScreen('idleScreen');
+        showScreen('idleScreen');  // This will start polling automatically
     }
 
     // ── USB Polling ──────────────────────────────────────────
@@ -98,10 +99,26 @@
         var screens = ['idleScreen', 'usbBrowser', 'userIdScreen', 'touchPlayer',
                        'dsLogin', 'dsSession', 'dsPlayer'];
 
+        var legacyScreens = ['dsLogin', 'dsSession', 'dsPlayer'];
+
         for (var i = 0; i < screens.length; i++) {
             var el = document.getElementById(screens[i]);
             if (el) {
-                el.style.display = (screens[i] === screenId) ? 'flex' : 'none';
+                if (screens[i] === screenId) {
+                    el.style.display = (legacyScreens.indexOf(screens[i]) !== -1) ? 'block' : 'flex';
+                } else {
+                    el.style.display = 'none';
+                }
+            }
+        }
+
+        // Only poll for USB when idle screen or USB browser is visible
+        if (screenId === 'idleScreen' || screenId === 'usbBrowser') {
+            if (!pollTimer) startUsbPolling();
+        } else {
+            if (pollTimer) {
+                clearInterval(pollTimer);
+                pollTimer = null;
             }
         }
     }
@@ -146,7 +163,7 @@
                 headerTitle.innerHTML = 'USB Drive';
             } else {
                 var folderName = data.current_path.split('/').pop();
-                headerTitle.innerHTML = '<span class="back-arrow" onclick="window.kcrUsb.goBack()">&#8592;</span> ' +
+                headerTitle.innerHTML = '<span class="back-arrow" onclick="window.dsUsb.goBack()">&#8592;</span> ' +
                     escapeHtml(folderName);
             }
         }
@@ -159,7 +176,7 @@
         for (var i = 0; i < data.folders.length; i++) {
             var folder = data.folders[i];
             hasContent = true;
-            html += '<div class="browser-row folder" onclick="window.kcrUsb.browsePath(\'' +
+            html += '<div class="browser-row folder" onclick="window.dsUsb.browsePath(\'' +
                 escapeAttr(folder.path) + '\')">' +
                 '<span class="row-icon">&#128193;</span>' +
                 '<span class="row-name">' + escapeHtml(folder.name) + '</span>' +
@@ -174,7 +191,7 @@
             hasContent = true;
             var isSelected = selectedFiles.indexOf(file.path) !== -1;
             html += '<div class="browser-row file' + (isSelected ? ' selected' : '') +
-                '" onclick="window.kcrUsb.toggleFile(\'' + escapeAttr(file.path) + '\', this)">' +
+                '" onclick="window.dsUsb.toggleFile(\'' + escapeAttr(file.path) + '\', this)">' +
                 '<span class="row-icon">&#9835;</span>' +
                 '<span class="row-name">' + escapeHtml(file.name) + '</span>' +
                 '<span class="row-info">' + file.size_human + '</span>' +
@@ -371,7 +388,7 @@
 
         var html = '';
         for (var i = 0; i < existingUsers.length; i++) {
-            html += '<div class="existing-user-item" onclick="window.kcrUsb.selectExistingUser(\'' +
+            html += '<div class="existing-user-item" onclick="window.dsUsb.selectExistingUser(\'' +
                 escapeAttr(existingUsers[i]) + '\')">' +
                 escapeHtml(existingUsers[i]) + '</div>';
         }
@@ -463,14 +480,14 @@
         browser.innerHTML =
             '<div class="browser-header">' +
             '  <div class="header-title" id="browserHeaderTitle">USB Drive</div>' +
-            '  <button class="btn-select-all" id="btnSelectAll" onclick="window.kcrUsb.selectAll()">Select All</button>' +
+            '  <button class="btn-select-all" id="btnSelectAll" onclick="window.dsUsb.selectAll()">Select All</button>' +
             '</div>' +
             '<div class="browser-list" id="browserList"></div>' +
             '<div class="browser-footer">' +
             '  <span class="selected-count" id="selectedCount">0 selected</span>' +
             '  <div class="footer-buttons">' +
-            '    <button class="btn-browser btn-back" onclick="window.kcrUsb.goBack()">&#8592; Back</button>' +
-            '    <button class="btn-browser btn-import" id="btnImport" disabled onclick="window.kcrUsb.showUserIdScreen()">Use These Tracks &#8594;</button>' +
+            '    <button class="btn-browser btn-back" onclick="window.dsUsb.goBack()">&#8592; Back</button>' +
+            '    <button class="btn-browser btn-import" id="btnImport" disabled onclick="window.dsUsb.showUserIdScreen()">Use These Tracks &#8594;</button>' +
             '  </div>' +
             '</div>';
     }
@@ -505,7 +522,7 @@
             var html = '';
             for (var i = 0; i < tracks.length; i++) {
                 html += '<div class="player-track" id="track-' + i +
-                    '" onclick="window.kcrUsb.playTrack(' + i + ')">' +
+                    '" onclick="window.dsUsb.playTrack(' + i + ')">' +
                     '<span class="track-indicator">' + (i + 1) + '</span>' +
                     '<span class="track-name">' + escapeHtml(tracks[i].name) + '</span>' +
                     '</div>';
@@ -698,7 +715,7 @@
         }
         currentTrackIndex = -1;
         selectedFiles = [];
-        showScreen('idleScreen');
+        showScreen('idleScreen');  // showScreen auto-restarts polling for idle screen
     }
 
     function goToSessions() {
@@ -723,7 +740,7 @@
 
     function goToLegacyLogin() {
         // Switch to the original login flow (keyboard/mouse)
-        showScreen('dsLogin');
+        showScreen('dsLogin');  // showScreen auto-stops polling for non-USB screens
     }
 
     // ── Helpers ───────────────────────────────────────────────
@@ -747,7 +764,7 @@
 
     // ── Public API (exposed to onclick handlers) ─────────────
 
-    window.kcrUsb = {
+    window.dsUsb = {
         init: init,
         browsePath: browsePath,
         toggleFile: toggleFile,

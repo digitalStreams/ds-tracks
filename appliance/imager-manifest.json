@@ -1,10 +1,10 @@
 {
   "os_list": [
     {
-      "name": "KCR Tracks Appliance",
+      "name": "DS-Tracks Appliance",
       "description": "Safe music playback system for community radio stations. Upload and play music from USB drives without malware risk.",
-      "icon": "https://yoursite.com/downloads/kcr-tracks-icon.png",
-      "url": "https://yoursite.com/downloads/kcr-tracks-v2.0.img.xz",
+      "icon": "https://yoursite.com/downloads/ds-tracks-icon.png",
+      "url": "https://yoursite.com/downloads/ds-tracks-v2.0.img.xz",
       "extract_size": 8000000000,
       "extract_sha256": "REPLACE_WITH_ACTUAL_SHA256_HASH",
       "image_download_size": 1000000000,
@@ -15,7 +15,7 @@
         "pi4-64bit",
         "pi5-64bit"
       ],
-      "website": "https://yoursite.com/kcr-tracks"
+      "website": "https://yoursite.com/ds-tracks"
     }
   ]
 }

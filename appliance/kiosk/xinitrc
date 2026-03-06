@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================
-# KCR Tracks Kiosk Mode X Session Configuration
+# DS-Tracks Kiosk Mode X Session Configuration
 # ============================================================
 # This file is installed to /home/pi/.xinitrc
 # It configures the X session for kiosk mode operation
@@ -37,10 +37,10 @@ sleep 3
 
 # Get configuration for cursor hiding
 HIDE_CURSOR="true"
-if [ -f /boot/firmware/kcr-config.txt ]; then
-    HIDE_CURSOR=$(grep "^HIDE_CURSOR=" /boot/firmware/kcr-config.txt | cut -d'=' -f2 || echo "true")
-elif [ -f /boot/kcr-config.txt ]; then
-    HIDE_CURSOR=$(grep "^HIDE_CURSOR=" /boot/kcr-config.txt | cut -d'=' -f2 || echo "true")
+if [ -f /boot/firmware/ds-config.txt ]; then
+    HIDE_CURSOR=$(grep "^HIDE_CURSOR=" /boot/firmware/ds-config.txt | cut -d'=' -f2 || echo "true")
+elif [ -f /boot/ds-config.txt ]; then
+    HIDE_CURSOR=$(grep "^HIDE_CURSOR=" /boot/ds-config.txt | cut -d'=' -f2 || echo "true")
 fi
 
 # Build Chromium flags
@@ -69,7 +69,12 @@ fi
 # Launch Chromium in kiosk mode
 # Loop to restart if it crashes
 while true; do
-    chromium-browser "${CHROMIUM_FLAGS[@]}" http://localhost/kcr-tracks/login.php
+    # chromium-browser was renamed to chromium in Bookworm+
+    if command -v chromium-browser &>/dev/null; then
+        chromium-browser "${CHROMIUM_FLAGS[@]}" http://localhost/login.php
+    else
+        chromium "${CHROMIUM_FLAGS[@]}" http://localhost/login.php
+    fi
 
     # If Chromium exits, wait a moment then restart
     echo "Chromium exited, restarting in 3 seconds..."

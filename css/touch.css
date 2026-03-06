@@ -1,5 +1,5 @@
 /* ============================================================
-   KCR Tracks - Touch-Optimised Stylesheet
+   DS-Tracks - Touch-Optimised Stylesheet
    ============================================================
    Designed for 800x480 Raspberry Pi 7" touchscreen.
    All touch targets are 48px minimum height.
@@ -490,6 +490,7 @@
     flex-direction: column;
     height: 100%;
     background: #007479;
+    position: relative;
 }
 
 /* Player Header */
@@ -497,11 +498,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 16px;
+    padding: 8px 70px 8px 16px; /* Right padding for home icon */
     background: rgba(0, 0, 0, 0.2);
     color: white;
-    min-height: 40px;
+    min-height: 48px;
     box-sizing: border-box;
+    position: relative;
 }
 
 .player-header .player-user {

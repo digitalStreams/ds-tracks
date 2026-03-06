@@ -1,9 +1,9 @@
 #!/bin/bash
 # ============================================================
-# KCR Tracks - Music Drive Setup Script
+# DS-Tracks - Music Drive Setup Script
 # ============================================================
 #
-# Formats and labels a USB drive as the KCR Tracks music storage.
+# Formats and labels a USB drive as the DS-Tracks music storage.
 # Run this on the Pi during build, with the target USB drive plugged in.
 #
 # Usage:
@@ -23,8 +23,8 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-LABEL="KCR-MUSIC"
-MOUNT_POINT="/mnt/kcr-music"
+LABEL="DS-MUSIC"
+MOUNT_POINT="/mnt/ds-music"
 
 # Must run as root
 if [ "$EUID" -ne 0 ]; then
@@ -34,7 +34,7 @@ fi
 
 echo ""
 echo -e "${BLUE}============================================================${NC}"
-echo -e "${BLUE} KCR Tracks - Music Drive Setup${NC}"
+echo -e "${BLUE} DS-Tracks - Music Drive Setup${NC}"
 echo -e "${BLUE}============================================================${NC}"
 echo ""
 
@@ -157,7 +157,7 @@ chown www-data:www-data "$MOUNT_POINT/music"
 chmod 755 "$MOUNT_POINT/music"
 
 # Create a marker file so we know this is set up
-echo "KCR-MUSIC drive configured on $(date)" > "$MOUNT_POINT/.kcr-music-drive"
+echo "DS-MUSIC drive configured on $(date)" > "$MOUNT_POINT/.ds-music-drive"
 
 # Unmount
 umount "$MOUNT_POINT"

@@ -1,6 +1,6 @@
 <?php
 /**
- * KCR Tracks - Music Player Display
+ * DS-Tracks - Music Player Display
  * Displays audio files for a specific user session
  */
 

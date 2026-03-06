@@ -1,25 +1,25 @@
 <?php
 /**
- * KCR Tracks - Branding & Customization Configuration
+ * DS-Tracks - Branding & Customization Configuration
  * Version 2.0
  *
  * This file allows radio stations to customize the appearance
  * without modifying core code.
  */
 
-if (!defined('KCR_TRACKS')) {
-    define('KCR_TRACKS', true);
+if (!defined('DS_TRACKS')) {
+    define('DS_TRACKS', true);
 }
 
 class Branding {
 
     // Station Information
-    public static $stationName = "Kiama Community Radio";
-    public static $stationShortName = "KCR";
-    public static $stationWebsite = "https://kiamaradio.org.au";
+    public static $stationName = "My Station";
+    public static $stationShortName = "DS";
+    public static $stationWebsite = "";
 
     // Logo Configuration
-    public static $logoPath = "images/kcr-logo-cropped.png";
+    public static $logoPath = "images/station-logo.png";
     public static $tracksLogoPath = "images/tracks-logo.png";
     public static $faviconPath = "images/favicon.ico";
 
@@ -132,7 +132,7 @@ class Branding {
         }
 
         if (self::$settings['show-powered-by']) {
-            $html .= '<p class="powered-by">Powered by KCR Tracks v2.0</p>';
+            $html .= '<p class="powered-by">Powered by DS-Tracks v2.0</p>';
         }
 
         if (self::$settings['show-station-website-link'] && self::$stationWebsite) {

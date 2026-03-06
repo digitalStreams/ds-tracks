@@ -1,6 +1,6 @@
 <?php
 /**
- * KCR Tracks - USB File Browser API
+ * DS-Tracks - USB File Browser API
  *
  * Returns the contents of a directory on the mounted USB drive.
  * Only exposes folders and supported audio files.
@@ -22,7 +22,7 @@ header('Cache-Control: no-cache, no-store, must-revalidate');
 // Configuration
 $usbMountPoint = '/media/kcr-usb';
 $allowedExtensions = ['mp3', 'wav', 'ogg', 'flac', 'm4a'];
-$statusFile = '/tmp/kcr-usb-status.json';
+$statusFile = '/run/kcr-usb-status.json';
 
 /**
  * Format bytes into human-readable size

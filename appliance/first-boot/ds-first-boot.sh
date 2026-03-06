@@ -1,10 +1,10 @@
 #!/bin/bash
 # ============================================================
-# KCR Tracks First Boot Configuration Script
+# DS-Tracks First Boot Configuration Script
 # ============================================================
 # This script runs automatically on first boot to:
 # - Expand the music partition to fill the SSD
-# - Apply user configuration from /boot/kcr-config.txt
+# - Apply user configuration from /boot/ds-config.txt
 # - Configure network settings
 # - Set up the station branding
 # - Enable/disable services as needed
@@ -15,14 +15,14 @@
 set -e
 
 # Logging setup
-LOG_FILE="/var/log/kcr-first-boot.log"
+LOG_FILE="/var/log/ds-first-boot.log"
 exec > >(tee -a "$LOG_FILE") 2>&1
 
 # Configuration
-KCR_INSTALL_DIR="/var/www/html/kcr-tracks"
-CONFIG_FILE="/boot/firmware/kcr-config.txt"
-CONFIG_FILE_ALT="/boot/kcr-config.txt"
-BRANDING_FILE="$KCR_INSTALL_DIR/branding.php"
+DS_INSTALL_DIR="/var/www/html/ds-tracks"
+CONFIG_FILE="/boot/firmware/ds-config.txt"
+CONFIG_FILE_ALT="/boot/ds-config.txt"
+BRANDING_FILE="$DS_INSTALL_DIR/branding.php"
 
 # ============================================================
 # Helper Functions
@@ -138,7 +138,7 @@ configure_station() {
         update_branding "stationShortName" "$station_short"
 
         # Set hostname based on short name
-        local new_hostname="kcr-$(echo "$station_short" | tr '[:upper:]' '[:lower:]' | tr -cd 'a-z0-9-')"
+        local new_hostname="ds-$(echo "$station_short" | tr '[:upper:]' '[:lower:]' | tr -cd 'a-z0-9-')"
         log_info "Setting hostname to: $new_hostname"
         hostnamectl set-hostname "$new_hostname" || true
         echo "$new_hostname" > /etc/hostname
@@ -195,7 +195,7 @@ EOF
         if [ -f /etc/dhcpcd.conf ]; then
             cat >> /etc/dhcpcd.conf << EOF
 
-# KCR Tracks static IP configuration
+# DS-Tracks static IP configuration
 interface eth0
 static ip_address=$static_ip/24
 static routers=$gateway
@@ -274,23 +274,23 @@ configure_ssh() {
 set_permissions() {
     log_info "Setting file permissions..."
 
-    if [ -d "$KCR_INSTALL_DIR" ]; then
+    if [ -d "$DS_INSTALL_DIR" ]; then
         # Set ownership
-        chown -R www-data:www-data "$KCR_INSTALL_DIR"
+        chown -R www-data:www-data "$DS_INSTALL_DIR"
 
         # Set directory permissions
-        find "$KCR_INSTALL_DIR" -type d -exec chmod 755 {} \;
+        find "$DS_INSTALL_DIR" -type d -exec chmod 755 {} \;
 
         # Set file permissions
-        find "$KCR_INSTALL_DIR" -type f -exec chmod 644 {} \;
+        find "$DS_INSTALL_DIR" -type f -exec chmod 644 {} \;
 
         # Ensure music and logs directories are writable
-        chmod 755 "$KCR_INSTALL_DIR/music" 2>/dev/null || true
-        chmod 755 "$KCR_INSTALL_DIR/logs" 2>/dev/null || true
+        chmod 755 "$DS_INSTALL_DIR/music" 2>/dev/null || true
+        chmod 755 "$DS_INSTALL_DIR/logs" 2>/dev/null || true
 
         log_success "Permissions set correctly"
     else
-        log_error "KCR Tracks directory not found: $KCR_INSTALL_DIR"
+        log_error "DS-Tracks directory not found: $DS_INSTALL_DIR"
     fi
 }
 
@@ -299,8 +299,8 @@ generate_instance_id() {
 
     # Generate a unique instance ID for support purposes
     local instance_id=$(cat /proc/sys/kernel/random/uuid | cut -d'-' -f1-2)
-    echo "$instance_id" > "$KCR_INSTALL_DIR/.instance-id"
-    chown www-data:www-data "$KCR_INSTALL_DIR/.instance-id"
+    echo "$instance_id" > "$DS_INSTALL_DIR/.instance-id"
+    chown www-data:www-data "$DS_INSTALL_DIR/.instance-id"
 
     log_success "Instance ID: $instance_id"
 }
@@ -323,7 +323,7 @@ configure_music_drive() {
     local music_storage=$(get_config "MUSIC_STORAGE" "usb")
     log_info "Music storage mode: $music_storage"
 
-    MUSIC_MOUNT="/mnt/kcr-music"
+    MUSIC_MOUNT="/mnt/ds-music"
     MUSIC_DIR="$MUSIC_MOUNT/music"
 
     if [ "$music_storage" = "sdcard" ]; then
@@ -331,19 +331,19 @@ configure_music_drive() {
         log_info "Configuring local SD card music storage..."
 
         # Remove symlink if one exists from a previous USB config
-        if [ -L "$KCR_INSTALL_DIR/music" ]; then
-            rm -f "$KCR_INSTALL_DIR/music"
+        if [ -L "$DS_INSTALL_DIR/music" ]; then
+            rm -f "$DS_INSTALL_DIR/music"
             log_info "Removed USB symlink"
         fi
 
         # Create real local directory
-        if [ ! -d "$KCR_INSTALL_DIR/music" ]; then
-            mkdir -p "$KCR_INSTALL_DIR/music"
+        if [ ! -d "$DS_INSTALL_DIR/music" ]; then
+            mkdir -p "$DS_INSTALL_DIR/music"
         fi
-        chown www-data:www-data "$KCR_INSTALL_DIR/music"
-        chmod 755 "$KCR_INSTALL_DIR/music"
+        chown www-data:www-data "$DS_INSTALL_DIR/music"
+        chmod 755 "$DS_INSTALL_DIR/music"
 
-        log_success "Music storage: SD card ($KCR_INSTALL_DIR/music)"
+        log_success "Music storage: SD card ($DS_INSTALL_DIR/music)"
     else
         # --- USB mode: music stored on separate USB SSD ---
         log_info "Configuring USB SSD music storage..."
@@ -363,30 +363,30 @@ configure_music_drive() {
             chmod 755 "$MUSIC_DIR"
 
             # Create or verify the symlink
-            if [ -L "$KCR_INSTALL_DIR/music" ]; then
-                log_success "Music symlink verified: $KCR_INSTALL_DIR/music -> $MUSIC_DIR"
+            if [ -L "$DS_INSTALL_DIR/music" ]; then
+                log_success "Music symlink verified: $DS_INSTALL_DIR/music -> $MUSIC_DIR"
             else
                 # Remove real directory if it exists, replace with symlink
-                if [ -d "$KCR_INSTALL_DIR/music" ]; then
-                    if [ "$(ls -A "$KCR_INSTALL_DIR/music" 2>/dev/null)" ]; then
+                if [ -d "$DS_INSTALL_DIR/music" ]; then
+                    if [ "$(ls -A "$DS_INSTALL_DIR/music" 2>/dev/null)" ]; then
                         log_warn "Moving existing local music to USB drive..."
-                        cp -a "$KCR_INSTALL_DIR/music/"* "$MUSIC_DIR/" 2>/dev/null || true
+                        cp -a "$DS_INSTALL_DIR/music/"* "$MUSIC_DIR/" 2>/dev/null || true
                     fi
-                    rm -rf "$KCR_INSTALL_DIR/music"
+                    rm -rf "$DS_INSTALL_DIR/music"
                 fi
-                ln -s "$MUSIC_DIR" "$KCR_INSTALL_DIR/music"
+                ln -s "$MUSIC_DIR" "$DS_INSTALL_DIR/music"
                 log_success "Music symlink created"
             fi
         else
-            log_error "Music drive (KCR-MUSIC) not found!"
-            log_error "Please plug in the USB SSD labelled KCR-MUSIC and reboot"
-            log_error "Or change MUSIC_STORAGE=sdcard in kcr-config.txt to use the SD card"
+            log_error "Music drive (DS-MUSIC) not found!"
+            log_error "Please plug in the USB SSD labelled DS-MUSIC and reboot"
+            log_error "Or change MUSIC_STORAGE=sdcard in ds-config.txt to use the SD card"
 
             # Create a fallback local directory so the app doesn't break
-            if [ ! -e "$KCR_INSTALL_DIR/music" ]; then
-                mkdir -p "$KCR_INSTALL_DIR/music"
-                chown www-data:www-data "$KCR_INSTALL_DIR/music"
-                chmod 755 "$KCR_INSTALL_DIR/music"
+            if [ ! -e "$DS_INSTALL_DIR/music" ]; then
+                mkdir -p "$DS_INSTALL_DIR/music"
+                chown www-data:www-data "$DS_INSTALL_DIR/music"
+                chmod 755 "$DS_INSTALL_DIR/music"
                 log_info "Created fallback local music directory"
             fi
         fi
@@ -399,7 +399,7 @@ configure_music_drive() {
 
 main() {
     log "============================================================"
-    log "KCR Tracks First Boot Configuration"
+    log "DS-Tracks First Boot Configuration"
     log "============================================================"
     log ""
 
@@ -430,8 +430,8 @@ main() {
     log ""
 
     # Remove the first-boot trigger file
-    rm -f /boot/kcr-first-boot-pending
-    rm -f /boot/firmware/kcr-first-boot-pending
+    rm -f /boot/ds-first-boot-pending
+    rm -f /boot/firmware/ds-first-boot-pending
 
     # Schedule reboot
     sleep 10

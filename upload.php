@@ -1,6 +1,6 @@
 <?php
 /**
- * KCR Tracks - Secure File Upload Handler
+ * DS-Tracks - Secure File Upload Handler
  * https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/Ajax-JavaScript-file-upload-example
  */
 
@@ -8,7 +8,7 @@
 session_start();
 
 // Configuration
-define('MAX_FILE_SIZE', 50 * 1024 * 1024); // 50MB max file size
+define('MAX_FILE_SIZE', 512 * 1024 * 1024); // 512MB max file size
 define('ALLOWED_EXTENSIONS', ['mp3', 'wav', 'ogg', 'flac', 'm4a']);
 define('UPLOAD_BASE_DIR', __DIR__ . '/music/');
 

@@ -1,6 +1,6 @@
-# KCR Tracks Appliance Build System
+# DS-Tracks Appliance Build System
 
-This folder contains everything needed to build a distributable Raspberry Pi appliance image for KCR Tracks.
+This folder contains everything needed to build a distributable Raspberry Pi appliance image for DS-Tracks.
 
 ## Folder Contents
 
@@ -10,10 +10,10 @@ appliance/
 ├── build-appliance.sh        # Master build script
 ├── imager-manifest.json      # Raspberry Pi Imager integration
 ├── boot-files/
-│   └── kcr-config.txt        # User configuration template
+│   └── ds-config.txt        # User configuration template
 ├── first-boot/
-│   ├── kcr-first-boot.sh     # First-boot configuration script
-│   └── kcr-first-boot.service # Systemd service
+│   ├── ds-first-boot.sh     # First-boot configuration script
+│   └── ds-first-boot.service # Systemd service
 └── kiosk/
     ├── xinitrc               # X session startup
     ├── bash_profile          # Auto-start X on login
@@ -35,14 +35,14 @@ appliance/
 
 2. **Boot the Pi** and connect via SSH or keyboard
 
-3. **Copy KCR-Tracks2** folder to the Pi:
+3. **Copy DS-Tracks2** folder to the Pi:
    ```bash
-   scp -r /path/to/KCR-Tracks2 pi@raspberrypi.local:/tmp/
+   scp -r /path/to/DS-Tracks2 pi@raspberrypi.local:/tmp/
    ```
 
 4. **Run the build script**:
    ```bash
-   cd /tmp/KCR-Tracks2/appliance
+   cd /tmp/DS-Tracks2/appliance
    sudo ./build-appliance.sh
    ```
 
@@ -53,7 +53,7 @@ appliance/
 
 6. **Create image** on another Linux computer:
    ```bash
-   sudo dd if=/dev/sdX of=kcr-tracks-v2.0.img bs=4M status=progress
+   sudo dd if=/dev/sdX of=ds-tracks-v2.0.img bs=4M status=progress
    ```
 
 7. **Shrink and compress**:
@@ -63,15 +63,15 @@ appliance/
    chmod +x pishrink.sh
 
    # Shrink image
-   sudo ./pishrink.sh kcr-tracks-v2.0.img
+   sudo ./pishrink.sh ds-tracks-v2.0.img
 
    # Compress
-   xz -9 -T0 kcr-tracks-v2.0.img
+   xz -9 -T0 ds-tracks-v2.0.img
    ```
 
 8. **Generate checksum**:
    ```bash
-   sha256sum kcr-tracks-v2.0.img.xz > checksums.txt
+   sha256sum ds-tracks-v2.0.img.xz > checksums.txt
    ```
 
 ## What the Build Script Does
@@ -79,7 +79,7 @@ appliance/
 | Phase | Description |
 |-------|-------------|
 | 1 | Updates system packages |
-| 2 | Installs KCR Tracks (Apache, PHP, application) |
+| 2 | Installs DS-Tracks (Apache, PHP, application) |
 | 3 | Installs kiosk components (X11, Chromium, auto-login) |
 | 4 | Configures first-boot system (auto-expand, config reader) |
 | 5 | Applies security hardening (firewall, SSH disabled) |
@@ -92,13 +92,13 @@ appliance/
 ### Simple Download Distribution
 
 Provide users with:
-- `KCR-Tracks-v2.0.img.xz` - Compressed image
+- `DS-Tracks-v2.0.img.xz` - Compressed image
 - `INSTALLATION-GUIDE.pdf` - Visual instructions
 - `checksums.txt` - For verification
 
 ### Raspberry Pi Imager Integration
 
-To make KCR Tracks appear in Raspberry Pi Imager's menu:
+To make DS-Tracks appear in Raspberry Pi Imager's menu:
 
 1. Host the image on your web server
 2. Update `imager-manifest.json` with:
@@ -114,7 +114,7 @@ Before distributing, test:
 
 - [ ] Fresh flash boots successfully
 - [ ] First-boot expands filesystem
-- [ ] Station name configured from kcr-config.txt
+- [ ] Station name configured from ds-config.txt
 - [ ] Kiosk mode starts automatically
 - [ ] Touch input works
 - [ ] Audio plays correctly
@@ -128,18 +128,18 @@ Before distributing, test:
 
 Master script that orchestrates the entire build process. Run once on a fresh Pi OS installation.
 
-### kcr-first-boot.sh
+### ds-first-boot.sh
 
 Runs automatically on first boot of a user's appliance. It:
 - Expands the filesystem to fill the SSD
-- Reads `/boot/kcr-config.txt` and applies settings
+- Reads `/boot/ds-config.txt` and applies settings
 - Configures WiFi if credentials provided
 - Sets timezone and hostname
 - Enables/disables SSH
 - Sets correct file permissions
 - Reboots to apply changes
 
-### kcr-config.txt
+### ds-config.txt
 
 User-editable configuration file on the boot partition. Can be edited on Windows/Mac before first boot. Settings include:
 - Station name and website
@@ -158,9 +158,9 @@ User-editable configuration file on the boot partition. Can be edited on Windows
 
 ### "Source not found"
 
-Ensure KCR-Tracks2 is in `/tmp/`:
+Ensure DS-Tracks2 is in `/tmp/`:
 ```bash
-ls /tmp/KCR-Tracks2/install-raspberry-pi.sh
+ls /tmp/DS-Tracks2/install-raspberry-pi.sh
 ```
 
 ### "Permission denied"
@@ -174,14 +174,14 @@ sudo ./build-appliance.sh
 
 Check the log file:
 ```bash
-cat /var/log/kcr-build.log
+cat /var/log/ds-build.log
 ```
 
 ### Kiosk doesn't start
 
 Check the kiosk log:
 ```bash
-cat /var/log/kcr-kiosk.log
+cat /var/log/ds-kiosk.log
 ```
 
 ## Version History

@@ -1,14 +1,14 @@
 #!/bin/bash
-# KCR Tracks - USB Auto-Unmount Script
-# Install to: /usr/local/bin/kcr-usb-unmount.sh
+# DS-Tracks - USB Auto-Unmount Script
+# Install to: /usr/local/bin/ds-usb-unmount.sh
 #
 # Called by udev when a USB storage partition is removed.
 # Unmounts the device and removes the status file.
 
 DEVICE="/dev/$1"
-MOUNT_POINT="/media/kcr-usb"
-STATUS_FILE="/tmp/kcr-usb-status.json"
-LOG_FILE="/var/log/kcr-usb.log"
+MOUNT_POINT="/media/ds-usb"
+STATUS_FILE="/tmp/ds-usb-status.json"
+LOG_FILE="/var/log/ds-usb.log"
 
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') UNMOUNT: $1" >> "$LOG_FILE"
@@ -17,7 +17,7 @@ log() {
 log "USB device removed: $DEVICE"
 
 # Don't touch the music drive - it's managed by fstab
-MUSIC_MOUNT="/mnt/kcr-music"
+MUSIC_MOUNT="/mnt/ds-music"
 if mountpoint -q "$MUSIC_MOUNT" 2>/dev/null; then
     # Check if this device is the music drive
     MUSIC_DEV=$(findmnt -n -o SOURCE "$MUSIC_MOUNT" 2>/dev/null)

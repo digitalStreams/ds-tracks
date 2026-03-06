@@ -1,12 +1,12 @@
 [Unit]
-Description=KCR Tracks First Boot Configuration
+Description=DS-Tracks First Boot Configuration
 After=network-online.target
 Wants=network-online.target
-ConditionPathExists=/boot/kcr-first-boot-pending
+ConditionPathExists=/boot/ds-first-boot-pending
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/kcr-first-boot.sh
+ExecStart=/usr/local/bin/ds-first-boot.sh
 RemainAfterExit=yes
 StandardOutput=journal+console
 StandardError=journal+console

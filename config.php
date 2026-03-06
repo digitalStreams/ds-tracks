@@ -1,11 +1,11 @@
 <?php
 /**
- * KCR Tracks - Central Configuration File
+ * DS-Tracks - Central Configuration File
  * Version 2.0 - Security Hardened
  */
 
 // Prevent direct access
-if (!defined('KCR_TRACKS')) {
+if (!defined('DS_TRACKS')) {
     die('Direct access not permitted');
 }
 
@@ -46,7 +46,7 @@ ini_set('log_errors', '1');
 ini_set('error_log', LOG_DIR . 'php_errors.log');
 
 // Security functions
-class KCRSecurity {
+class DSSecurity {
 
     /**
      * Sanitize username input
@@ -142,19 +142,19 @@ class KCRSecurity {
 
 // Helper functions for backward compatibility
 function sanitizeInput($input, $allowDash = true) {
-    return KCRSecurity::sanitizeSessionName($input);
+    return DSSecurity::sanitizeSessionName($input);
 }
 
 function isValidMusicPath($path) {
-    return KCRSecurity::isValidMusicPath($path);
+    return DSSecurity::isValidMusicPath($path);
 }
 
 function logError($message) {
-    KCRSecurity::logError($message);
+    DSSecurity::logError($message);
 }
 
 function logInfo($message) {
-    KCRSecurity::logInfo($message);
+    DSSecurity::logInfo($message);
 }
 
 ?>

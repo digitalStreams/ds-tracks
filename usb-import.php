@@ -1,6 +1,6 @@
 <?php
 /**
- * KCR Tracks - USB File Import API
+ * DS-Tracks - USB File Import API
  *
  * Copies selected audio files from the mounted USB drive to the music directory.
  * Applies the same security validation as upload.php (extension, MIME type, filename sanitisation).
@@ -23,7 +23,7 @@ header('Content-Type: application/json');
 // Configuration
 $usbMountPoint = '/media/kcr-usb';
 $musicBaseDir = __DIR__ . '/music/';
-$statusFile = '/tmp/kcr-usb-status.json';
+$statusFile = '/run/kcr-usb-status.json';
 $maxFileSize = 50 * 1024 * 1024; // 50MB
 $allowedExtensions = ['mp3', 'wav', 'ogg', 'flac', 'm4a'];
 $allowedMimeTypes = [
@@ -191,7 +191,7 @@ foreach ($files as $filePath) {
 
         $tracks[] = [
             'name' => $safeFilename,
-            'url' => '/kcr-tracks/music/' . $sessionName . '/' . rawurlencode($safeFilename)
+            'url' => 'music/' . $sessionName . '/' . rawurlencode($safeFilename)
         ];
 
         logImportInfo("Imported: $originalName as $safeFilename for user $username");

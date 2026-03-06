@@ -151,11 +151,15 @@ section#dsPlayer {
   border: 1px solid #aaa;
   position: relative;
 }
+section#dsPlayer div#fileButtonDiv {
+  position: absolute;
+  overflow: hidden;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
 section#dsPlayer div#fileButtonDiv input {
-  scale: 1.5;
-  margin-left: 220px;
-  margin-top: 20px;
-  color: transparent;
+  position: absolute;
 }
 section#dsPlayer div#dsClientLogo img {
   width: 14%;
@@ -249,7 +253,16 @@ div#dsPrompt {
   padding-left: 150px;
 }
 .dsButton {
-  padding: 6px 20px;
+  padding: 8px 20px;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  background: #f1f3f4;
+  font-size: 13px;
+  height: 36px;
+  cursor: pointer;
+}
+.dsButton:hover {
+  background: #e0e2e3;
 }
 .dsButton.dsUserButton {
   height: 40px;
@@ -287,8 +300,8 @@ input#dsGetName {
 div#fileList {
   width: 45%;
   max-width: 500px;
-  margin-top: 35px;
-  height: 330px;
+  margin-top: 65px;
+  height: 300px;
   overflow-y: scroll;
   border: 1px solid;
   padding: 12px;
@@ -304,31 +317,68 @@ div#dsPlayerDContainer {
   float: left;
   margin-top: 17px;
   margin-left: 3%;
-  height: 341px;
-  position: relative;
 }
-div#dsPlayerDContainer #dsMenuButton {
+/* Home icon - top right corner, consistent across all screens */
+.dsHomeIcon {
   position: absolute;
-  bottom: 80px;
-  right: 20px;
-}
-div#dsPlayerDContainer #dsMenuButton #dsMenu {
-  padding: 6px 40px;
-}
-div#dsPlayerDContainer #dsMenuButton #dsMenu:hover {
+  top: 8px;
+  right: 10px;
+  z-index: 100;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.4);
+  color: white;
+  font-size: 26px;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
 }
-div#dsPlayerDContainer #dsMenuButton #dsMenu a {
-  text-decoration: none;
-  color: black;
+.dsHomeIcon:hover,
+.dsHomeIcon:active {
+  background: rgba(255,255,255,0.3);
+}
+
+/* Player action buttons */
+#dsPlayerButtons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 50px 20px 0;
+}
+.dsPlayerBtn {
+  padding: 10px 24px;
+  font-size: 14px;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  background: #f1f3f4;
+  color: #333;
+  cursor: pointer;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+.dsPlayerBtn:hover {
+  background: #e0e2e3;
+}
+.dsPlayerBtnAccent {
+  background: #f3c07c;
+  border-color: #d9a55e;
+}
+.dsPlayerBtnAccent:hover {
+  background: #f8d5a7;
 }
 div#audioPlayer {
   width: 100%;
-  float: left;
-  margin-top: 110px;
+  margin-top: 80px;
   padding: 0px;
   margin-left: 20px;
-  height: 300px;
 }
 .dsTrackTitle {
   width: 300px;
@@ -363,6 +413,7 @@ span.dsTitle {
   padding: 8px 12px;
   border-radius: 8px;
   box-shadow: 4px 4px 8px #aaa;
+  margin-bottom: 10px;
 }
 .dsAudioFileName a {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -393,13 +444,15 @@ span.dsTitle {
 .dsSessionName {
   width: 57%;
   float: left;
-  padding: 8px 12px;
+  padding: 8px 36px 8px 12px;
   margin: 6px 0;
   border: 1px solid #aaa;
   display: block;
   background: whitesmoke;
   color: black;
   font-size: 16px;
+  position: relative;
+  box-sizing: border-box;
 }
 .dsSessionName:hover {
   background: #efefef;
@@ -422,17 +475,23 @@ span.dsTitle {
 button.dsShowTracks,
 button.dsAddTracks {
   margin-top: 6px;
-  padding: 9px 6px;
-  margin-right: 13px;
+  padding: 9px 14px;
+  margin-right: 10px;
   float: right;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  background: #f1f3f4;
+  font-size: 13px;
+  height: 36px;
+  cursor: pointer;
 }
 button.dsShowTracks:hover,
 button.dsAddTracks:hover {
-  cursor: pointer;
+  background: #e0e2e3;
 }
 button.dsAddTracks {
-  padding: 9px 12px;
   background: #f3c07c;
+  border-color: #d9a55e;
 }
 button.dsAddTracks:hover {
   background: #f8d5a7;
@@ -500,5 +559,235 @@ button.dsCloseButton {
   display: none;
   width: 80%;
   height: 80vh;
+}
+/* Upload progress indicator */
+.dsUploadProgress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 40px;
+  box-sizing: border-box;
+  text-align: center;
+}
+.dsSpinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: dsSpin 0.8s linear infinite;
+  margin-bottom: 20px;
+}
+@keyframes dsSpin {
+  to { transform: rotate(360deg); }
+}
+.dsUploadStatus {
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 8px;
+}
+.dsUploadDetail {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+}
+/* Session label in session list bar */
+.dsSessionLabel {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  color: black;
+  margin-left: 10px;
+}
+/* Edit label pencil icon — inside the session bar */
+.dsEditLabel {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 16px;
+  color: #999;
+  padding: 2px 4px;
+  line-height: 1;
+}
+.dsEditLabel:hover {
+  color: #333;
+}
+/* Edit label modal — same structure as #dsNewSessionPrompt */
+#dsEditLabelPrompt {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3000;
+}
+/* New session prompt overlay */
+#dsNewSessionPrompt {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3000;
+}
+.dsPromptOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+.dsPromptPanel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 12px;
+  padding: 30px 36px;
+  width: 380px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  z-index: 3001;
+  text-align: center;
+}
+.dsPromptPanel h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  color: #333;
+}
+.dsPromptPanel p {
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: #666;
+}
+.dsPromptPanel input[type="text"] {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+.dsPromptPanel input[type="text"]:focus {
+  outline: none;
+  border-color: #007479;
+}
+.dsPromptButtons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+.dsPromptButtons .dsButton {
+  min-width: 100px;
+}
+.dsButtonAccent {
+  background: #f3c07c;
+  border-color: #d9a55e;
+}
+.dsButtonAccent:hover {
+  background: #f8d5a7;
+}
+/* Auto-play toggle switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 26px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+input:checked + .slider {
+  background-color: #8c213c;
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+input:checked + .slider:before {
+  -webkit-transform: translateX(12px);
+  -ms-transform: translateX(12px);
+  transform: translateX(12px);
+}
+.slider.round {
+  border-radius: 34px;
+}
+.slider.round:before {
+  border-radius: 50%;
+}
+label.switch {
+  flex-shrink: 0;
+}
+.dsEnableAuto {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.dsAutoPlayText {
+  text-align: left;
+  font-weight: bold;
+  font-size: 12px;
+  color: white;
+}
+/* Auto-play bottom buttons */
+div#dsPlayerDContainer .dsBottomButtons {
+  width: 100%;
+  text-align: center;
+  margin-top: 35px;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+div#dsPlayerDContainer .dsBottomButtons button#dsBtn_PlayAll {
+  width: 60%;
+  background-color: #8c213c;
+  color: white;
+  font-weight: bold;
+  display: none;
+  margin-top: 4px;
+}
+div#dsPlayerDContainer .dsBottomButtons #dsBtn_StopAll {
+  display: none;
+  width: 60%;
+  margin-top: 4px;
+}
+/* Drag-and-drop sortable state */
+.dsNowSorting .dsAudioFileName:hover {
+  cursor: pointer;
+  background: url("images/sort-icon3.png") #cecfcb no-repeat;
+}
+.dsNowSorting .dsAudioFileName:active {
+  cursor: pointer;
+  background: url("images/sort-icon3.png") #fff no-repeat;
 }
 /*# sourceMappingURL=./style.css.map */

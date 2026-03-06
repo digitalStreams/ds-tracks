@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================
-# KCR Tracks - Apply Music Storage Mode
+# DS-Tracks - Apply Music Storage Mode
 # ============================================================
 # Called by the web admin panel (via sudo) to switch between
 # USB SSD and SD card music storage.
@@ -12,8 +12,8 @@
 # Returns JSON for the PHP caller to parse.
 # ============================================================
 
-INSTALL_DIR="/var/www/html/kcr-tracks"
-MUSIC_MOUNT="/mnt/kcr-music"
+INSTALL_DIR="/var/www/html/ds-tracks"
+MUSIC_MOUNT="/mnt/ds-music"
 MUSIC_DIR="$MUSIC_MOUNT/music"
 MODE="$1"
 
@@ -60,7 +60,7 @@ case "$MODE" in
         fi
 
         if ! mountpoint -q "$MUSIC_MOUNT" 2>/dev/null; then
-            json_response "false" "USB drive (KCR-MUSIC) not found. Please plug it in and try again."
+            json_response "false" "USB drive (DS-MUSIC) not found. Please plug it in and try again."
             exit 1
         fi
 

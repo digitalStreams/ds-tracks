@@ -1,6 +1,6 @@
 <?php
 /**
- * KCR Tracks - JSON API Handler
+ * DS-Tracks - JSON API Handler
  * Provides session and track data with input validation and security
  */
 
@@ -9,6 +9,23 @@ session_start();
 
 // Configuration
 define('MUSIC_BASE_DIR', __DIR__ . '/music/');
+define('LABELS_FILE', MUSIC_BASE_DIR . 'session-labels.json');
+
+// Load session labels
+function getSessionLabels() {
+    if (file_exists(LABELS_FILE)) {
+        $data = json_decode(file_get_contents(LABELS_FILE), true);
+        return is_array($data) ? $data : [];
+    }
+    return [];
+}
+
+// Save a session label
+function saveSessionLabel($sessionId, $label) {
+    $labels = getSessionLabels();
+    $labels[$sessionId] = $label;
+    file_put_contents(LABELS_FILE, json_encode($labels, JSON_PRETTY_PRINT));
+}
 
 // Error logging function
 function logError($message) {
@@ -35,6 +52,20 @@ function isValidMusicPath($path) {
     return strpos($realPath, $baseDir) === 0;
 }
 
+// Save a session label
+if (isset($_POST['save_label']) && isset($_POST['session_id'])) {
+    $sessionId = sanitizeInput($_POST['session_id']);
+    $label = trim(substr($_POST['save_label'], 0, 100)); // Max 100 chars
+    $label = htmlspecialchars($label, ENT_QUOTES, 'UTF-8');
+    if (!empty($sessionId) && !empty($label)) {
+        saveSessionLabel($sessionId, $label);
+        echo json_encode(['status' => 'ok']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Missing data']);
+    }
+    exit;
+}
+
 // Get sessions for a specific user
 if(isset($_POST['u_name'])){
     $user_name = sanitizeInput($_POST['u_name']);
@@ -49,6 +80,7 @@ if(isset($_POST['u_name'])){
     $dirs = array_filter(glob(MUSIC_BASE_DIR . '*'), 'is_dir');
     $arr = [];
     $my_music = [];
+    $labels = getSessionLabels();
 
     foreach ($dirs as $key => $value) {
         // Validate path before processing
@@ -68,7 +100,11 @@ if(isset($_POST['u_name'])){
             // Sanitize file names before adding to response
             $sanitizedFiles = array_map('basename', $files);
 
-            $arr[] = array('name' => $dirName, 'music' => $sanitizedFiles);
+            $session = array('name' => $dirName, 'music' => $sanitizedFiles);
+            if (isset($labels[$dirName])) {
+                $session['label'] = $labels[$dirName];
+            }
+            $arr[] = $session;
         }
     }
 

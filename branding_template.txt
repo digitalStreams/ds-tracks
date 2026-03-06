@@ -74,7 +74,7 @@
         }
 
         if (self::$settings['show-powered-by']) {
-            $html .= '<p class="powered-by">Powered by KCR Tracks v2.0</p>';
+            $html .= '<p class="powered-by">Powered by DS-Tracks v2.0</p>';
         }
 
         if (self::$settings['show-station-website-link'] && self::$stationWebsite) {

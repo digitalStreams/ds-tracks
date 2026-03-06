@@ -1,5 +1,5 @@
 # ============================================================
-# KCR Tracks Appliance Configuration
+# DS-Tracks Appliance Configuration
 # ============================================================
 #
 # Edit this file BEFORE first boot to pre-configure your station.
@@ -67,7 +67,7 @@ HIDE_CURSOR=true
 # MUSIC STORAGE
 # ------------------------------------------------------------
 # Where to store music files:
-#   usb    - On a separate USB SSD (labelled KCR-MUSIC)
+#   usb    - On a separate USB SSD (labelled DS-MUSIC)
 #            Best for large music libraries. USB SSD can be any size.
 #   sdcard - On this SD card (in the app's music folder)
 #            Simpler setup, but limited by SD card size.
@@ -95,7 +95,7 @@ SSH_PORT=22
 # 2. Insert the drive into your Raspberry Pi
 # 3. Connect the display and power on
 # 4. Wait 2-3 minutes for first-boot setup to complete
-# 5. KCR Tracks will start automatically
+# 5. DS-Tracks will start automatically
 #
-# Need help? Visit: https://yoursite.com/kcr-tracks/support
+# Need help? Visit: https://yoursite.com/ds-tracks/support
 # ============================================================

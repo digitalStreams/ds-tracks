@@ -1,14 +1,14 @@
 #!/bin/bash
-# KCR Tracks - USB Auto-Mount Script
-# Install to: /usr/local/bin/kcr-usb-mount.sh
+# DS-Tracks - USB Auto-Mount Script
+# Install to: /usr/local/bin/ds-usb-mount.sh
 #
 # Called by udev when a USB storage partition is inserted.
 # Mounts the device read-only and writes a status file for the web app.
 
 DEVICE="/dev/$1"
-MOUNT_POINT="/media/kcr-usb"
-STATUS_FILE="/tmp/kcr-usb-status.json"
-LOG_FILE="/var/log/kcr-usb.log"
+MOUNT_POINT="/media/ds-usb"
+STATUS_FILE="/tmp/ds-usb-status.json"
+LOG_FILE="/var/log/ds-usb.log"
 
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') MOUNT: $1" >> "$LOG_FILE"
@@ -16,10 +16,10 @@ log() {
 
 log "USB device detected: $DEVICE"
 
-# Check if this is the permanent music storage drive (labelled KCR-MUSIC)
+# Check if this is the permanent music storage drive (labelled DS-MUSIC)
 LABEL=$(blkid -o value -s LABEL "$DEVICE" 2>/dev/null)
-if [ "$LABEL" = "KCR-MUSIC" ]; then
-    log "Skipping KCR-MUSIC drive (permanent music storage) - mounted via fstab"
+if [ "$LABEL" = "DS-MUSIC" ]; then
+    log "Skipping DS-MUSIC drive (permanent music storage) - mounted via fstab"
     exit 0
 fi
 

@@ -1,5 +1,5 @@
 # ============================================================
-# KCR Tracks Auto-Start Configuration
+# DS-Tracks Auto-Start Configuration
 # ============================================================
 # This file is installed to /home/pi/.bash_profile
 # It automatically starts the X session (kiosk mode) on login
@@ -12,8 +12,8 @@
 
 if [ -z "$DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
     # Log the startup
-    echo "[$(date)] Starting KCR Tracks kiosk mode..." >> /var/log/kcr-kiosk.log
+    echo "[$(date)] Starting DS-Tracks kiosk mode..." >> /var/log/ds-kiosk.log
 
     # Start X server with our xinitrc
-    exec startx -- -nocursor 2>> /var/log/kcr-kiosk.log
+    exec startx -- -nocursor 2>> /var/log/ds-kiosk.log
 fi
