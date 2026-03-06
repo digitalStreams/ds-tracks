@@ -7,8 +7,9 @@
 // Start session
 session_start();
 
-// Configuration
-define('MUSIC_BASE_DIR', __DIR__ . '/music/');
+// Load central configuration (provides sanitizeInput, isValidMusicPath, logError)
+require_once __DIR__ . '/config.php';
+
 define('LABELS_FILE', MUSIC_BASE_DIR . 'session-labels.json');
 
 // Load session labels
@@ -27,36 +28,11 @@ function saveSessionLabel($sessionId, $label) {
     file_put_contents(LABELS_FILE, json_encode($labels, JSON_PRETTY_PRINT));
 }
 
-// Error logging function
-function logError($message) {
-    error_log(date('[Y-m-d H:i:s] ') . $message . PHP_EOL, 3, __DIR__ . '/api_errors.log');
-}
-
-// Sanitize input function
-function sanitizeInput($input, $allowDash = true) {
-    if ($allowDash) {
-        return preg_replace('/[^a-zA-Z0-9_-]/', '', $input);
-    }
-    return preg_replace('/[^a-zA-Z0-9_]/', '', $input);
-}
-
-// Validate directory path is within music directory
-function isValidMusicPath($path) {
-    $realPath = realpath($path);
-    $baseDir = realpath(MUSIC_BASE_DIR);
-
-    if ($realPath === false) {
-        return false;
-    }
-
-    return strpos($realPath, $baseDir) === 0;
-}
-
 // Save a session label
 if (isset($_POST['save_label']) && isset($_POST['session_id'])) {
     $sessionId = sanitizeInput($_POST['session_id']);
     $label = trim(substr($_POST['save_label'], 0, 100)); // Max 100 chars
-    $label = htmlspecialchars($label, ENT_QUOTES, 'UTF-8');
+    $label = preg_replace('/[\x00-\x1f]/', '', $label); // Strip control chars
     if (!empty($sessionId) && !empty($label)) {
         saveSessionLabel($sessionId, $label);
         echo json_encode(['status' => 'ok']);
@@ -70,6 +46,15 @@ if (isset($_POST['save_label']) && isset($_POST['session_id'])) {
 if (isset($_POST['delete_action'])) {
     $action = sanitizeInput($_POST['delete_action']);
     header('Content-Type: application/json');
+
+    // Authentication: require a valid username cookie
+    $cookieUser = isset($_COOKIE['username']) ? sanitizeInput($_COOKIE['username']) : '';
+    if (empty($cookieUser)) {
+        logError('Unauthenticated delete attempt: action=' . $action);
+        http_response_code(403);
+        echo json_encode(['status' => 'error', 'message' => 'Not authorized']);
+        exit;
+    }
 
     // DELETE TRACK: remove a single file from a session
     if ($action === 'track' && isset($_POST['session']) && isset($_POST['track'])) {

@@ -8,7 +8,7 @@
     <title>DS-Tracks</title>
     <link rel="icon" type="image/png" href="images/ds-icon.png">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="js/jquery-3.6.1.min.js"></script>
     <script src="js/jquery-ui-custom.min.js"></script>
     <script src="js/js.cookie.min.js"></script>
     <script src="js/touch-dnd.js"></script>
@@ -259,6 +259,16 @@
     let sessionPath;
     let escName;
 
+    // XSS protection helpers
+    function escapeHtml(str) {
+        var div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+    function escapeAttr(str) {
+        return String(str).replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
     //  GET EXISTING SYSTEM USER AND SESSION DATA
     var base_url = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
     base_url = window.location.origin + base_url;
@@ -347,10 +357,9 @@
                 body: formData
             });
 
-            escName = fileNames[i].name.replace("'", "%27");
-            fileList += "<div id='" + (i + 1) + "' class='dsAudioFileName' data-url='" + path + escName +
-                "' data-name='" + escName + "'  onclick='dsPlayAudio(this)' >" +
-                fileNames[i].name + "</div>";
+            fileList += "<div id='" + (i + 1) + "' class='dsAudioFileName' data-url='" + path + encodeURIComponent(fileNames[i].name) +
+                "' data-name='" + escapeAttr(fileNames[i].name) + "'  onclick='dsPlayAudio(this)' >" +
+                escapeHtml(fileNames[i].name) + "</div>";
         }
 
         //  CLEAN UP AND RESTORE LAYOUT
@@ -400,10 +409,9 @@
                         let fileList = "";
                         path = base_url + "music/" + sessionName + "/";
                         for (let t = 0; t < tracks.length; t++) {
-                            let escName = tracks[t].replace("'", "%27");
-                            fileList += "<div id='" + (t + 1) + "' class='dsAudioFileName' data-url='" + path + escName +
-                                "' data-name='" + escName + "' onclick='dsPlayAudio(this)' >" +
-                                tracks[t] + "</div>";
+                            fileList += "<div id='" + (t + 1) + "' class='dsAudioFileName' data-url='" + path + encodeURIComponent(tracks[t]) +
+                                "' data-name='" + escapeAttr(tracks[t]) + "' onclick='dsPlayAudio(this)' >" +
+                                escapeHtml(tracks[t]) + "</div>";
                         }
                         document.getElementById("fileList").innerHTML = fileList;
                         break;
@@ -615,8 +623,7 @@
 
                         var fileList = '';
                         $.each(value.music, function(i, track) {
-                            var escName = track.replace("'", '%27');
-                            fileList += "<div id='" + track + "' class='dsAudioFileName' data-url='" + path + escName + "' data-name='" + escName + "' onclick='dsPlayAudio(this)'>" + track + "<span class='dsDeleteTrack' data-track='" + escName + "' title='Delete track' onclick='event.stopPropagation(); deleteTrack(\"" + escName + "\")'>&" + "#128465;</span></div>";
+                            fileList += "<div class='dsAudioFileName' data-url='" + path + encodeURIComponent(track) + "' data-name='" + escapeAttr(track) + "' onclick='dsPlayAudio(this)'>" + escapeHtml(track) + "<span class='dsDeleteTrack' data-track='" + escapeAttr(track) + "' title='Delete track' onclick='event.stopPropagation(); deleteTrack(this.dataset.track)'>&#128465;</span></div>";
                         });
 
                         showPlayerSection();
@@ -710,8 +717,8 @@
                 //  CHECK IF THERE ARE CURRENT USERS AND DISPLAY THEM ELSE DISPLAY MESSAGE
                 if ((userList).length > 0) {
                     $.each(userList, function(key, val) {
-                        let dsUser = "<div class='dsUserName' id='" + val + "' >" + val +
-                            "<span class='dsDeleteUser' data-user='" + val + "' title='Delete user and all sessions' onclick='event.stopPropagation(); deleteUser(\"" + val + "\")'>&#128465;</span>" +
+                        let dsUser = "<div class='dsUserName' id='" + escapeAttr(val) + "' >" + escapeHtml(val) +
+                            "<span class='dsDeleteUser' data-user='" + escapeAttr(val) + "' title='Delete user and all sessions' onclick='event.stopPropagation(); deleteUser(this.dataset.user)'>&#128465;</span>" +
                             "</div>";
                         dsUsersDisplay = (dsUsersDisplay) ? dsUsersDisplay + dsUser : dsUser;
                     })
@@ -874,12 +881,11 @@
         path = base_url + "music/" + usernameDateTime + "/";
 
         $.each(dsTracks, function(key, value) {
-            escName = value.replace("'", "%27");
-            fileHTML = "<div id='" + value + "' class='dsAudioFileName' data-url='" + path +
-                escName + "' data-name='" + escName +
+            fileHTML = "<div class='dsAudioFileName' data-url='" + path +
+                encodeURIComponent(value) + "' data-name='" + escapeAttr(value) +
                 "'  onclick='dsPlayAudio(this)' >" +
-                value +
-                "<span class='dsDeleteTrack' data-track='" + escName + "' title='Delete track' onclick='event.stopPropagation(); deleteTrack(\"" + escName + "\")'>&#128465;</span>" +
+                escapeHtml(value) +
+                "<span class='dsDeleteTrack' data-track='" + escapeAttr(value) + "' title='Delete track' onclick='event.stopPropagation(); deleteTrack(this.dataset.track)'>&#128465;</span>" +
                 "</div>"
 
             fileList = (fileList) ? fileList + fileHTML : fileHTML;
@@ -1036,12 +1042,9 @@
                 body: formData
             });
 
-            //  ENCODE THE ' CHARACTER
-            escName = fileNames[i].name.replace("'", "%27");
-
-            fileHTML = "<div id='" + (i + 1) + "' class='dsAudioFileName' data-url='" + path + escName +
-                "' data-name='" + escName + "'  onclick='dsPlayAudio(this)' >" +
-                fileNames[i].name + "</div>"
+            fileHTML = "<div id='" + (i + 1) + "' class='dsAudioFileName' data-url='" + path + encodeURIComponent(fileNames[i].name) +
+                "' data-name='" + escapeAttr(fileNames[i].name) + "'  onclick='dsPlayAudio(this)' >" +
+                escapeHtml(fileNames[i].name) + "</div>"
 
             fileList = fileList + fileHTML;
         }

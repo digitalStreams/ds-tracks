@@ -4,8 +4,9 @@
  * Version 2.0 - Security Hardened
  */
 
-// Prevent direct access
-if (!defined('DS_TRACKS')) {
+// Prevent direct browser access to this config file
+if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === basename(__FILE__)) {
+    http_response_code(403);
     die('Direct access not permitted');
 }
 

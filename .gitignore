@@ -1,8 +1,8 @@
 # DS-Tracks - Git Ignore File
 
-# Log files
-logs/
-*.log
+# Log files (keep .htaccess for security)
+logs/*.log
+!logs/.htaccess
 
 # Music files (user uploaded content)
 music/*
@@ -32,3 +32,6 @@ disk-image/
 # Environment specific
 .env
 config.local.php
+
+# Admin password (external, not in git)
+admin_password.php

@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css">
 <link rel="stylesheet" type="text/css" href="css/exporter-styles.css">
 
-<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="js/jquery-3.6.1.min.js"></script>
 <script type="text/javascript" language="javascript"
     src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" language="javascript"
@@ -48,20 +48,8 @@
 
                 <!-- SCAN DIRECTORIES AND GET FILE NAMES AND PATHS   -->
                 <?php
-                    // Configuration
-                    define('MUSIC_BASE_DIR', __DIR__ . '/music/');
-
-                    // Validate path function
-                    function isValidMusicPath($path) {
-                        $realPath = realpath($path);
-                        $baseDir = realpath(MUSIC_BASE_DIR);
-
-                        if ($realPath === false || $baseDir === false) {
-                            return false;
-                        }
-
-                        return strpos($realPath, $baseDir) === 0;
-                    }
+                    // Load central configuration
+                    require_once __DIR__ . '/config.php';
 
                     $dirs = array_filter(glob(MUSIC_BASE_DIR . '*'), 'is_dir');
 

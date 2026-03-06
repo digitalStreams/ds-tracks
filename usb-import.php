@@ -118,7 +118,12 @@ if ($existingSession && is_dir($musicBaseDir . $existingSession)) {
 }
 
 // Set cookie for compatibility with existing session system
-setcookie('username', $sessionName, time() + (14 * 24 * 60 * 60), '/');
+setcookie('username', $sessionName, [
+    'expires' => time() + (14 * 24 * 60 * 60),
+    'path' => '/',
+    'httponly' => false,  // JS reads this cookie via js.cookie
+    'samesite' => 'Strict'
+]);
 
 $realMountPoint = realpath($usbMountPoint);
 $realMusicBase = realpath($musicBaseDir);

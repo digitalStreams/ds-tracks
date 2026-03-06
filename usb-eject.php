@@ -9,8 +9,8 @@
 
 header('Content-Type: application/json');
 
-$mountPoint = '/media/ds-usb';
-$statusFile = '/tmp/ds-usb-status.json';
+$mountPoint = '/media/kcr-usb';
+$statusFile = '/run/kcr-usb-status.json';
 
 // Check if USB is mounted
 if (!file_exists($statusFile)) {

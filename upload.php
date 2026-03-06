@@ -7,15 +7,12 @@
 // Start session for better security than cookies alone
 session_start();
 
-// Configuration
-define('MAX_FILE_SIZE', 512 * 1024 * 1024); // 512MB max file size
-define('ALLOWED_EXTENSIONS', ['mp3', 'wav', 'ogg', 'flac', 'm4a']);
-define('UPLOAD_BASE_DIR', __DIR__ . '/music/');
+// Load central configuration (provides constants, sanitizeInput, isValidMusicPath, logError)
+require_once __DIR__ . '/config.php';
 
-// Error logging function
-function logError($message) {
-    error_log(date('[Y-m-d H:i:s] ') . $message . PHP_EOL, 3, __DIR__ . '/upload_errors.log');
-}
+// Local aliases for config constants
+define('ALLOWED_EXTENSIONS', ALLOWED_AUDIO_EXTENSIONS);
+define('UPLOAD_BASE_DIR', MUSIC_BASE_DIR);
 
 // Validate and sanitize input
 if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {

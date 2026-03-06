@@ -4,11 +4,14 @@
  * Simple interface to customize branding without editing code
  */
 
-define('DS_TRACKS', true);
-require_once 'config.php';
+require_once __DIR__ . '/config.php';
 
-// Simple password protection - CHANGE THIS PASSWORD!
-$ADMIN_PASSWORD = 'changeme123';
+// Load admin password from external file (not in git)
+$passwordFile = __DIR__ . '/admin_password.php';
+if (!file_exists($passwordFile)) {
+    die('<p style="font-family:sans-serif;padding:2em;">Admin password not configured.<br>Create <code>admin_password.php</code> in the application root.<br>Contents: <code>&lt;?php return \'your-password-here\'; ?&gt;</code></p>');
+}
+$ADMIN_PASSWORD = include($passwordFile);
 
 session_start();
 
@@ -91,12 +94,17 @@ if (isset($_POST['save_branding']) && isset($_SESSION['admin_logged_in'])) {
     $config .= "    ];\n\n";
 
     // Add the rest of the class methods (copy from original)
-    $config .= file_get_contents('branding_template.txt');
-
-    if (file_put_contents('branding.php', $config)) {
-        $success = "Branding saved successfully!";
+    $templateFile = __DIR__ . '/branding_template.txt';
+    if (!file_exists($templateFile)) {
+        $error = 'Branding template file is missing. Cannot save changes.';
     } else {
-        $error = "Failed to save branding configuration";
+        $config .= file_get_contents($templateFile);
+
+        if (file_put_contents(__DIR__ . '/branding.php', $config)) {
+            $success = "Branding saved successfully!";
+        } else {
+            $error = "Failed to save branding configuration";
+        }
     }
 }
 
@@ -150,7 +158,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
     <body>
         <div class="login-box">
             <h2>Admin Login</h2>
-            <?php if (isset($error)) echo "<p class='error'>$error</p>"; ?>
+            <?php if (isset($error)) echo "<p class='error'>" . htmlspecialchars($error, ENT_QUOTES, 'UTF-8') . "</p>"; ?>
             <form method="post">
                 <input type="password" name="password" placeholder="Enter admin password" required>
                 <button type="submit" name="login">Login</button>
@@ -301,7 +309,7 @@ require_once 'branding.php';
         <p><a href="?logout">Logout</a> | <a href="login.php">Back to App</a></p>
 
         <?php if (isset($success)) echo "<div class='success'>$success</div>"; ?>
-        <?php if (isset($error)) echo "<div class='error'>$error</div>"; ?>
+        <?php if (isset($error)) echo "<div class='error'>" . htmlspecialchars($error, ENT_QUOTES, 'UTF-8') . "</div>"; ?>
 
         <form method="post">
             <div class="section">
