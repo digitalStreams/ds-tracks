@@ -66,6 +66,104 @@ if (isset($_POST['save_label']) && isset($_POST['session_id'])) {
     exit;
 }
 
+// DELETE ACTIONS
+if (isset($_POST['delete_action'])) {
+    $action = sanitizeInput($_POST['delete_action']);
+    header('Content-Type: application/json');
+
+    // DELETE TRACK: remove a single file from a session
+    if ($action === 'track' && isset($_POST['session']) && isset($_POST['track'])) {
+        $session = sanitizeInput($_POST['session']);
+        $track = basename($_POST['track']);
+        $filePath = MUSIC_BASE_DIR . $session . '/' . $track;
+
+        if (!isValidMusicPath(MUSIC_BASE_DIR . $session) || !file_exists($filePath)) {
+            echo json_encode(['status' => 'error', 'message' => 'File not found']);
+            exit;
+        }
+
+        if (unlink($filePath)) {
+            $remaining = array_diff(scandir(MUSIC_BASE_DIR . $session), ['.', '..']);
+            if (count($remaining) === 0) {
+                rmdir(MUSIC_BASE_DIR . $session);
+                $labels = getSessionLabels();
+                if (isset($labels[$session])) {
+                    unset($labels[$session]);
+                    file_put_contents(LABELS_FILE, json_encode($labels, JSON_PRETTY_PRINT));
+                }
+            }
+            echo json_encode(['status' => 'ok', 'remaining' => count($remaining)]);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Could not delete file']);
+        }
+        exit;
+    }
+
+    // DELETE SESSION: remove entire session directory and all tracks
+    if ($action === 'session' && isset($_POST['session'])) {
+        $session = sanitizeInput($_POST['session']);
+        $sessionDir = MUSIC_BASE_DIR . $session;
+
+        if (!is_dir($sessionDir) || !isValidMusicPath($sessionDir)) {
+            echo json_encode(['status' => 'error', 'message' => 'Session not found']);
+            exit;
+        }
+
+        $files = array_diff(scandir($sessionDir), ['.', '..']);
+        foreach ($files as $file) {
+            unlink($sessionDir . '/' . $file);
+        }
+        rmdir($sessionDir);
+
+        $labels = getSessionLabels();
+        if (isset($labels[$session])) {
+            unset($labels[$session]);
+            file_put_contents(LABELS_FILE, json_encode($labels, JSON_PRETTY_PRINT));
+        }
+
+        echo json_encode(['status' => 'ok']);
+        exit;
+    }
+
+    // DELETE USER: remove all sessions for a username
+    if ($action === 'user' && isset($_POST['username'])) {
+        $targetUser = sanitizeInput($_POST['username'], false);
+        $dirs = array_filter(glob(MUSIC_BASE_DIR . '*'), 'is_dir');
+        $deleted = 0;
+        $labels = getSessionLabels();
+        $labelsChanged = false;
+
+        foreach ($dirs as $dir) {
+            if (!isValidMusicPath($dir)) continue;
+            $dirName = basename($dir);
+            $nameParts = explode('-', $dirName);
+            if ($nameParts[0] === $targetUser) {
+                $files = array_diff(scandir($dir), ['.', '..']);
+                foreach ($files as $file) {
+                    unlink($dir . '/' . $file);
+                }
+                rmdir($dir);
+                $deleted++;
+
+                if (isset($labels[$dirName])) {
+                    unset($labels[$dirName]);
+                    $labelsChanged = true;
+                }
+            }
+        }
+
+        if ($labelsChanged) {
+            file_put_contents(LABELS_FILE, json_encode($labels, JSON_PRETTY_PRINT));
+        }
+
+        echo json_encode(['status' => 'ok', 'deleted_sessions' => $deleted]);
+        exit;
+    }
+
+    echo json_encode(['status' => 'error', 'message' => 'Invalid delete action']);
+    exit;
+}
+
 // Get sessions for a specific user
 if(isset($_POST['u_name'])){
     $user_name = sanitizeInput($_POST['u_name']);

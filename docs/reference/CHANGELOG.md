@@ -1,74 +1,73 @@
-# Changelog
+# DS-Tracks - Changelog
 
-All notable changes to {PROJECT_NAME} are documented in this file.
+All notable changes to DS-Tracks are documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-<!-- INSTRUCTIONS: How to use this changelog
-- Update the "Unreleased" section during development with new changes
-- When releasing a version, create a new section with [vX.Y.Z] - YYYY-MM-DD
-- Use these categories: FEAT (new features), FIX (bug fixes), REFACTOR (refactoring),
-  DOCS (documentation), TEST (tests), SECURITY (security fixes), UX (user experience)
-- Keep items brief and user-focused. Use past tense (Added, Fixed, Improved)
-- Link to related issues/PRs when applicable: [#123](https://github.com/repo/issues/123)
-- Archive very old entries to a separate file if the changelog grows beyond 1000 lines
--->
+---
 
 ## Unreleased
 
-<!-- INSTRUCTIONS: Add changes here during development before releasing -->
-
 ### FEAT
-- <!-- Add new features here -->
+- Delete functionality at three levels: individual tracks, sessions, and users
+- All deletes physically remove files from disk to free space
+- Auto-cleanup of empty session directories after last track deleted
+- Session labels cleaned up on session/user deletion
 
 ### FIX
-- <!-- Add bug fixes here -->
+- Fixed user dropdown not showing newly created users (existingUsers array not resetting)
+- Fixed Add Tracks creating new sessions instead of adding to existing ones
+- Fixed wrong screen shown after USB import (now returns to player view)
+- Fixed USB browser screen not hiding after import in legacy mode
 
-### DOCS
-- <!-- Add documentation updates here -->
+### UX
+- Delete icons on track rows, session rows, and user rows with confirmation dialogs
+- After adding tracks via USB, player view opens showing imported tracks
 
 ---
 
-## [{VERSION}] - {DATE}
+## 2026-03-05
 
 ### FEAT
-- Added new dashboard widget with real-time data synchronization
-- Implemented batch operations for bulk data processing
-- Added filtering and sorting capabilities to data tables
+- Added `browseAndImport()` function for legacy UI to trigger USB file browser
+- Added `legacySessionFolder` support to pass existing session through import flow
+- Added `loadSessionIntoPlayer()` to show tracks after import
+- USB import (`usb-import.php`) now supports adding files to existing sessions via `session` parameter
 
 ### FIX
-- Fixed memory leak in event listener cleanup
-- Corrected calculation formula in reporting module
-- Resolved race condition in concurrent requests
-
-### REFACTOR
-- Reorganized module structure for improved maintainability
-- Simplified authentication flow logic
-- Removed deprecated API endpoints
+- Fixed `browseAndImport is not defined` JS error (function body was missing)
+- Fixed `station-logo.png` 404 (file existed locally but was never deployed to Pi)
+- Fixed `showScreen()` coordination between touch and legacy UI systems
 
 ### DOCS
-- Updated API reference documentation with new endpoints
-- Added troubleshooting guide for common issues
-- Improved installation instructions with examples
-
-### SECURITY
-- Patched XSS vulnerability in user input sanitization
-- Updated dependencies to latest security patches
-
-### TEST
-- Added comprehensive test coverage for payment flow
-- Improved test performance with optimized fixtures
+- Created `start-here.md` agent initiation document
+- Updated `deferred-work.md` with rebrand scope and implementation details
 
 ---
 
-## [v1.0.0] - YYYY-MM-DD
-
-Initial stable release of {PROJECT_NAME}.
+## 2026-03-04
 
 ### FEAT
-- Initial feature set release
-- Core functionality implementation
+- Touch interface: USB file browser with folder navigation
+- USB polling, mount detection, file selection UI
+- Touch player with session management
+- Dual UI system: touch (kiosk) and legacy (browser)
+
+### FIX
+- Replaced native file dialogs with USB browser for Pi kiosk (no file system access)
+- Fixed new user login flow in touch interface
+
+### DOCS
+- Reorganized project structure: docs and scripts into subfolders
+- Added build day guide, deployment KB, architecture docs
+
+---
+
+## 2026-03-03
+
+### FEAT
+- Configurable music storage: SD card vs USB SSD toggle in admin UI
+- Separate music drive support (OS on SD card, music on USB SSD)
 
 ---
 
@@ -76,13 +75,7 @@ Initial stable release of {PROJECT_NAME}.
 
 - **FEAT**: New features and additions
 - **FIX**: Bug fixes and corrections
-- **REFACTOR**: Code reorganization and optimization (no functional changes)
+- **REFACTOR**: Code reorganization (no functional changes)
 - **DOCS**: Documentation updates
-- **TEST**: Test additions and improvements
-- **SECURITY**: Security-related fixes and patches
-- **UX**: User experience improvements and interface changes
-
----
-
-<!-- INSTRUCTIONS: When the changelog exceeds ~500 entries, move older entries to a
-     separate CHANGELOG.archive.md file and link it here. -->
+- **UX**: User experience improvements
+- **SECURITY**: Security-related fixes

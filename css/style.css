@@ -791,3 +791,40 @@ div#dsPlayerDContainer .dsBottomButtons #dsBtn_StopAll {
   background: url("images/sort-icon3.png") #fff no-repeat;
 }
 /*# sourceMappingURL=./style.css.map */
+/* Delete buttons */
+button.dsDeleteSession {
+  margin-top: 6px;
+  padding: 9px 10px;
+  float: right;
+  border: 1px solid #d9534f;
+  border-radius: 8px;
+  background: #f2dede;
+  font-size: 13px;
+  height: 36px;
+  cursor: pointer;
+}
+button.dsDeleteSession:hover {
+  background: #ebcccc;
+}
+.dsDeleteTrack {
+  float: right;
+  cursor: pointer;
+  opacity: 0.4;
+  padding: 0 6px;
+  font-size: 14px;
+}
+.dsDeleteTrack:hover {
+  opacity: 1;
+  color: #d9534f;
+}
+.dsDeleteUser {
+  float: right;
+  cursor: pointer;
+  opacity: 0.4;
+  padding: 0 8px;
+  font-size: 14px;
+}
+.dsDeleteUser:hover {
+  opacity: 1;
+  color: #d9534f;
+}

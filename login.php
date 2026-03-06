@@ -521,6 +521,64 @@
         dsUsb.browseAndImport(username, usernameDateTime);
     }
 
+    // DELETE FUNCTIONS
+    function deleteTrack(trackName) {
+        if (!confirm('Delete "' + trackName + '" from this session?')) return;
+        $.post('json.php', {
+            delete_action: 'track',
+            session: usernameDateTime,
+            track: trackName
+        }, function(data) {
+            if (data.status === 'ok') {
+                // Remove track from UI
+                $('#fileList').find('#' + CSS.escape(trackName)).remove();
+                if (data.remaining === 0) {
+                    // Session is empty, go back to session list
+                    getSessionsList();
+                    gotoSessionView();
+                    showScreen('dsSession');
+                }
+            } else {
+                alert('Could not delete track: ' + (data.message || 'Unknown error'));
+            }
+        }, 'json');
+    }
+
+    function deleteSession(sessionFolder) {
+        if (!confirm('Delete this session and all its tracks?')) return;
+        $.post('json.php', {
+            delete_action: 'session',
+            session: sessionFolder
+        }, function(data) {
+            if (data.status === 'ok') {
+                getSessionsList();
+            } else {
+                alert('Could not delete session: ' + (data.message || 'Unknown error'));
+            }
+        }, 'json');
+    }
+
+    function deleteUser(targetUsername) {
+        if (!confirm('Delete user "' + targetUsername + '" and ALL their sessions? This cannot be undone.')) return;
+        $.post('json.php', {
+            delete_action: 'user',
+            username: targetUsername
+        }, function(data) {
+            if (data.status === 'ok') {
+                getSessions();
+                // If we just deleted ourselves, go back to login
+                if (targetUsername === username) {
+                    Cookies.remove('username');
+                    document.getElementById("dsSession").style.display = 'none';
+                    document.getElementById("dsPlayer").style.display = 'none';
+                    document.getElementById("dsLogin").style.display = 'block';
+                }
+            } else {
+                alert('Could not delete user: ' + (data.message || 'Unknown error'));
+            }
+        }, 'json');
+    }
+
     function gotoSessionView() {
         //  SWAP TO SESSION LIST VIEW                 
         document.getElementById('userName').innerHTML = "USER: " + username;
@@ -557,7 +615,7 @@
                         var fileList = '';
                         $.each(value.music, function(i, track) {
                             var escName = track.replace("'", '%27');
-                            fileList += "<div id='" + track + "' class='dsAudioFileName' data-url='" + path + escName + "' data-name='" + escName + "' onclick='dsPlayAudio(this)'>" + track + "</div>";
+                            fileList += "<div id='" + track + "' class='dsAudioFileName' data-url='" + path + escName + "' data-name='" + escName + "' onclick='dsPlayAudio(this)'>" + track + "<span class='dsDeleteTrack' data-track='" + escName + "' title='Delete track' onclick='event.stopPropagation(); deleteTrack(\"" + escName + "\")'>&" + "#128465;</span></div>";
                         });
 
                         showPlayerSection();
@@ -652,6 +710,7 @@
                 if ((userList).length > 0) {
                     $.each(userList, function(key, val) {
                         let dsUser = "<div class='dsUserName' id='" + val + "' >" + val +
+                            "<span class='dsDeleteUser' data-user='" + val + "' title='Delete user and all sessions' onclick='event.stopPropagation(); deleteUser("" + val + "")'>&#128465;</span>" +
                             "</div>";
                         dsUsersDisplay = (dsUsersDisplay) ? dsUsersDisplay + dsUser : dsUser;
                     })
@@ -733,7 +792,10 @@
                         ' class="dsAddTracks">Add Tracks</button>' +
                         '<button title="Click item to preview tracks in this session." data-tracks=' +
                         tracks +
-                        ' class="dsShowTracks">Show Tracks</button>';
+                        ' class="dsShowTracks">Show Tracks</button>' +
+                        '<button title="Delete this session and all tracks." data-folder="' +
+                        value.name +
+                        '" class="dsDeleteSession">&#128465;</button>';
 
                     allSessions = (allSessions) ? mySession + allSessions : mySession;
                 })
@@ -814,7 +876,9 @@
             fileHTML = "<div id='" + value + "' class='dsAudioFileName' data-url='" + path +
                 escName + "' data-name='" + escName +
                 "'  onclick='dsPlayAudio(this)' >" +
-                value + "</div>"
+                value +
+                "<span class='dsDeleteTrack' data-track='" + escName + "' title='Delete track' onclick='event.stopPropagation(); deleteTrack("" + escName + "")'>&#128465;</span>" +
+                "</div>"
 
             fileList = (fileList) ? fileList + fileHTML : fileHTML;
         })
@@ -896,6 +960,12 @@
 
         //  SHOW USB BROWSER TO SELECT TRACKS FOR THIS SESSION
         dsUsb.browseAndImport(username, dsFolderID);
+    });
+
+    $(document).on('click', '.dsDeleteSession', function(e) {
+        e.stopPropagation();
+        let folder = $(this).attr("data-folder");
+        deleteSession(folder);
     });
 
     //  EDIT SESSION LABEL — modal prompt
@@ -1147,7 +1217,7 @@
     </script>
 
     <!-- USB Browser & Touch Player -->
-    <script src="js/usb-browser.js?v=7"></script>
+    <script src="js/usb-browser.js?v=8"></script>
 
 </body>
 
