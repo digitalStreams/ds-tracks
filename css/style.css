@@ -458,10 +458,20 @@ span.dsTitle {
   background: #efefef;
   cursor: pointer;
 }
-.dsSessionName span.dsSmall.dsItalic {
-  font-size: 0.9em;
-  font-style: italic;
-  color: #636363;
+.dsSessionLabelPrimary {
+  font-size: 1em;
+  font-weight: 600;
+  color: black;
+}
+.dsSessionDate {
+  font-size: 0.75em;
+  color: #777;
+  margin-left: 8px;
+}
+.dsSessionDate.dsSessionDateOnly {
+  font-size: 1em;
+  color: black;
+  margin-left: 0;
 }
 .dsButtonBar.dsRight {
   text-align: right;
@@ -593,14 +603,7 @@ button.dsCloseButton {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.7);
 }
-/* Session label in session list bar */
-.dsSessionLabel {
-  font-style: normal;
-  font-weight: 600;
-  font-size: 14px;
-  color: black;
-  margin-left: 10px;
-}
+/* Session label styles moved to .dsSessionLabelPrimary above */
 /* Edit label pencil icon — inside the session bar */
 .dsEditLabel {
   position: absolute;
@@ -827,4 +830,108 @@ button.dsDeleteSession:hover {
 .dsDeleteUser:hover {
   opacity: 1;
   color: #d9534f;
+}
+
+
+/* ============================================
+   On-Screen Keyboard
+   ============================================ */
+
+.ds-keyboard {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #2c2c2c;
+    padding: 6px 4px;
+    z-index: 10000;
+    display: none;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+    border-top: 1px solid #444;
+}
+
+.ds-keyboard.ds-kb-visible {
+    display: block;
+}
+
+.ds-kb-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 4px;
+    gap: 3px;
+}
+
+.ds-kb-row:last-child {
+    margin-bottom: 0;
+}
+
+.ds-kb-key {
+    min-width: 32px;
+    height: 44px;
+    border: none;
+    border-radius: 5px;
+    background: #525252;
+    color: #fff;
+    font-size: 18px;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 1 auto;
+    padding: 0 8px;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    transition: background 0.1s;
+}
+
+.ds-kb-key:active {
+    background: #777;
+}
+
+.ds-kb-special {
+    background: #3a3a3a;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.ds-kb-space {
+    flex: 1 1 40%;
+    max-width: 50%;
+}
+
+.ds-kb-backspace {
+    min-width: 50px;
+    font-size: 22px;
+}
+
+.ds-kb-shift {
+    min-width: 44px;
+    font-size: 22px;
+}
+
+.ds-kb-shift.ds-kb-active {
+    background: #666;
+    color: #4fc3f7;
+}
+
+.ds-kb-done {
+    min-width: 60px;
+    background: #2979ff;
+    color: #fff;
+    font-weight: 600;
+}
+
+.ds-kb-done:active {
+    background: #1565c0;
+}
+
+.ds-kb-mode {
+    min-width: 44px;
+    font-size: 14px;
+}
+
+/* Push page content up when keyboard is open */
+body.ds-keyboard-open {
+    padding-bottom: 220px;
 }

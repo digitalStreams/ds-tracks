@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DS-Tracks</title>
+    <link rel="icon" type="image/png" href="images/ds-icon.png">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="js/jquery-ui-custom.min.js"></script>
@@ -772,18 +773,19 @@
 
                     //  SESSION LABEL (user-defined name)
                     let labelText = value.label || '';
-                    let labelHtml = labelText
-                        ? ' <span class="dsSessionLabel">' + labelText + '</span>'
-                        : '';
-
                     //  CREATE HTML TRACK DISPLAY ITEM
+                    let shortDate = day + '/' + date.substr(2, 2) + '/' + date.substr(0, 2);
+                    let shortTime = time.slice(0, 2) + ':' + time.slice(2, 4);
+                    let dateStr = shortDate + '-' + shortTime;
+                    let sessionTitle = labelText
+                        ? '<span class="dsSessionLabelPrimary">' + labelText + '</span>' +
+                          '<span class="dsSessionDate">' + dateStr + '</span>'
+                        : '<span class="dsSessionDate dsSessionDateOnly">' + dateStr + '</span>';
+
                     let mySession =
                         '<div id="' + directoryName +
                         '" class="dsSessionName" title="Click item to load this session." data-tracks=' +
-                        tracks + '>' + user + '  | <span class="dsSmall dsItalic"> Date: ' +
-                        dateFormatted + ' - ' +
-                        timeFormatted +
-                        '</span>' + labelHtml +
+                        tracks + '>' + sessionTitle +
                         '<span class="dsEditLabel" data-session="' + directoryName +
                         '" title="Edit session name">&#9998;</span>' +
                         '</div>' +
@@ -1079,7 +1081,7 @@
                 t_name: 'Peter-221003-0933'
             },
             success: function(data) {
-                console.log(data);
+                // console.log(data);
             }
         });
     }
@@ -1217,7 +1219,10 @@
     </script>
 
     <!-- USB Browser & Touch Player -->
-    <script src="js/usb-browser.js?v=8"></script>
+    <script src="js/usb-browser.js?v=9"></script>
+
+    <!-- On-Screen Keyboard -->
+    <script src="js/on-screen-keyboard.js?v=1"></script>
 
 </body>
 

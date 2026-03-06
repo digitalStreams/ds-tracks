@@ -100,9 +100,13 @@ if ($existingSession && is_dir($musicBaseDir . $existingSession)) {
     $sessionDir = $musicBaseDir . $sessionName;
     logImportInfo("Adding to existing session: $sessionName");
 } else {
-    // Create new session
-    $dateStamp = date('ymd-His');
-    $sessionName = $username . '-' . $dateStamp;
+    // Create new session - use passed session name if provided, otherwise generate one
+    if ($existingSession) {
+        $sessionName = $existingSession;
+    } else {
+        $dateStamp = date('ymd-His');
+        $sessionName = $username . '-' . $dateStamp;
+    }
     $sessionDir = $musicBaseDir . $sessionName;
 
     if (!mkdir($sessionDir, 0755, true)) {

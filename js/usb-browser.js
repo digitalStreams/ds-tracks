@@ -30,6 +30,7 @@
     var autoPlay = false;
     var legacyMode = false;        // When true, skip user ID screen and return to legacy session view
     var legacySessionFolder = null; // When set, import into this existing session folder
+    var initialCheckDone = false;   // Suppress auto-browse on first poll if USB already present
 
     // ── Initialisation ───────────────────────────────────────
 
@@ -51,9 +52,16 @@
             .then(function(r) { return r.json(); })
             .then(function(data) {
                 if (data.mounted && !usbMounted) {
-                    // USB just inserted
                     usbMounted = true;
-                    onUsbInserted(data);
+                    if (!initialCheckDone) {
+                        // USB was already present on page load - don't auto-browse
+                        initialCheckDone = true;
+                    } else {
+                        // USB just inserted - show browser
+                        onUsbInserted(data);
+                    }
+                } else if (!data.mounted && !initialCheckDone) {
+                    initialCheckDone = true;
                 } else if (!data.mounted && usbMounted) {
                     // USB just removed
                     usbMounted = false;
@@ -768,7 +776,6 @@
     }
 
     function browseAndImport(username, sessionFolder) {
-        console.log('[dsUsb] browseAndImport called, username:', username, 'sessionFolder:', sessionFolder);
             alert('Please insert a USB drive to add tracks.');
             return;
         }
