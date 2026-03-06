@@ -8,7 +8,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
+### SECURITY
+- Centralized security functions: all PHP files now use config.php (removed 6 local duplicates)
+- Added authentication check on delete operations (track, session, user) via cookie validation
+- Externalized admin password to admin_password.php (gitignored, not in source control)
+- Fixed XSS in legacy UI: track/user names now properly escaped with escapeHtml()/escapeAttr()
+- Fixed usb-eject.php wrong paths (/media/ds-usb -> /media/kcr-usb, /tmp/ -> /run/)
+- Fixed upload.php file size mismatch (was 512MB, now 50MB matching config.php)
+- Fixed unescaped error output in admin panel (now uses htmlspecialchars())
+- Fixed session label double-encoding (removed htmlspecialchars() on save, escape on output only)
+- Added branding_template.txt existence check before saving branding config
+- Fixed usb-import.php cookie: added SameSite=Strict flag
+- Bundled jQuery 3.6.1 locally (was CDN-only, broke offline kiosk)
+- Protected logs/ directory with .htaccess deny rule
+- Deleted legacy unsecured pages: Get_users.php, Get_users_Audio.php, music.php
+- Deleted deploy/KCR-Tracks2/ (old codebase copy doubling attack surface)
+- Added config.php direct-access guard using SCRIPT_FILENAME check
+
 ### FEAT
+- USB music export to USB drive (admin-only, via admin panel)
+  - Copies all session folders with audio files to DS-Tracks-Export/ on USB
+  - Generates session-info.json manifest with metadata (username, date, time, label, tracks)
+  - Progress bar UI in admin panel
 - On-screen keyboard for Pi kiosk touchscreen (no physical keyboard needed)
   - 4 layouts: lowercase, uppercase, numbers, symbols
   - Auto-shows on text input focus, compact white/corporate theme

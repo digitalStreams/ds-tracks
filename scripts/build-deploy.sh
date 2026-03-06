@@ -33,17 +33,15 @@ cp "$PROJECT_ROOT"/config.php "$DEPLOY_DIR/"
 cp "$PROJECT_ROOT"/branding.php "$DEPLOY_DIR/"
 cp "$PROJECT_ROOT"/branding_template.txt "$DEPLOY_DIR/"
 cp "$PROJECT_ROOT"/login.php "$DEPLOY_DIR/"
-cp "$PROJECT_ROOT"/music.php "$DEPLOY_DIR/"
 cp "$PROJECT_ROOT"/upload.php "$DEPLOY_DIR/"
 cp "$PROJECT_ROOT"/json.php "$DEPLOY_DIR/"
 cp "$PROJECT_ROOT"/admin_customize.php "$DEPLOY_DIR/"
 cp "$PROJECT_ROOT"/all_track_exporter.php "$DEPLOY_DIR/"
-cp "$PROJECT_ROOT"/Get_users.php "$DEPLOY_DIR/"
-cp "$PROJECT_ROOT"/Get_users_Audio.php "$DEPLOY_DIR/"
 cp "$PROJECT_ROOT"/usb-browse.php "$DEPLOY_DIR/"
 cp "$PROJECT_ROOT"/usb-eject.php "$DEPLOY_DIR/"
 cp "$PROJECT_ROOT"/usb-import.php "$DEPLOY_DIR/"
 cp "$PROJECT_ROOT"/usb-status.php "$DEPLOY_DIR/"
+cp "$PROJECT_ROOT"/usb-export.php "$DEPLOY_DIR/"
 
 # CSS (compiled only, no source maps or LESS)
 mkdir -p "$DEPLOY_DIR/css"
@@ -55,11 +53,20 @@ mkdir -p "$DEPLOY_DIR/js"
 cp "$PROJECT_ROOT"/js/js.cookie.min.js "$DEPLOY_DIR/js/"
 cp "$PROJECT_ROOT"/js/js-cookie.js "$DEPLOY_DIR/js/"
 cp "$PROJECT_ROOT"/js/usb-browser.js "$DEPLOY_DIR/js/"
+cp "$PROJECT_ROOT"/js/on-screen-keyboard.js "$DEPLOY_DIR/js/"
+cp "$PROJECT_ROOT"/js/jquery-3.6.1.min.js "$DEPLOY_DIR/js/"
 
 # Images (only those used by the app)
 mkdir -p "$DEPLOY_DIR/images"
 cp "$PROJECT_ROOT"/images/station-logo.png "$DEPLOY_DIR/images/"
 cp "$PROJECT_ROOT"/images/tracks-logo.png "$DEPLOY_DIR/images/"
+
+# Logs directory protection
+mkdir -p "$DEPLOY_DIR/logs"
+cp "$PROJECT_ROOT"/logs/.htaccess "$DEPLOY_DIR/logs/"
+
+# Admin password template (user must change on deployment)
+cp "$PROJECT_ROOT"/admin_password.php "$DEPLOY_DIR/"
 
 # ---- Installer Scripts ----
 

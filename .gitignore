@@ -2,6 +2,7 @@
 
 # Log files (keep .htaccess for security)
 logs/*.log
+*.log
 !logs/.htaccess
 
 # Music files (user uploaded content)

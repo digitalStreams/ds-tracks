@@ -26,6 +26,7 @@ DS-Tracks is a Raspberry Pi kiosk application for community radio stations. User
 | `usb-browse.php` | Lists files/folders on mounted USB |
 | `usb-import.php` | Copies selected files from USB into session directory |
 | `js/on-screen-keyboard.js` | Touch keyboard for Pi kiosk (auto-shows on input focus) |
+| `usb-export.php` | Admin-only: export all music sessions to USB drive with metadata |
 | `json.php` | API: session list, track list, session management, delete (track/session/user) |
 | `upload.php` | Legacy file upload handler |
 | `admin_customize.php` | Admin settings page |
@@ -131,7 +132,7 @@ ds-tracks/
 ├── login.php              # Main entry point (dual UI)
 ├── config.php             # Security, constants
 ├── json.php               # Session/track API
-├── usb-*.php              # USB status, browse, import, eject
+├── usb-*.php              # USB status, browse, import, eject, export
 ├── upload.php             # Legacy upload
 ├── admin_customize.php    # Admin settings
 ├── branding.php           # Station branding

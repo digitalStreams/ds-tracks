@@ -218,6 +218,33 @@ The main entry point loads jQuery from a CDN. For a kiosk that may not have inte
 
 ---
 
+## Resolution Status (2026-03-07)
+
+| # | Finding | Status |
+|---|---------|--------|
+| 1 | Unauthenticated deletes | FIXED -- cookie auth check added to json.php |
+| 2 | Hardcoded admin password | FIXED -- externalized to admin_password.php (gitignored) |
+| 3 | XSS in track/user names | FIXED -- escapeHtml()/escapeAttr() added to login.php |
+| 4 | No CSRF protection | DEFERRED -- low risk for kiosk (single-user, no tabs) |
+| 5 | Cookie missing SameSite | FIXED -- usb-import.php uses array syntax with SameSite=Strict |
+| 6 | usb-eject.php wrong paths | FIXED -- corrected to /media/kcr-usb and /run/kcr-usb-status.json |
+| 7 | upload.php size mismatch | FIXED -- now uses MAX_FILE_SIZE from config.php (50MB) |
+| 8 | Unescaped admin errors | FIXED -- htmlspecialchars() on error output |
+| 9 | Legacy pages unsecured | FIXED -- deleted Get_users.php, Get_users_Audio.php, music.php |
+| 10 | CDN jQuery dependency | FIXED -- jQuery 3.6.1 bundled locally in js/ |
+| 11 | json.php not using config | FIXED -- all PHP files now require_once config.php |
+| 12 | Logs in web root | FIXED -- logs/ directory with .htaccess deny rule |
+| 13 | Template file inclusion | FIXED -- existence check added before file_get_contents |
+| 14 | Label double-encoding | FIXED -- htmlspecialchars() removed from save path |
+| 15 | No rate limiting | DEFERRED -- low priority for kiosk deployment |
+| 16 | Dead code / legacy files | FIXED -- deleted legacy pages and deploy/KCR-Tracks2/ |
+| 17 | deploy/ full app copy | FIXED -- deleted deploy/KCR-Tracks2/ |
+| 18 | jQuery loaded from CDN | FIXED -- bundled locally |
+
+**16 of 18 findings resolved.** See [SECURITY-FIX-PLAN.md](SECURITY-FIX-PLAN.md) for implementation details.
+
+---
+
 ## Recommended Fix Order
 
 1. Add auth check to delete operations in `json.php`

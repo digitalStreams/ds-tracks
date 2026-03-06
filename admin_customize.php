@@ -413,6 +413,106 @@ require_once 'branding.php';
                 </div>
             </div>
         </form>
+
+        <div class="section" id="exportSection">
+            <h2>Export Music to USB</h2>
+            <p>Copy all music sessions and track data to a USB drive for backup or transfer.</p>
+
+            <div id="exportStatus" style="margin: 15px 0;">
+                <p class="hint">Insert a USB drive and click Export to copy all sessions.</p>
+            </div>
+
+            <div id="exportProgress" style="display:none; margin: 15px 0;">
+                <div style="background:#eee; border-radius:5px; overflow:hidden; height:24px;">
+                    <div id="exportProgressBar" style="background:#1a7a7a; height:100%; width:0%; transition:width 0.3s; border-radius:5px;"></div>
+                </div>
+                <p id="exportProgressText" class="hint" style="margin-top:8px;">Preparing export...</p>
+            </div>
+
+            <div id="exportResult" style="display:none; margin: 15px 0;"></div>
+
+            <div class="button-group">
+                <button type="button" id="btnExport" class="btn-primary" onclick="startExport()">Export All Sessions to USB</button>
+            </div>
+        </div>
+
+        <script>
+        function startExport() {
+            var btn = document.getElementById('btnExport');
+            var status = document.getElementById('exportStatus');
+            var progress = document.getElementById('exportProgress');
+            var result = document.getElementById('exportResult');
+            var bar = document.getElementById('exportProgressBar');
+            var text = document.getElementById('exportProgressText');
+
+            btn.disabled = true;
+            btn.textContent = 'Exporting...';
+            status.style.display = 'none';
+            result.style.display = 'none';
+            progress.style.display = 'block';
+            bar.style.width = '10%';
+            text.textContent = 'Connecting to USB drive...';
+
+            // Simulate progress while waiting for response
+            var progressVal = 10;
+            var timer = setInterval(function() {
+                if (progressVal < 85) {
+                    progressVal += Math.random() * 8;
+                    bar.style.width = Math.min(progressVal, 85) + '%';
+                    if (progressVal > 30) text.textContent = 'Copying session files...';
+                    if (progressVal > 60) text.textContent = 'Writing manifest...';
+                }
+            }, 500);
+
+            fetch('usb-export.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sessions: [] })  // empty = export all
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                clearInterval(timer);
+                bar.style.width = '100%';
+                progress.style.display = 'none';
+                result.style.display = 'block';
+
+                if (data.success) {
+                    var msg = '<div class="success">';
+                    msg += '<strong>Export complete!</strong><br>';
+                    msg += 'Sessions exported: ' + data.exported + '<br>';
+                    msg += 'Total tracks copied: ' + data.total_files + '<br>';
+                    msg += 'USB folder: <code>' + escapeHtmlAdmin(data.export_path) + '</code>';
+                    if (data.skipped > 0) {
+                        msg += '<br>Skipped: ' + data.skipped;
+                    }
+                    if (data.errors.length > 0) {
+                        msg += '<br><br>Warnings:<br>' + data.errors.map(escapeHtmlAdmin).join('<br>');
+                    }
+                    msg += '</div>';
+                    result.innerHTML = msg;
+                } else {
+                    result.innerHTML = '<div class="error">' + escapeHtmlAdmin(data.error || 'Export failed') + '</div>';
+                }
+
+                btn.disabled = false;
+                btn.textContent = 'Export All Sessions to USB';
+            })
+            .catch(function(err) {
+                clearInterval(timer);
+                progress.style.display = 'none';
+                result.style.display = 'block';
+                result.innerHTML = '<div class="error">Export failed: Could not connect to server.</div>';
+                btn.disabled = false;
+                btn.textContent = 'Export All Sessions to USB';
+            });
+        }
+
+        function escapeHtmlAdmin(str) {
+            var div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+        </script>
     </div>
 </body>
 </html>
