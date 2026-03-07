@@ -56,6 +56,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## 2026-03-08
+
+### FIX
+- Fixed track playback: filenames with commas broke playlist (comma-separated encoding replaced with JSON)
+- Fixed track playback: filenames with apostrophes broke HTML attribute quoting (now JSON-encoded)
+- Fixed autoplay stalling: added `onerror` handler to skip unplayable tracks instead of stopping
+- Fixed single-play track name display: now uses `decodeURIComponent()` instead of manual `%27` replace
+- Fixed layout offset caused by removing CSS borders (teal borders preserve box model)
+
+### FEAT
+- USB import filename sanitisation: MIME-type detection for extensionless files, special character removal
+- Screen blanking: display powers off after 5 minutes of idle (wakes on touch)
+- Plymouth boot splash: DS-Tracks branded image shown during boot (replaces scrolling Linux text)
+
+### UX
+- App viewport expanded from 795x447 to 800x480 (fills Pi 7" touchscreen completely)
+- Borders changed from visible grey/white to teal (invisible, matches background)
+- Boot sequence streamlined: removed unnecessary 30-second network wait loop
+
+### DOCS
+- Updated PI-DEPLOYMENT-KNOWLEDGE.md with screen blanking, Plymouth, and boot sequence details
+
+---
+
 ## 2026-03-05
 
 ### FEAT

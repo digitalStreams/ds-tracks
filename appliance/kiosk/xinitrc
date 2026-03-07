@@ -6,14 +6,6 @@
 # It configures the X session for kiosk mode operation
 # ============================================================
 
-# Disable screen blanking and power saving
-xset s off
-xset s noblank
-xset -dpms
-
-# Disable screen saver
-xset s 0 0
-
 # Hide cursor after 0.5 seconds of inactivity
 unclutter -idle 0.5 -root &
 
@@ -21,19 +13,16 @@ unclutter -idle 0.5 -root &
 openbox-session &
 
 # Wait for window manager to start
-sleep 2
+sleep 1
 
-# Wait for network to be available
-echo "Waiting for network..."
-for i in {1..30}; do
-    if ping -c 1 127.0.0.1 &> /dev/null; then
+
+# Wait for Apache to be ready (localhost only, no network needed)
+for i in {1..10}; do
+    if curl -s -o /dev/null http://localhost/login.php 2>/dev/null; then
         break
     fi
     sleep 1
 done
-
-# Additional wait for Apache to start
-sleep 3
 
 # Get configuration for cursor hiding
 HIDE_CURSOR="true"
@@ -66,15 +55,21 @@ if [ "$HIDE_CURSOR" = "true" ]; then
     CHROMIUM_FLAGS+=(--cursor=none)
 fi
 
+# Screen blanking and DPMS power saving (5 min idle)
+xset s 300
+xset s blank
+xset +dpms
+xset dpms 300 300 300
+
+# Dismiss Plymouth splash screen
+sudo plymouth quit --retain-splash 2>/dev/null || true
+sudo plymouth quit 2>/dev/null || true
+
+
 # Launch Chromium in kiosk mode
 # Loop to restart if it crashes
 while true; do
-    # chromium-browser was renamed to chromium in Bookworm+
-    if command -v chromium-browser &>/dev/null; then
-        chromium-browser "${CHROMIUM_FLAGS[@]}" http://localhost/login.php
-    else
-        chromium "${CHROMIUM_FLAGS[@]}" http://localhost/login.php
-    fi
+    chromium "${CHROMIUM_FLAGS[@]}" http://localhost/login.php
 
     # If Chromium exits, wait a moment then restart
     echo "Chromium exited, restarting in 3 seconds..."

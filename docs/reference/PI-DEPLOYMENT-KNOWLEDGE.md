@@ -59,6 +59,91 @@ Chromium in kiosk mode caches JS aggressively. After updating JS files:
 ### Kiosk Crash Recovery
 The xinitrc script runs Chromium in a `while true` loop — if it crashes, it restarts after 3 seconds.
 
+## Screen Blanking (Power Save)
+
+The kiosk screen blanks after 5 minutes of idle (no touch input). Configuration is via `xset` in `.xinitrc`.
+
+### Critical: xset Must Run After openbox
+
+If `xset` commands are placed before `openbox-session &`, openbox resets them on startup. The xset commands **must** run after openbox and all waits, just before Chromium launches.
+
+```bash
+# WRONG — openbox will override these
+xset s 300
+openbox-session &
+
+# RIGHT — set after openbox has started
+openbox-session &
+sleep 1
+# ... waits ...
+xset s 300
+xset s blank
+xset +dpms
+xset dpms 300 300 300
+```
+
+### Verifying Screen Blanking
+
+```bash
+DISPLAY=:0 xset q | grep -A5 "Screen Saver\|DPMS"
+```
+
+Expected output: `timeout: 300`, `prefer blanking: yes`, `DPMS is Enabled`.
+
+### Adjusting Timeout
+
+To change temporarily (until reboot): `DISPLAY=:0 xset s <seconds> && DISPLAY=:0 xset dpms <s> <s> <s>`
+To change permanently: edit the `xset` lines in `/home/pi/.xinitrc`.
+
+## Boot Splash Screen (Plymouth)
+
+Plymouth displays a branded image during boot, replacing scrolling Linux text.
+
+### Setup Components
+
+| Component | Location |
+|-----------|----------|
+| Theme descriptor | `/usr/share/plymouth/themes/ds-tracks/ds-tracks.plymouth` |
+| Theme script | `/usr/share/plymouth/themes/ds-tracks/ds-tracks.script` |
+| Splash image | `/usr/share/plymouth/themes/ds-tracks/splash.png` (800x480 PNG) |
+| Kernel cmdline | `/boot/firmware/cmdline.txt` — needs `quiet splash logo.nologo vt.global_cursor_default=0` |
+| Config | `/boot/firmware/config.txt` — needs `disable_splash=1` (hides rainbow square) |
+
+### Plymouth Lessons Learned
+
+- **Do NOT redirect `console=tty3`** — X server fails with `AddScreen/ScreenInit failed` because it cannot find the display on tty1
+- **Do NOT mask `plymouth-quit.service`** — this prevents proper boot completion and causes black screen hangs
+- Plymouth quits at the display-manager systemd target; some Debian text may show briefly between Plymouth exit and X11 start — this gap is currently unavoidable without framebuffer manipulation
+- `feh` fullscreen splash as a bridge was tested but the gap is too short to be effective
+- After changing Plymouth theme: `sudo update-initramfs -u` is required
+
+### Rebuilding Plymouth Theme
+
+```bash
+sudo /usr/sbin/plymouth-set-default-theme ds-tracks
+sudo update-initramfs -u
+```
+
+## Boot Sequence (xinitrc)
+
+The kiosk boot sequence in `/home/pi/.xinitrc` has been optimised:
+
+### Old Sequence (35+ seconds of black screen)
+1. xset commands (overridden by openbox)
+2. openbox start + sleep 2
+3. Network ping loop (up to 30 seconds) — **unnecessary for localhost appliance**
+4. sleep 3 (Apache wait)
+5. Chromium launch
+
+### New Sequence (10 seconds typical)
+1. openbox start + sleep 1
+2. curl loop checking `http://localhost/login.php` (up to 10 seconds, exits as soon as Apache responds)
+3. xset screen blanking commands (after openbox, so they stick)
+4. Plymouth quit
+5. Chromium launch
+
+Key change: the 30-second network wait loop was removed entirely — the appliance runs everything on localhost with no network dependency.
+
 ## Build Script Best Practices
 
 - **No hardcoded paths** — scripts must auto-detect their location
@@ -73,6 +158,9 @@ The xinitrc script runs Chromium in a `while true` loop — if it crashes, it re
 - Chromium (kiosk mode, auto-restart)
 - USB auto-detect via systemd service template
 - Music storage: configurable (SD card or USB SSD)
+- Plymouth boot splash (DS-Tracks branded)
+- Screen blanking after 5 min idle (DPMS)
+- feh installed (available for future splash bridging)
 
 ## Troubleshooting Quick Reference
 
@@ -87,3 +175,7 @@ The xinitrc script runs Chromium in a `while true` loop — if it crashes, it re
 | Apache won't start | Check PHP version matches config: `php -v` |
 | Chromium package not found | Use `chromium` not `chromium-browser` |
 | Kiosk black screen | SSH in, check `systemctl status apache2`, check xinitrc |
+| Screen won't blank | Verify xset runs AFTER openbox: `DISPLAY=:0 xset q` |
+| Plymouth not showing | Check `cmdline.txt` has `quiet splash`, run `sudo update-initramfs -u` |
+| X server fails after cmdline change | Do NOT use `console=tty3` — X needs tty1 |
+| Boot hangs on black screen | Do NOT mask `plymouth-quit.service` — unmask and reboot |

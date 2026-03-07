@@ -5,8 +5,8 @@ body {
 }
 #content {
   position: relative;
-  width: 795px;
-  height: 447px;
+  width: 800px;
+  height: 480px;
 }
 #content div#dsCloseFullScreen {
   position: absolute;
@@ -29,9 +29,9 @@ body {
 section#dsLogin {
   display: block;
   background: #007479;
-  width: 795px;
-  height: 447px;
-  border: 1px solid #aaa;
+  width: 798px;
+  height: 478px;
+  border: 1px solid #007479;
   position: relative;
 }
 section#dsLogin .dsHeadline h2 {
@@ -124,9 +124,9 @@ section#dsLogin #dsCurrentUsers:hover {
 section#dsSession {
   display: none;
   background: #007479;
-  width: 795px;
-  height: 447px;
-  border: 1px solid white;
+  width: 798px;
+  height: 478px;
+  border: 1px solid #007479;
   position: relative;
   color: whitesmoke;
 }
@@ -146,9 +146,9 @@ section#dsSession div#dsLogoDiv img {
 section#dsPlayer {
   display: none;
   background: #007479;
-  width: 795px;
-  height: 447px;
-  border: 1px solid #aaa;
+  width: 798px;
+  height: 478px;
+  border: 1px solid #007479;
   position: relative;
 }
 section#dsPlayer div#fileButtonDiv {

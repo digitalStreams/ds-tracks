@@ -41,19 +41,49 @@ function logImportInfo($message) {
 }
 
 /**
- * Sanitise a filename for safe storage
+ * Sanitise a filename for safe storage.
+ * - Replaces special characters (commas, apostrophes, etc.) with underscores
+ * - Collapses multiple spaces to single space
+ * - Trims leading/trailing spaces
+ * - If no extension, attempts to detect audio type from file content
  */
-function sanitiseFilename($filename) {
+function sanitiseFilename($filename, $sourcePath = null) {
     $pathInfo = pathinfo($filename);
     $extension = strtolower($pathInfo['extension'] ?? '');
     $basename = $pathInfo['filename'] ?? '';
 
-    // Remove special characters, keep safe ones
+    // If no extension, try to detect from MIME type
+    if (empty($extension) && $sourcePath && is_file($sourcePath)) {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = finfo_file($finfo, $sourcePath);
+        finfo_close($finfo);
+        $mimeToExt = [
+            'audio/mpeg' => 'mp3', 'audio/mp3' => 'mp3',
+            'audio/wav' => 'wav', 'audio/wave' => 'wav', 'audio/x-wav' => 'wav',
+            'audio/ogg' => 'ogg', 'audio/flac' => 'flac',
+            'audio/x-m4a' => 'm4a', 'audio/mp4' => 'm4a',
+        ];
+        $extension = $mimeToExt[$mime] ?? '';
+        if (!empty($extension)) {
+            logImportInfo("No extension on '$filename' - detected as .$extension from MIME type");
+        }
+    }
+
+    // Remove special characters, keep safe ones (letters, numbers, underscore, hyphen, parens, brackets, space)
     $safeBasename = preg_replace('/[^a-zA-Z0-9_\-\(\)\[\] ]/', '_', $basename);
+    // Collapse multiple spaces/underscores to single space
+    $safeBasename = preg_replace('/\s+/', ' ', $safeBasename);
+    $safeBasename = preg_replace('/_+/', '_', $safeBasename);
+    $safeBasename = trim($safeBasename);
     $safeBasename = substr($safeBasename, 0, 200);
 
     if (empty($safeBasename)) {
         $safeBasename = 'track_' . time();
+    }
+
+    if (empty($extension)) {
+        logImportInfo("No extension detected for '$filename' - skipping");
+        return null; // Signal that this file should be flagged
     }
 
     return $safeBasename . '.' . $extension;
@@ -179,8 +209,12 @@ foreach ($files as $filePath) {
         continue;
     }
 
-    // Sanitise destination filename
-    $safeFilename = sanitiseFilename($originalName);
+    // Sanitise destination filename (pass source path for MIME detection of extensionless files)
+    $safeFilename = sanitiseFilename($originalName, $realSource);
+    if ($safeFilename === null) {
+        $errors[] = "Skipped (no audio extension): $originalName";
+        continue;
+    }
     $destination = $sessionDir . '/' . $safeFilename;
 
     // Handle duplicate filenames

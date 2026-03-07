@@ -13,7 +13,7 @@
     <script src="js/js.cookie.min.js"></script>
     <script src="js/touch-dnd.js"></script>
 
-    <link rel="stylesheet" href="css/style.css?v=7">
+    <link rel="stylesheet" href="css/style.css?v=12">
     <link rel="stylesheet" href="css/touch.css">
 </head>
 
@@ -474,9 +474,9 @@
         currentTrackID = audioID;
 
         //  BUILD THE HTML5 AUDIO TAGS
-        let audioHtml = "<audio id='dsAudio' controls autoplay> <source src='" + audioURL +
-            "' type='audio/mpeg'></audio><div class='dsTrackTitle'><span class='dsTitle'>Title: </span>" +
-            trackName.replace("%27", "'") +
+        let audioHtml = "<audio id='dsAudio' controls autoplay onerror='this.nextElementSibling && this.nextElementSibling.click()'> <source src='" + audioURL +
+            "' type='audio/mpeg'></source></audio><div class='dsTrackTitle'><span class='dsTitle'>Title: </span>" +
+            decodeURIComponent(trackName) +
             "</div>";
 
         // SET THE TRACK TO PLAY IN THE AUDIO PLAYER DIV
@@ -748,7 +748,7 @@
                 let allSessions;
                 let obj = jQuery.parseJSON(data);
                 $.each(obj, function(key, value) {
-                    let tracks = '"' + value.music.toString() + '"';
+                    let tracks = "'" + JSON.stringify(value.music).replace(/'/g, '&#39;') + "'";
                     let directoryName = value.name;
                     let sessionDetails = directoryName.split('-');
 
@@ -874,8 +874,7 @@
         fileHTML,
         fileList = "";
         usernameDateTime = $(this).attr('id');;
-        var dsTracks = $(this).attr("data-tracks");
-        dsTracks = dsTracks.split(',')
+        var dsTracks = JSON.parse($(this).attr("data-tracks"));
 
         //  SET DEFAULT PATH
         path = base_url + "music/" + usernameDateTime + "/";
@@ -912,18 +911,16 @@
         usernameDateTime = sessionPath;
 
         //  GET ARRAY OF FILES 
-        var dsTracks = $(this).attr("data-tracks");
-
-
-        dsTracks = dsTracks.split(',')
+        var dsTracks = JSON.parse($(this).attr("data-tracks"));
 
         //  SET DEFAULT PATH
         path = base_url + "music/" + usernameDateTime + "/";
 
         $.each(dsTracks, function(key, value) {
-            fileHTML = "<div id='" + value + "' class='dsAudioFileName' data-url='" + path +
-                value + "' data-name='" + value + "'  onclick='dsPlayAudio(this)' >" +
-                value + "</div>"
+            fileHTML = "<div class='dsAudioFileName' data-url='" + path +
+                encodeURIComponent(value) + "' data-name='" + escapeAttr(value) +
+                "'  onclick='dsPlayAudio(this)' >" +
+                escapeHtml(value) + "</div>"
 
             fileList = (fileList) ? fileList + fileHTML : fileHTML;
         })
@@ -943,10 +940,11 @@
 
     $(document).on('click', '.dsShowTracks', function() {
         // var dsTracks = $(this).attr("data-tracks").split(',').join('\n');
-        var dsTracks = $(this).attr("data-tracks").replace(/ *, */g, '<br>');
+        var dsTracks = JSON.parse($(this).attr("data-tracks"));
+        var trackListHtml = dsTracks.map(function(t) { return escapeHtml(t); }).join('<br>');
         // console.log(dsTracks);
         $("#dsLightbox").fadeIn(200);
-        $("#dsTrackList").html("<div class='dsTrackListDiv'>" + dsTracks.replace("%27", "'") +
+        $("#dsTrackList").html("<div class='dsTrackListDiv'>" + trackListHtml +
                 "</div><div class='dsCloseBar'><button class='dsCloseButton'>Close List</div></div>")
             .fadeIn(
                 300);
@@ -1210,10 +1208,10 @@
 
         //  BUILD THE HTML5 AUDIO TAGS — onended chains to next track
         let audioHtml =
-            "<audio id='dsAudio' controls controlsList='nodownload noplaybackrate' onended='dsPlayList()' autoplay> <source src='" +
+            "<audio id='dsAudio' controls controlsList='nodownload noplaybackrate' onended='dsPlayList()' onerror='dsPlayList()' autoplay> <source src='" +
             audioURL +
-            "' type='audio/mpeg'></audio><div class='dsTrackTitle'><span class='dsTitle'>Title: </span>" +
-            trackName.replace("%27", "'").replace("%2C", ",") +
+            "' type='audio/mpeg'></source></audio><div class='dsTrackTitle'><span class='dsTitle'>Title: </span>" +
+            decodeURIComponent(trackName) +
             "</div>";
 
         // SET THE TRACK TO PLAY IN THE AUDIO PLAYER DIV
